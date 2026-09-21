@@ -1,0 +1,14 @@
+{
+  "name": "opencode-bug-fix-subagent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Issue-to-fix orchestration and safety gates for OpenCode",
+  "scripts": {
+    "test": "node --test",
+    "bugfix": "node bin/bug-fix.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

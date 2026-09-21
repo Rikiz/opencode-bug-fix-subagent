@@ -1,0 +1,6 @@
+{
+  "commands": [
+    ["npm", "test"]
+  ],
+  "timeoutMs": 120000
+}

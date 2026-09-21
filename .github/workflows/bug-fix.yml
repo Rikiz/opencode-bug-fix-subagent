@@ -1,0 +1,64 @@
+name: Issue Bug Fix
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  fix:
+    # Explicit maintainer command prevents arbitrary issue content from starting an agent.
+    if: >-
+      github.event.issue.pull_request == null &&
+      startsWith(github.event.comment.body, '/bugfix') &&
+      (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: npm install --global @opencode/cli
+      - run: npm test
+      - name: Write trusted event payload
+        env:
+          EVENT: ${{ toJson(github.event) }}
+        run: node -e 'const fs=require("fs"); const e=JSON.parse(process.env.EVENT); fs.writeFileSync("/tmp/issue.json", JSON.stringify({issue:e.issue, comments:[e.comment]}))'
+      - name: Diagnose and fix with OpenCode
+        env:
+          BUGFIX_MODEL: ${{ vars.BUGFIX_MODEL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npm run bugfix -- --issue-file /tmp/issue.json
+      - name: Export candidate patch without credentials
+        run: git diff --binary > /tmp/bugfix.patch && test -s /tmp/bugfix.patch
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: bugfix-patch-${{ github.event.issue.number }}
+          path: /tmp/bugfix.patch
+          if-no-files-found: error
+
+  publish-draft:
+    needs: fix
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        with:
+          name: bugfix-patch-${{ github.event.issue.number }}
+          path: /tmp
+      - name: Create draft pull request from the verified patch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git switch -c "codex/bugfix-${{ github.event.issue.number }}"
+          git apply --index /tmp/bugfix.patch
+          git commit -m "fix: resolve #${{ github.event.issue.number }}"
+          gh pr create --draft --fill --body "Automated candidate fix for #${{ github.event.issue.number }}. A maintainer must review the patch and validation evidence before merging."
