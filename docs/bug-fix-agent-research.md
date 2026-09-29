@@ -20,7 +20,7 @@
 
 ## 资料
 
-- [OpenCode GitHub 集成文档](https://thdxr.dev.opencode.ai/docs/github/)：issue/PR 命令、GitHub runner 内执行与创建 PR 的官方流程。
+- [OpenCode GitHub 集成文档](https://opencode.ai/docs/github/)：issue/PR 命令、GitHub runner 内执行与创建 PR 的官方流程。
 - [OpenCode CLI 文档](https://dev.opencode.ai/docs/cli/)：`run`、agent 与 MCP 管理接口。
 - [SWE-bench 官方排行榜](https://www.swebench.com/)：当前可比较的公开 resolved-rate 与运行轨迹入口。
 - [OpenAI：Codex 升级](https://openai.com/index/introducing-upgrades-to-codex/)：GPT-5-Codex 的工程任务定位和全 500 task 报告说明。
