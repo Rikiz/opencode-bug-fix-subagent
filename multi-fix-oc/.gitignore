@@ -1,0 +1,11 @@
+# Real topology manifests list internal repository paths, owners and service topology.
+# Commit topology.example.json instead; copy it to topology.json locally.
+topology.json
+topology.local.json
+
+# Per-run artifacts: prompts, routing decisions, diffs, validation output.
+.runs/
+
+node_modules/
+.env
+.env.*

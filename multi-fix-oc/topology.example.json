@@ -1,0 +1,119 @@
+{
+  "$comment": "Copy to topology.json (git-ignored) and edit. Paths are absolute and machine-local; opencode cannot expand $HOME or env vars in permission patterns, so multi-repo runs use --dir per repository instead of external_directory grants. Every contract edge needs evidence and confidence. Missing evidence belongs in coverage.unknownEdges, never silently omitted.",
+  "version": 1,
+  "org": "example-org",
+  "repos": [
+    {
+      "name": "web-gateway",
+      "path": "/abs/path/to/web-gateway",
+      "language": ["typescript"],
+      "role": "gateway",
+      "summary": "Edge router. Terminates TLS, authenticates sessions, applies rate limits, rewrites paths, and fans out to order and payment services.",
+      "provides": [
+        { "kind": "http", "path": "/api/v2/orders/**" }
+      ],
+      "consumes": [
+        { "kind": "http", "path": "/internal/v2/orders/**" }
+      ],
+      "owner": "team-platform",
+      "validation": [["npm", "test"]]
+    },
+    {
+      "name": "order-service",
+      "path": "/abs/path/to/order-service",
+      "language": ["java", "kotlin"],
+      "role": "service",
+      "summary": "Order lifecycle: create, validate inventory, persist, emit order events. Owns the order database schema.",
+      "provides": [
+        { "kind": "http", "path": "/internal/v2/orders/**" },
+        { "kind": "event", "topic": "order.v2.created" },
+        { "kind": "schema", "name": "OrderV2", "location": "src/main/resources/schema/order-v2.avsc" }
+      ],
+      "consumes": [
+        { "kind": "event", "topic": "inventory.v1.reserved" },
+        { "kind": "config", "name": "PAYMENT_BASE_URL" }
+      ],
+      "owner": "team-fulfilment",
+      "validation": [["./gradlew", "test"]]
+    },
+    {
+      "name": "payment-service",
+      "path": "/abs/path/to/payment-service",
+      "language": ["go"],
+      "role": "service",
+      "summary": "Authorises and captures payments. Strictly validates inbound order payloads and rejects unknown fields.",
+      "provides": [
+        { "kind": "http", "path": "/internal/v2/payments/**" },
+        { "kind": "event", "topic": "payment.v2.captured" }
+      ],
+      "consumes": [
+        { "kind": "schema", "name": "OrderV2", "location": "internal/order/v2/types.go" },
+        { "kind": "event", "topic": "order.v2.created" }
+      ],
+      "owner": "team-payments",
+      "validation": [["go", "test", "./..."]]
+    },
+    {
+      "name": "web-checkout",
+      "path": "/abs/path/to/web-checkout",
+      "language": ["typescript", "react"],
+      "role": "frontend",
+      "summary": "Customer-facing checkout flow. Calls the gateway only; must never reach internal service routes directly.",
+      "provides": [],
+      "consumes": [
+        { "kind": "http", "path": "/api/v2/orders/**" }
+      ],
+      "owner": "team-frontend",
+      "validation": [["npm", "test"]]
+    }
+  ],
+  "contracts": [
+    {
+      "from": "order-service",
+      "to": "payment-service",
+      "kind": "event",
+      "topic": "order.v2.created",
+      "field": "customerId",
+      "evidence": "src/main/java/com/example/order/OrderEventPublisher.java:88",
+      "confidence": 0.95
+    },
+    {
+      "from": "web-gateway",
+      "to": "order-service",
+      "kind": "http",
+      "path": "/internal/v2/orders/**",
+      "evidence": "config/routes/upstream-order.yaml:12",
+      "confidence": 0.9
+    },
+    {
+      "from": "payment-service",
+      "to": "order-service",
+      "kind": "schema",
+      "name": "OrderV2",
+      "field": "customerId",
+      "evidence": "internal/order/v2/types.go:34",
+      "confidence": 0.4
+    },
+    {
+      "from": "order-service",
+      "to": "payment-service",
+      "kind": "schema",
+      "name": "OrderV2",
+      "field": "customerId",
+      "evidence": "src/main/resources/schema/order-v2.avsc:71",
+      "confidence": 0.85
+    }
+  ],
+  "coverage": {
+    "$comment": "Treat these as first-class findings, not bookkeeping. A repo listed here must not be presented as safe: absence of evidence is not evidence of absence.",
+    "indexedAt": "2026-10-01T00:00:00Z",
+    "staleRepos": ["payment-service"],
+    "unknownEdges": [
+      {
+        "description": "Dynamic route templates registered at runtime in order-service are not statically resolvable, so gateway rewrite rules cannot be fully linked.",
+        "affects": ["web-gateway", "order-service"]
+      }
+    ],
+    "notes": "Service mesh routing rules (ingress annotations, virtual services) are NOT modelled. Do not treat the contract graph as complete for gateway-root-cause work."
+  }
+}
