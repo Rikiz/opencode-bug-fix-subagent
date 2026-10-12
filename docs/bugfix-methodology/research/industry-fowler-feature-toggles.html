@@ -1,0 +1,1679 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head><meta charset="UTF-8">
+<title>Feature Toggles (aka Feature Flags)</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" /><script defer src="https://cloud.umami.is/script.js" data-website-id="eb12527f-b713-4afa-905a-8a50f8a7f157"></script>
+<meta content = 'summary_large_image' name = 'twitter:card'></meta>
+
+<meta content = '16665197' name = 'twitter:site:id'></meta>
+
+<meta content = '@martinfowler' name = 'twitter:site'></meta>
+
+<meta content = 'Feature Toggles (aka Feature Flags)' property = 'og:title'></meta>
+
+<meta content = 'https://martinfowler.com/articles/feature-toggles.html' property = 'og:url'></meta>
+
+<meta content = 'Feature Flags can be categorized into several buckets; manage each appropriately. Smart implementation can help constrain complexity.' property = 'og:description'></meta>
+
+<meta content = 'https://martinfowler.com/articles/feature-toggles/overview-diagram.png' property = 'og:image'></meta>
+
+<meta content = 'martinfowler.com' property = 'og:site_name'></meta>
+
+<meta content = 'article' property = 'og:type'></meta>
+
+<meta content = '2017-10-09' property = 'og:article:modified_time'></meta>
+
+<meta content = 'width=device-width, initial-scale=1' name = 'viewport'></meta>
+
+<link href = 'feature-toggles.css' rel = 'stylesheet' type = 'text/css'></link>
+</head>
+
+<body><header id = 'banner' style = 'background-image: url("/img/zakim.png"); background-repeat: no-repeat'>
+
+<div class = 'name-logo'><a href = 'https://martinfowler.com'><img src = '/mf-name-white.png'></img></a></div>
+  <div class = 'search'>
+    <!-- SiteSearch Google -->
+    <form method='GET' action="https://www.google.com/search">
+      <input type='hidden' name='ie' value='UTF-8'/>
+      <input type='hidden' name='oe' value='UTF-8'/>
+      <input class = 'field' type='text' 
+             name='q' size='15' maxlength='255' value=""/>
+      <button class = 'button' type='submit' 
+             name='btnG' value=" " title = "Search"/>
+      <input type='hidden' name='domains' value="martinfowler.com"/>
+      <input type='hidden' name='sitesearch' value=""/> 
+      <input
+          type='hidden' name='sitesearch' value="martinfowler.com"/>
+    </form>
+  </div>
+
+<div class = 'menu-button navmenu-button'><a class = 'icon icon-bars' href = '#navmenu-bottom'></a></div>
+
+<nav class = 'top-menu'>
+<ul>
+<li><a class = '' href = 'https://refactoring.com'>Refactoring</a></li>
+
+<li><a class = '' href = '/agile.html'>Agile</a></li>
+
+<li><a class = '' href = '/architecture'>Architecture</a></li>
+
+<li><a class = '' href = '/aboutMe.html'>About</a></li>
+
+<li><a class = 'tw' href = 'https://www.thoughtworks.com/engineering'>Thoughtworks</a></li>
+
+<li><a class = 'icon icon-rss' href = '/feed.atom' title = 'feed'></a></li>
+
+<li><a class = 'icon icon-twitter' href = 'https://www.twitter.com/martinfowler' title = 'Twitter stream'></a></li>
+
+<li class = 'icon'><a href = 'https://toot.thoughtworks.com/@mfowler' title = 'Mastodon stream'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.2595 13.9898C20.9852 15.4006 18.8033 16.9446 16.2974 17.2439C14.9907 17.3998 13.7041 17.5431 12.3321 17.4802C10.0885 17.3774 8.31809 16.9446 8.31809 16.9446C8.31809 17.163 8.33156 17.371 8.3585 17.5655C8.65019 19.7797 10.5541 19.9124 12.3576 19.9742C14.1779 20.0365 15.7987 19.5254 15.7987 19.5254L15.8735 21.1711C15.8735 21.1711 14.6003 21.8548 12.3321 21.9805C11.0814 22.0493 9.52849 21.9491 7.71973 21.4703C3.79684 20.432 3.12219 16.2504 3.01896 12.0074C2.98749 10.7477 3.00689 9.55981 3.00689 8.56632C3.00689 4.22771 5.84955 2.95599 5.84955 2.95599C7.2829 2.29772 9.74238 2.0209 12.2993 2H12.3621C14.919 2.0209 17.3801 2.29772 18.8133 2.95599C18.8133 2.95599 21.6559 4.22771 21.6559 8.56632C21.6559 8.56632 21.6916 11.7674 21.2595 13.9898ZM18.3029 8.9029C18.3029 7.82924 18.0295 6.97604 17.4805 6.34482C16.9142 5.71359 16.1726 5.39001 15.2522 5.39001C14.187 5.39001 13.3805 5.79937 12.8473 6.61819L12.3288 7.48723L11.8104 6.61819C11.2771 5.79937 10.4706 5.39001 9.40554 5.39001C8.485 5.39001 7.74344 5.71359 7.17719 6.34482C6.62807 6.97604 6.3547 7.82924 6.3547 8.9029V14.1562H8.43597V9.05731C8.43597 7.98246 8.88822 7.4369 9.79281 7.4369C10.793 7.4369 11.2944 8.08408 11.2944 9.36376V12.1547H13.3634V9.36376C13.3634 8.08408 13.8646 7.4369 14.8648 7.4369C15.7694 7.4369 16.2216 7.98246 16.2216 9.05731V14.1562H18.3029V8.9029Z"></path></svg>
+</a></li>
+
+<li class = 'icon'><a href = 'https://www.linkedin.com/in/martin-fowler-com/' title = 'LinkedIn'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4.00098 3H20.001C20.5533 3 21.001 3.44772 21.001 4V20C21.001 20.5523 20.5533 21 20.001 21H4.00098C3.44869 21 3.00098 20.5523 3.00098 20V4C3.00098 3.44772 3.44869 3 4.00098 3ZM5.00098 5V19H19.001V5H5.00098ZM7.50098 9C6.67255 9 6.00098 8.32843 6.00098 7.5C6.00098 6.67157 6.67255 6 7.50098 6C8.3294 6 9.00098 6.67157 9.00098 7.5C9.00098 8.32843 8.3294 9 7.50098 9ZM6.50098 10H8.50098V17.5H6.50098V10ZM12.001 10.4295C12.5854 9.86534 13.2665 9.5 14.001 9.5C16.072 9.5 17.501 11.1789 17.501 13.25V17.5H15.501V13.25C15.501 12.2835 14.7175 11.5 13.751 11.5C12.7845 11.5 12.001 12.2835 12.001 13.25V17.5H10.001V10H12.001V10.4295Z"></path></svg>
+</a></li>
+
+<li class = 'icon'><a href = 'https://bsky.app/profile/martinfowler.com' title = 'BlueSky'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 11.3884C11.0942 9.62673 8.62833 6.34423 6.335 4.7259C4.13833 3.17506 3.30083 3.4434 2.75167 3.69256C2.11583 3.9784 2 4.95506 2 5.52839C2 6.10339 2.315 10.2367 2.52 10.9276C3.19917 13.2076 5.61417 13.9776 7.83917 13.7309C4.57917 14.2142 1.68333 15.4017 5.48083 19.6292C9.65833 23.9542 11.2058 18.7017 12 16.0392C12.7942 18.7017 13.7083 23.7651 18.4442 19.6292C22 16.0392 19.4208 14.2142 16.1608 13.7309C18.3858 13.9784 20.8008 13.2076 21.48 10.9276C21.685 10.2376 22 6.10256 22 5.52923C22 4.95423 21.8842 3.97839 21.2483 3.6909C20.6992 3.44256 19.8617 3.17423 17.665 4.72423C15.3717 6.34506 12.9058 9.62756 12 11.3884Z"></path></svg></a></li>
+</ul>
+</nav>
+</header>
+<nav id = 'top-navmenu'>
+<nav class = 'navmenu'>
+<div class = 'nav-head'>  <div class = 'search'>
+    <!-- SiteSearch Google -->
+    <form method='GET' action="https://www.google.com/search">
+      <input type='hidden' name='ie' value='UTF-8'/>
+      <input type='hidden' name='oe' value='UTF-8'/>
+      <input class = 'field' type='text' 
+             name='q' size='15' maxlength='255' value=""/>
+      <button class = 'button' type='submit' 
+             name='btnG' value=" " title = "Search"/>
+      <input type='hidden' name='domains' value="martinfowler.com"/>
+      <input type='hidden' name='sitesearch' value=""/> 
+      <input
+          type='hidden' name='sitesearch' value="martinfowler.com"/>
+    </form>
+  </div>
+
+<div class = 'closediv'>
+<span class = 'close' title = 'close'></span>
+</div>
+</div>
+
+<div class = 'nav-body'>
+<div class = 'topics'>
+<h2>Topics</h2>
+
+<p><a href = '/architecture'>Architecture</a></p>
+
+<p><a href = 'https://refactoring.com'>Refactoring</a></p>
+
+<p><a href = '/agile.html'>Agile</a></p>
+
+<p><a href = '/delivery.html'>Delivery</a></p>
+
+<p><a href = '/microservices'>Microservices</a></p>
+
+<p><a href = '/data'>Data</a></p>
+
+<p><a href = '/testing'>Testing</a></p>
+
+<p><a href = '/dsl.html'>DSL</a></p>
+</div>
+
+<div class = 'about'>
+<h2>about me</h2>
+
+<p><a href = '/aboutMe.html'>About</a></p>
+
+<p><a href = '/books'>Books</a></p>
+
+<p><a href = '/faq.html'>FAQ</a></p>
+</div>
+
+<div class = 'content'>
+<h2>content</h2>
+
+<p><a href = '/videos.html'>Videos</a></p>
+
+<p><a href = '/tags'>Content Index</a></p>
+
+<p><a href = '/fragments'>Fragments</a></p>
+
+<p><a href = '/boardgames'>Board Games</a></p>
+
+<p><a href = '/photos'>Photography</a></p>
+</div>
+
+<div class = 'tw'>
+<h2>Thoughtworks</h2>
+
+<p><a href = 'https://thoughtworks.com'>Home</a></p>
+
+<p><a href = 'https://thoughtworks.com/insights'>Insights</a></p>
+
+<p><a href = 'https://thoughtworks.com/careers'>Careers</a></p>
+
+<p><a href = 'https://thoughtworks.com/radar'>Radar</a></p>
+
+<p><a href = 'https://www.thoughtworks.com/engineering'>Engineering</a></p>
+</div>
+
+<div class = 'feeds'>
+<h2>follow</h2>
+
+<p><a href = '/feed.atom'>RSS</a></p>
+
+<p><a href = 'https://toot.thoughtworks.com/@mfowler'>Mastodon</a></p>
+
+<p><a href = 'https://www.linkedin.com/in/martin-fowler-com/'>LinkedIn</a></p>
+
+<p><a href = 'https://bsky.app/profile/martinfowler.com'>Bluesky</a></p>
+
+<p><a href = 'https://www.twitter.com/martinfowler'>X</a></p>
+
+<p><a href = 'https://boardgamegeek.com/blog/13064/martins-7th-decade'>BGG</a></p>
+</div>
+</div>
+</nav>
+</nav>
+
+<nav id = 'toc-dropdown'>
+<button class = 'dropdown-button'>
+<h2>Table of Contents</h2>
+</button>
+
+<div class = 'hidden' id = 'dropdownLinks'>
+<ul>
+<li><a href = '#top'>Top</a></li>
+
+<li><a href = '#ATogglingTale'>A Toggling Tale</a>
+<ul>
+<li><a href = '#TheBirthOfAFeatureFlag'>The birth of a Feature Flag</a></li>
+
+<li><a href = '#MakingAFlagDynamic'>Making a flag dynamic</a></li>
+
+<li><a href = '#GettingReadyToRelease'>Getting ready to release</a></li>
+
+<li><a href = '#CanaryReleasing'>Canary releasing</a></li>
+
+<li><a href = '#AbTesting'>A/B testing</a></li>
+</ul>
+</li>
+
+<li><a href = '#CategoriesOfToggles'>Categories of toggles</a>
+<ul>
+<li><a href = '#ReleaseToggles'>Release Toggles</a></li>
+
+<li><a href = '#ExperimentToggles'>Experiment Toggles</a></li>
+
+<li><a href = '#OpsToggles'>Ops Toggles</a></li>
+
+<li><a href = '#PermissioningToggles'>Permissioning Toggles</a></li>
+
+<li><a href = '#ManagingDifferentCategoriesOfToggles'>Managing different categories of toggles</a>
+<ul>
+<li><a href = '#StaticVsDynamicToggles'>static vs dynamic toggles</a></li>
+
+<li><a href = '#Long-livedTogglesVsTransientToggles'>Long-lived toggles vs transient toggles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li><a href = '#ImplementationTechniques'>Implementation Techniques</a>
+<ul>
+<li><a href = '#De-couplingDecisionPointsFromDecisionLogic'>De-coupling decision points from decision logic</a></li>
+
+<li><a href = '#InversionOfDecision'>Inversion of Decision</a></li>
+
+<li><a href = '#AvoidingConditionals'>Avoiding conditionals</a></li>
+</ul>
+</li>
+
+<li><a href = '#ToggleConfiguration'>Toggle Configuration</a>
+<ul>
+<li><a href = '#DynamicRoutingVsDynamicConfiguration'>Dynamic routing vs dynamic configuration</a></li>
+
+<li><a href = '#PreferStaticConfiguration'>Prefer static configuration</a></li>
+
+<li><a href = '#ApproachesForManagingToggleConfiguration'>Approaches for managing toggle configuration</a></li>
+
+<li><a href = '#HardcodedToggleConfiguration'>Hardcoded Toggle Configuration</a></li>
+
+<li><a href = '#ParameterizedToggleConfiguration'>Parameterized Toggle Configuration</a></li>
+
+<li><a href = '#ToggleConfigurationFile'>Toggle Configuration File</a></li>
+
+<li><a href = '#ToggleConfigurationInAppDb'>Toggle Configuration in App DB</a></li>
+
+<li><a href = '#DistributedToggleConfiguration'>Distributed Toggle Configuration</a></li>
+
+<li><a href = '#OverridingConfiguration'>Overriding configuration</a>
+<ul>
+<li><a href = '#Per-requestOverrides'>Per-request overrides</a></li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li><a href = '#WorkingWithFeature-flaggedSystems'>Working with feature-flagged systems</a>
+<ul>
+<li><a href = '#ExposeCurrentFeatureToggleConfiguration'>Expose current feature toggle configuration</a></li>
+
+<li><a href = '#TakeAdvantageOfStructuredToggleConfigurationFiles'>Take advantage of structured Toggle Configuration files</a></li>
+
+<li><a href = '#ManageDifferentTogglesDifferently'>Manage different toggles differently</a></li>
+
+<li><a href = '#FeatureTogglesIntroduceValidationComplexity'>Feature Toggles introduce validation complexity</a></li>
+
+<li><a href = '#WhereToPlaceYourToggle'>Where to place your toggle</a>
+<ul>
+<li><a href = '#TogglesAtTheEdge'>Toggles at the edge</a></li>
+
+<li><a href = '#TogglesInTheCore'>Toggles in the core</a></li>
+</ul>
+</li>
+
+<li><a href = '#ManagingTheCarryingCostOfFeatureToggles'>Managing the carrying cost of Feature Toggles</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+<main>
+<h1>Feature Toggles (aka Feature Flags)</h1>
+
+<section class = 'frontMatter'>
+<p class = 'abstract'><i>
+        Feature Toggles (often also refered to as Feature Flags) are a powerful technique, allowing teams to modify system behavior without changing code. They fall into various usage categories, and it's important to take that categorization into account when implementing and managing toggles. Toggles introduce complexity. We can keep that complexity in check by using smart toggle implementation practices and appropriate tools to manage our toggle configuration, but we should also aim to constrain the number of toggles in our system.
+      </i></p>
+
+<p class = 'date'>09 October 2017</p>
+
+<hr style = 'clear: both'></hr>
+
+<div class = 'front-grid'>
+<div class = 'author-list'>
+<div class = 'author'>
+<div class = 'photo'><a href = 'https://thepete.net'><img alt = 'Photo of Pete Hodgson' src = 'feature-toggles/pete-hodgson.png' width = '80'></img></a></div>
+
+<address class = 'name'><a href = 'https://thepete.net' rel = 'author'>Pete Hodgson</a></address>
+
+<div class = 'bio'>
+<p>Pete Hodgson is an <a href = 'https://thepete.net'>independent
+          software delivery consultant</a> based in the beautiful, rainy Pacific Northwest.
+          He specializes in helping startup engineering teams improve their
+          engineering practices and technical architecture.</p>
+
+<p>Pete previously spent six years as a consultant with Thoughtworks,
+          leading technical practices for their West Coast business. He also did
+          several stints as a tech lead at various San Francisco startups.</p>
+</div>
+</div>
+</div>
+
+<div class = 'tags'>
+<p class = 'tag-link'><a href = /tags/continuous%20delivery.html>continuous delivery</a></p>
+
+<p class = 'tag-link'><a href = /tags/application%20architecture.html>application architecture</a></p>
+</div>
+
+<div class = 'contents'><span class = 'contents-expand'>expand</span>
+<h2>Contents</h2>
+
+<ul>
+<li><a href = '#ATogglingTale'>A Toggling Tale</a>
+<ul>
+<li><a href = '#TheBirthOfAFeatureFlag'>The birth of a Feature Flag</a></li>
+
+<li><a href = '#MakingAFlagDynamic'>Making a flag dynamic</a></li>
+
+<li><a href = '#GettingReadyToRelease'>Getting ready to release</a></li>
+
+<li><a href = '#CanaryReleasing'>Canary releasing</a></li>
+
+<li><a href = '#AbTesting'>A/B testing</a></li>
+</ul>
+</li>
+
+<li><a href = '#CategoriesOfToggles'>Categories of toggles</a>
+<ul>
+<li><a href = '#ReleaseToggles'>Release Toggles</a></li>
+
+<li><a href = '#ExperimentToggles'>Experiment Toggles</a></li>
+
+<li><a href = '#OpsToggles'>Ops Toggles</a></li>
+
+<li><a href = '#PermissioningToggles'>Permissioning Toggles</a></li>
+
+<li><a href = '#ManagingDifferentCategoriesOfToggles'>Managing different categories of toggles</a>
+<ul>
+<li><a href = '#StaticVsDynamicToggles'>static vs dynamic toggles</a></li>
+
+<li><a href = '#Long-livedTogglesVsTransientToggles'>Long-lived toggles vs transient toggles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li><a href = '#ImplementationTechniques'>Implementation Techniques</a>
+<ul>
+<li><a href = '#De-couplingDecisionPointsFromDecisionLogic'>De-coupling decision points from decision logic</a></li>
+
+<li><a href = '#InversionOfDecision'>Inversion of Decision</a></li>
+
+<li><a href = '#AvoidingConditionals'>Avoiding conditionals</a></li>
+</ul>
+</li>
+
+<li><a href = '#ToggleConfiguration'>Toggle Configuration</a>
+<ul>
+<li><a href = '#DynamicRoutingVsDynamicConfiguration'>Dynamic routing vs dynamic configuration</a></li>
+
+<li><a href = '#PreferStaticConfiguration'>Prefer static configuration</a></li>
+
+<li><a href = '#ApproachesForManagingToggleConfiguration'>Approaches for managing toggle configuration</a></li>
+
+<li><a href = '#HardcodedToggleConfiguration'>Hardcoded Toggle Configuration</a></li>
+
+<li><a href = '#ParameterizedToggleConfiguration'>Parameterized Toggle Configuration</a></li>
+
+<li><a href = '#ToggleConfigurationFile'>Toggle Configuration File</a></li>
+
+<li><a href = '#ToggleConfigurationInAppDb'>Toggle Configuration in App DB</a></li>
+
+<li><a href = '#DistributedToggleConfiguration'>Distributed Toggle Configuration</a></li>
+
+<li><a href = '#OverridingConfiguration'>Overriding configuration</a>
+<ul>
+<li><a href = '#Per-requestOverrides'>Per-request overrides</a></li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li><a href = '#WorkingWithFeature-flaggedSystems'>Working with feature-flagged systems</a>
+<ul>
+<li><a href = '#ExposeCurrentFeatureToggleConfiguration'>Expose current feature toggle configuration</a></li>
+
+<li><a href = '#TakeAdvantageOfStructuredToggleConfigurationFiles'>Take advantage of structured Toggle Configuration files</a></li>
+
+<li><a href = '#ManageDifferentTogglesDifferently'>Manage different toggles differently</a></li>
+
+<li><a href = '#FeatureTogglesIntroduceValidationComplexity'>Feature Toggles introduce validation complexity</a></li>
+
+<li><a href = '#WhereToPlaceYourToggle'>Where to place your toggle</a>
+<ul>
+<li><a href = '#TogglesAtTheEdge'>Toggles at the edge</a></li>
+
+<li><a href = '#TogglesInTheCore'>Toggles in the core</a></li>
+</ul>
+</li>
+
+<li><a href = '#ManagingTheCarryingCostOfFeatureToggles'>Managing the carrying cost of Feature Toggles</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<hr></hr></section>
+
+<div class = 'paperBody deep'>
+<p>“Feature Toggling” is a set of patterns which can help a team to deliver new
+    functionality to users rapidly but safely. In this article on Feature Toggling we'll
+    start off with a short story showing some typical scenarios where Feature Toggles are
+    helpful. Then we'll dig into the details, covering specific patterns and practices
+    which will help a team succeed with Feature Toggles.</p>
+
+<p>Feature Toggles are also refered to as Feature Flags, Feature Bits, or Feature Flippers.
+    These are all synonyms for the same set of techniques. Throughout this article I'll use 
+    feature toggles and feature flags interchangebly.</p>
+
+<section id = 'ATogglingTale'>
+<h2>A Toggling Tale</h2>
+
+<p>Picture the scene. You're on one of several teams working on a sophisticated town
+      planning simulation game. Your team is responsible for the core simulation engine.
+      You have been tasked with increasing the efficiency of the Spline Reticulation
+      algorithm. You know this will require a fairly large overhaul of the implementation
+      which will take several weeks. Meanwhile other members of your team will need to
+      continue some ongoing work on related areas of the codebase. </p>
+
+<p>You want to avoid branching for this work if at all possible, based on previous
+      painful experiences of merging long-lived branches in the past. Instead, you decide
+      that the entire team will continue to work on trunk, but the developers working on
+      the Spline Reticulation improvements will use a Feature Toggle to prevent their work
+      from impacting the rest of the team or destabilizing the codebase.</p>
+
+<section id = 'TheBirthOfAFeatureFlag'>
+<h3>The birth of a Feature Flag</h3>
+
+<p>Here's the first change introduced by the pair working on the algorithm:</p>
+
+<p class = 'code-label'>before
+</p>
+
+<pre class = 'code'>  function reticulateSplines(){
+    // current implementation lives here
+  }</pre>
+
+<p class = 'code-remark'>these examples all use JavaScript ES2015</p>
+
+<p class = 'code-label'>after
+</p>
+
+<pre class = 'code'>  function reticulateSplines(){
+    var useNewAlgorithm = false;
+    // useNewAlgorithm = true; // UNCOMMENT IF YOU ARE WORKING ON THE NEW SR ALGORITHM
+  
+    if( useNewAlgorithm ){
+      return enhancedSplineReticulation();
+    }else{
+      return oldFashionedSplineReticulation();
+    }
+  }
+  
+  function oldFashionedSplineReticulation(){
+    // current implementation lives here
+  }
+  
+  function enhancedSplineReticulation(){
+    // TODO: implement better SR algorithm
+  }</pre>
+
+<p>The pair have moved the current algorithm implementation into an
+        <code>oldFashionedSplineReticulation</code> function, and turned
+        <code>reticulateSplines</code> into a <b>Toggle Point</b>. Now if someone is
+        working on the new algorithm they can enable the “use new Algorithm”
+        <b>Feature</b> by uncommenting the <code>useNewAlgorithm = true</code>
+        line.</p>
+</section>
+
+<section id = 'MakingAFlagDynamic'>
+<h3>Making a flag dynamic</h3>
+
+<p>A few hours pass and the pair are ready to run their new algorithm through some
+        of the simulation engine's integration tests. They also want to exercise the old
+        algorithm in the same integration test run. They'll need to be able to enable or
+        disable the Feature dynamically, which means it's time to move on from the clunky
+        mechanism of commenting or uncommenting that <code>useNewAlgorithm = true</code>
+        line:</p>
+
+<pre class = 'code'>function reticulateSplines(){
+  if( featureIsEnabled("use-new-SR-algorithm") ){
+    return enhancedSplineReticulation();
+  }else{
+    return oldFashionedSplineReticulation();
+  }
+}
+</pre>
+
+<p>We've now introduced a <code>featureIsEnabled</code> function, a <b>Toggle
+        Router</b> which can be used to dynamically control which codepath is live.
+        There are many ways to implement a Toggle Router, varying from a simple in-memory
+        store to a highly sophisticated distributed system with a fancy UI. For now we'll
+        start with a very simple system:</p>
+
+<pre class = 'code'>function createToggleRouter(featureConfig){
+  return {
+    setFeature(featureName,isEnabled){
+      featureConfig[featureName] = isEnabled;
+    },
+    featureIsEnabled(featureName){
+      return featureConfig[featureName];
+    }
+  };
+}
+</pre>
+
+<p class = 'code-remark'>note that we're using ES2015's <a href = 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Method_definitions'>method
+          shorthand</a></p>
+
+<p>We can create a new toggle router based on some default configuration - perhaps
+        read in from a config file - but we can also dynamically toggle a feature on or
+        off. This allows automated tests to verify both sides of a toggled feature:</p>
+
+<pre class = 'code'>describe( &#39;spline reticulation&#39;, function(){
+  let toggleRouter;
+  let simulationEngine;
+
+  beforeEach(function(){
+    toggleRouter = createToggleRouter();
+    simulationEngine = createSimulationEngine({toggleRouter:toggleRouter});
+  });
+
+  it(&#39;works correctly with old algorithm&#39;, function(){
+    // Given
+    toggleRouter.setFeature("use-new-SR-algorithm",false);
+
+    // When
+    const result = simulationEngine.doSomethingWhichInvolvesSplineReticulation();
+
+    // Then
+    verifySplineReticulation(result);
+  });
+
+  it(&#39;works correctly with new algorithm&#39;, function(){
+    // Given
+    toggleRouter.setFeature("use-new-SR-algorithm",true);
+
+    // When
+    const result = simulationEngine.doSomethingWhichInvolvesSplineReticulation();
+
+    // Then
+    verifySplineReticulation(result);
+  });
+});
+</pre>
+</section>
+
+<section id = 'GettingReadyToRelease'>
+<h3>Getting ready to release</h3>
+
+<p>More time passes and the team believe their new algorithm is feature-complete.
+        To confirm this they have been modifying their higher-level automated tests so
+        that they exercise the system both with the feature off and with it on. The team
+        also wants to do some manual exploratory testing to ensure everything works as
+        expected - Spline Reticulation is a critical part of the system's behavior, after
+        all. </p>
+
+<p>To perform manual testing of a feature which hasn't yet been verified as ready
+        for general use we need to be able to have the feature Off for our general user
+        base in production but be able to turn it On for internal users. There are a lot
+        of different approaches to achieve this goal:</p>
+
+<ul>
+<li>Have the Toggle Router make decisions based on a <b>Toggle Configuration</b>,
+          and make that configuration environment-specific. Only turn the new feature on in a
+          pre-production environment.</li>
+
+<li>Allow Toggle Configuration to be modified at runtime via some form of admin UI. Use
+          that admin UI to turn the new feature on a test environment.</li>
+
+<li>Teach the Toggle Router how to make dynamic, per-request toggling decisions.
+          These decisions take <b>Toggle Context</b> into account, for example by looking for a special cookie
+          or HTTP header. Usually Toggle Context is used as a proxy for identifying the user making the request.</li>
+</ul>
+
+<p>(We'll be digging into these approaches in more detail later on, so don't worry if some
+        of these concepts are new to you.)</p>
+
+<div class = 'figure ' id = 'overview-diagram.png'><img src = 'feature-toggles/overview-diagram.png'></img>
+<p class = 'photoCaption'></p>
+</div>
+
+<p>The team decides to go with a per-request Toggle Router since it gives them a lot of
+        flexibility. The team particularly appreciate that this will allow them to test their new algorithm without needing
+        a separate testing environment. Instead they can simply turn the algorithm on in their
+        production environment but only for internal users (as detected via a special cookie). The
+        team can now turn that cookie on for themselves and verify that the new feature performs
+        as expected.</p>
+</section>
+
+<section id = 'CanaryReleasing'>
+<h3>Canary releasing</h3>
+
+<p>The new Spline Reticulation algorithm is looking good based on the exploratory
+        testing done so far. However since it's such a critical part of the game's
+        simulation engine there remains some reluctance to turn this feature on for all
+        users. The team decide to use their Feature Flag infrastructure to perform a
+        <a href = '/bliki/CanaryRelease.html'><b>Canary Release</b></a>, only turning the new
+        feature on for a small percentage of their total userbase - a “canary” cohort.
+        </p>
+
+<p>The team enhance the Toggle Router by teaching it the concept of user cohorts -
+        groups of users who consistently experience a feature as always being On or Off. A
+        cohort of canary users is created via a random sampling of 1% of the user base -
+        perhaps using a modulo of user ID. This canary cohort will consistently have the
+        feature turned on, while the other 99% of the user base remain using the old
+        algorithm. Key business metrics (user engagement, total revenue earned, etc) are
+        monitored for both groups to gain confidence that the new algorithm does not
+        negatively impact user behavior. Once the team are confident that the new feature has no
+        ill effects they modify their Toggle Configuration to turn it on for the entire user
+        base.</p>
+</section>
+
+<section id = 'AbTesting'>
+<h3>A/B testing</h3>
+
+<p>The team's product manager learns about this approach and is quite excited. She
+        suggests that the team use a similar mechanism to perform some A/B testing. There's been a 
+        long-running debate as to whether modifying the crime rate algorithm to take
+        pollution levels into account would increase or decrease the game's playability.
+        They now have the ability to settle the debate using data. They plan to roll out a
+        cheap implementation which captures the essence of the idea, controlled with a
+        Feature Flag. They will turn the feature on for a reasonably large cohort of
+        users, then study how those users behave compared to a “control” cohort. This approach will allow
+        the team to resolve contentious product debates based on data, rather than <a href = 'http://www.forbes.com/sites/derosetichy/2013/04/15/what-happens-when-a-hippo-runs-your-company/'>HiPPOs</a>.</p>
+</section>
+
+<p>This brief scenario is intended to illustrate both the basic concept of Feature
+    Toggling but also to highlight how many different applications this core capability
+    can have. Now that we've seen some examples of those applications let's dig a little
+    deeper. We'll explore different categories of toggles and see what makes them
+    different. We'll cover how to write maintainable toggle code, and finally share
+    practices to avoid some of pitfalls of a feature-toggled system.</p>
+</section>
+
+<section id = 'CategoriesOfToggles'>
+<h2>Categories of toggles</h2>
+
+<p>We've seen the fundamental facility provided by Feature Toggles - being able to
+      ship alternative codepaths within one deployable unit and choose between them at
+      runtime. The scenarios above also show that this facility can be used in various
+      ways in various contexts. It can be tempting to lump all feature toggles into the
+      same bucket, but this is a dangerous path. The design forces at play for different
+      categories of toggles are quite different and managing them all in the same way can
+      lead to pain down the road. </p>
+
+<p>Feature toggles can be categorized across two major dimensions: how long the
+      feature toggle will live and how dynamic the toggling decision must be. There are
+      other factors to consider - who will manage the feature toggle, for example - but I
+      consider longevity and dynamism to be two big factors which can help guide how to manage
+      toggles.</p>
+
+<p>Let's consider various categories of toggle through the lens of these two
+      dimensions and see where they fit.</p>
+
+<section id = 'ReleaseToggles'>
+<h3>Release Toggles</h3>
+
+<div class = 'soundbite'>
+<p>
+        Release Toggles allow incomplete and un-tested codepaths to be shipped to production as latent code which may never be turned on.
+    </p>
+</div>
+
+<p>These are feature flags used to enable trunk-based development for teams practicing
+    Continuous Delivery. They allow in-progress features to be checked into a shared
+    integration branch (e.g. master or trunk) while still allowing that branch to be deployed to production at
+    any time. Release Toggles allow incomplete and un-tested codepaths to be shipped to
+    production as <a href = 'http://www.infoq.com/news/2009/08/enabling-lrm'>latent code</a> which may
+    never be turned on. </p>
+
+<p>Product Managers may also use a product-centric version of this same approach to
+    prevent half-complete product features from being exposed to their end users. For
+    example, the product manager of an ecommerce site might not want to let users see a
+    new Estimated Shipping Date feature which only works for one of the site's shipping
+    partners, preferring to wait until that feature has been implemented for all shipping
+    partners. Product Managers may have other reasons for not wanting to expose features
+    even if they are fully implemented and tested. Feature release might be being
+    coordinated with a marketing campaign, for example. Using Release Toggles in this way
+    is the most common way to implement the Continuous Delivery principle of “separating
+    [feature] release from [code] deployment.”</p>
+
+<div class = 'figure ' id = 'chart-1.png'><img src = 'feature-toggles/chart-1.png'></img>
+<p class = 'photoCaption'></p>
+</div>
+
+<p>Release Toggles are transitionary by nature. They should generally not stick around
+    much longer than a week or two, although product-centric toggles may need to remain in
+    place for a longer period. The toggling decision for a Release Toggle is
+    typically very static. Every toggling decision for a given release version will be the
+    same, and changing that toggling decision by rolling out a new release with a toggle
+    configuration change is usually perfectly acceptable.</p>
+</section>
+
+<section id = 'ExperimentToggles'>
+<h3>Experiment Toggles</h3>
+
+<p>Experiment Toggles are used to perform multivariate or A/B testing. Each user of
+      the system is placed into a cohort and at runtime the Toggle Router will
+      consistently send a given user down one codepath or the other, based upon which
+      cohort they are in. By tracking the aggregate behavior of different cohorts we can
+      compare the effect of different codepaths. This technique is commonly used
+      to make data-driven optimizations to things such as the purchase flow of an
+      ecommerce system, or the Call To Action wording on a button.</p>
+
+<div class = 'figure ' id = 'chart-2.png'><img src = 'feature-toggles/chart-2.png'></img>
+<p class = 'photoCaption'></p>
+</div>
+
+<p>An Experiment Toggle needs to remain in place with the same configuration long
+      enough to generate statistically significant results. Depending on traffic patterns
+      that might mean a lifetime of hours or weeks. Longer is unlikely to be useful, as
+      other changes to the system risk invalidating the results of the experiment. By
+      their nature Experiment Toggles are highly dynamic - each incoming request is likely
+      on behalf of a different user and thus might be routed differently than the last.
+      </p>
+</section>
+
+<section id = 'OpsToggles'>
+<h3>Ops Toggles</h3>
+
+<p>These flags are used to control operational aspects of our system's behavior.
+      We might introduce an Ops Toggle when rolling out a new feature which has unclear
+      performance implications so that system operators can disable or degrade that
+      feature quickly in production if needed. </p>
+
+<p>Most Ops Toggles will be relatively short-lived - once confidence is gained in
+      the operational aspects of a new feature the flag should be retired. However it's
+      not uncommon for systems to have a small number of long-lived “Kill Switches” which
+      allow operators of production environments to gracefully degrade non-vital system
+      functionality when the system is enduring unusually high load. For example, when
+      we're under heavy load we might want to disable a Recommendations panel on our home
+      page which is relatively expensive to generate. I consulted with an online retailer
+      that maintained Ops Toggles which could intentionally disable many non-critical
+      features in their website's main purchasing flow just prior to a high-demand product
+      launch. These types of long-lived Ops Toggles could be seen as a manually-managed
+      <a href = '/bliki/CircuitBreaker.html'>Circuit Breaker</a>.</p>
+
+<div class = 'figure ' id = 'chart-3.png'><img src = 'feature-toggles/chart-3.png'></img>
+<p class = 'photoCaption'></p>
+</div>
+
+<p>As already mentioned, many of these flags are only in place for a short while, but a few
+      key controls may be left in place for operators almost indefinitely. Since the
+      purpose of these flags is to allow operators to quickly react to production
+      issues they need to be re-configured extremely quickly - needing to roll out a
+      new release in order to flip an Ops Toggle is unlikely to make an Operations person happy.</p>
+</section>
+
+<section id = 'PermissioningToggles'>
+<h3>Permissioning Toggles</h3>
+
+<div class = 'soundbite'>
+<p>turning on new features for a set of internal users [is a] Champagne Brunch - an early opportunity to drink your own champagne</p>
+</div>
+
+<p>These flags are used to change the features or product experience that certain
+      users receive. For example we may have a set of “premium” features which we only
+      toggle on for our paying customers. Or perhaps we have a set of “alpha” features
+      which are only available to internal users and another set of “beta” features which
+      are only available to internal users plus beta users. I refer to this technique of
+      turning on new features for a set of internal or beta users as a Champagne Brunch -
+      an early opportunity to “<a href = 'http://www.cio.com/article/122351/Pegasystems_CIO_Tells_Colleagues_Drink_Your_Own_Champagne'>drink your own
+      champagne</a>“.
+      </p>
+
+<p>A Champagne Brunch is similar in many ways to a Canary Release. The distinction
+      between the two is that a Canary Released feature is exposed to a randomly selected
+      cohort of users while a Champagne Brunch feature is exposed to a specific set of
+      users.</p>
+
+<div class = 'figure ' id = 'chart-4.png'><img src = 'feature-toggles/chart-4.png'></img>
+<p class = 'photoCaption'></p>
+</div>
+
+<p>When used as a way to manage a feature which is only exposed to premium users a
+      Permissioning Toggle may be very-long lived compared to other categories of Feature
+      Toggles - at the scale of multiple years. Since permissions are user-specific the toggling
+      decision for a Permissioning Toggle will always be per-request, making this a very dynamic toggle.</p>
+</section>
+
+<section id = 'ManagingDifferentCategoriesOfToggles'>
+<h3>Managing different categories of toggles</h3>
+
+<p>Now that we have a toggle categorization scheme we can discuss how those two
+      dimensions of dynamism and longevity affect how we work with feature flags of different
+      categories.</p>
+
+<section id = 'StaticVsDynamicToggles'>
+<h4>static vs dynamic toggles</h4>
+
+<div class = 'figure ' id = 'chart-6.png'><img src = 'feature-toggles/chart-6.png'></img>
+<p class = 'photoCaption'></p>
+</div>
+
+<p>Toggles which are making runtime routing decisions necessarily need more
+          sophisticated Toggle Routers, along with more complex configuration for those
+          routers.</p>
+
+<p>For simple static routing decisions a toggle configuration can be a simple On 
+          or Off for each feature with a toggle router which is just responsible for relaying that
+          static on/off state to the Toggle Point. As we discussed earlier, other
+          categories of toggle are more dynamic and demand more sophisticated toggle
+          routers. For example the router for an Experiment Toggle makes routing
+          decisions dynamically for a given user, perhaps using some sort of consistent
+          cohorting algorithm based on that user's id. Rather than reading a static toggle
+          state from configuration this toggle router will instead need to read some sort of
+          cohort configuration defining things like how large the experimental cohort and
+          control cohort should be. That configuration would be used as an input into the
+          cohorting algorithm. </p>
+
+<p>We'll dig into more detail on different ways to manage this toggle
+          configuration later on.</p>
+</section>
+
+<section id = 'Long-livedTogglesVsTransientToggles'>
+<h4>Long-lived toggles vs transient toggles</h4>
+
+<div class = 'figure ' id = 'chart-5.png'><img src = 'feature-toggles/chart-5.png'></img>
+<p class = 'photoCaption'></p>
+</div>
+
+<p>We can also divide our toggle categories into those which are essentially
+        transient in nature vs. those which are long-lived and may be in place for years.
+        This distinction should have a strong influence on our approach to implementing 
+        a feature's Toggle Points. If
+        we're adding a Release Toggle which will be removed in a few days time then we can
+        probably get away with a Toggle Point which does a simple if/else check on a
+        Toggle Router. This is what we did with our spline reticulation example
+        earlier:</p>
+
+<pre class = 'code'>function reticulateSplines(){
+  if( featureIsEnabled("use-new-SR-algorithm") ){
+    return enhancedSplineReticulation();
+  }else{
+    return oldFashionedSplineReticulation();
+  }
+}
+</pre>
+
+<p>However if we're creating a new Permissioning Toggle with Toggle Points which
+        we expect to stick around for a very long time then we certainly don't want to
+        implement those Toggle Points by sprinkling if/else checks around
+        indiscriminately. We'll need to use more maintainable implementation
+        techniques.</p>
+</section>
+</section>
+</section>
+
+<section id = 'ImplementationTechniques'>
+<h2>Implementation Techniques</h2>
+
+<p>Feature Flags seem to beget rather messy Toggle Point code, and these Toggle
+      Points also have a tendency to proliferate throughout a codebase. It's important to
+      keep this tendency in check for any feature flags in your codebase, and critically
+      important if the flag will be long-lived. There are a few implementation patterns
+      and practices which help to reduce this issue.</p>
+
+<section id = 'De-couplingDecisionPointsFromDecisionLogic'>
+<h3>De-coupling decision points from decision logic</h3>
+
+<p>One common mistake with Feature Toggles is to couple the place where a toggling
+        decision is made (the Toggle Point) with the logic behind the decision (the Toggle
+        Router). Let's look at an example. We're working on the next generation of our
+        ecommerce system. One of our new features will allow a user to easily cancel an
+        order by clicking a link inside their order confirmation email (aka invoice email). We're using
+        feature flags to manage the rollout of all our next gen functionality. Our
+        initial feature flagging implementation looks like this:</p>
+
+<p class = 'code-label'>invoiceEmailer.js
+</p>
+
+<pre class = 'code'>  const features = fetchFeatureTogglesFromSomewhere();
+
+  function generateInvoiceEmail(){
+    const baseEmail = buildEmailForInvoice(this.invoice);
+    if( features.isEnabled("next-gen-ecomm") ){ 
+      return addOrderCancellationContentToEmail(baseEmail);
+    }else{
+      return baseEmail;
+    }
+  }
+</pre>
+
+<p>While generating the invoice email our
+        InvoiceEmailler checks to see whether the <code>next-gen-ecomm</code> feature is enabled. If
+        it is then the emailer adds some extra order cancellation content to the
+        email.</p>
+
+<p>While this looks like a reasonable approach, it's very brittle. The decision on
+        whether to include order cancellation functionality in our invoice emails is wired
+        directly to that rather broad <code>next-gen-ecomm</code> feature - using a magic string, no less. Why should
+        the invoice emailling code need to know that the order cancellation content is
+        part of the next-gen feature set? What happens if we'd like to turn on some parts
+        of the next-gen functionality without exposing order cancellation? Or vice versa?
+        What if we decide we'd like to only roll out order cancellation to certain users?
+        It is quite common for these sort of “toggle scope” changes to occur as features
+        are developed. Also bear in mind that these toggle points tend to proliferate
+        throughout a codebase. With our current approach since the toggling decision logic
+        is part of the toggle point any change to that decision logic will require
+        trawling through all those toggle points which have spread through the
+        codebase.</p>
+
+<p>Happily, <a href = 'https://en.wikipedia.org/wiki/Fundamental_theorem_of_software_engineering'>any
+        problem in software can be solved by adding a layer of indirection</a>. We can
+        decouple a toggling decision point from the logic behind that decision like
+        so:</p>
+
+<p class = 'code-label'>featureDecisions.js
+</p>
+
+<pre class = 'code'>  function createFeatureDecisions(features){
+    return {
+      includeOrderCancellationInEmail(){
+        return features.isEnabled("next-gen-ecomm");
+      }
+      // ... additional decision functions also live here ...
+    };
+  }
+</pre>
+
+<p class = 'code-label'>invoiceEmailer.js
+</p>
+
+<pre class = 'code'>  const features = fetchFeatureTogglesFromSomewhere();
+  const featureDecisions = createFeatureDecisions(features);
+
+  function generateInvoiceEmail(){
+    const baseEmail = buildEmailForInvoice(this.invoice);
+    if( featureDecisions.includeOrderCancellationInEmail() ){
+      return addOrderCancellationContentToEmail(baseEmail);
+    }else{
+      return baseEmail;
+    }
+  }
+</pre>
+
+<p>We've introduced a <code>FeatureDecisions</code> object, which acts as a collection point
+        for any feature toggle decision logic. We create a decision method on this object
+        for each specific toggling decision in our code - in this case “should we include
+        order cancellation functionality in our invoice email” is represented by the
+        <code>includeOrderCancellationInEmail</code> decision method. Right now the decision “logic”
+        is a trivial pass-through to check the state of the <code>next-gen-ecomm</code> feature, but
+        now as that logic evolves we have a singular place to manage it. Whenever we want
+        to modify the logic of that specific toggling decision we have a single place to
+        go. We might want to modify the scope of the decision - for example which specific
+        feature flag controls the decision. Alternatively we might need to modify the
+        reason for the decision - from being driven by a static toggle configuration to being
+        driven by an A/B experiment, or by an operational concern such as an outage in
+        some of our order cancellation infrastructure. In all cases our invoice emailer
+        can remain blissfully unaware of how or why that toggling decision is being
+        made.</p>
+</section>
+
+<section id = 'InversionOfDecision'>
+<h3>Inversion of Decision</h3>
+
+<p>In the previous example our invoice emailer was responsible for asking the
+        feature flagging infrastructure how it should perform. This means our invoice emailer has one
+        extra concept it needs to be aware of - feature flagging - and an extra module it
+        is coupled to. This makes the invoice emailer harder to work with and think about
+        in isolation, including making it harder to test. As feature flagging has a
+        tendency to become more and more prevalent in a system over time we will see more
+        and more modules becoming coupled to the feature flagging system as a global
+        dependency. Not the ideal scenario.</p>
+
+<p>In software design we can often solve these coupling issues by applying
+        Inversion of Control. This is true in this case. Here's how we might decouple our
+        invoice emailer from our feature flagging infrastructure:</p>
+
+<p class = 'code-label'>invoiceEmailer.js
+</p>
+
+<pre class = 'code'>  function createInvoiceEmailler(config){
+    return {
+      generateInvoiceEmail(){
+        const baseEmail = buildEmailForInvoice(this.invoice);
+        if( config.includeOrderCancellationInEmail ){
+          return addOrderCancellationContentToEmail(email);
+        }else{
+          return baseEmail;
+        }
+      },
+  
+      // ... other invoice emailer methods ...
+    };
+  }</pre>
+
+<p class = 'code-label'>featureAwareFactory.js
+</p>
+
+<pre class = 'code'>  function createFeatureAwareFactoryBasedOn(featureDecisions){
+    return {
+      invoiceEmailler(){
+        return createInvoiceEmailler({
+          includeOrderCancellationInEmail: featureDecisions.includeOrderCancellationInEmail()
+        });
+      },
+  
+      // ... other factory methods ...
+    };
+  }</pre>
+
+<p>Now, rather than our <code>InvoiceEmailler</code> reaching out to <code>FeatureDecisions</code> it
+        has those decisions injected into it at construction time via a <code>config</code> object.
+        <code>InvoiceEmailler</code> now has no knowledge whatsoever about feature flagging. It just
+        knows that some aspects of its behavior can be configured at runtime. This also
+        makes testing <code>InvoiceEmailler</code>'s behavior easier - we can test the way that it
+        generates emails both with and without order cancellation content just by passing
+        a different configuration option during test:</p>
+
+<pre class = 'code'>describe( &#39;invoice emailling&#39;, function(){
+  it( &#39;includes order cancellation content when configured to do so&#39;, function(){
+    // Given 
+    const emailler = createInvoiceEmailler({includeOrderCancellationInEmail:true});
+
+    // When
+    const email = emailler.generateInvoiceEmail();
+
+    // Then
+    verifyEmailContainsOrderCancellationContent(email);
+  };
+
+  it( &#39;does not includes order cancellation content when configured to not do so&#39;, function(){
+    // Given 
+    const emailler = createInvoiceEmailler({includeOrderCancellationInEmail:false});
+
+    // When
+    const email = emailler.generateInvoiceEmail();
+
+    // Then
+    verifyEmailDoesNotContainOrderCancellationContent(email);
+  };
+});
+</pre>
+
+<p>We also introduced a <code>FeatureAwareFactory</code> to centralize the creation of these
+        decision-injected objects. This is an application of the general Dependency
+        Injection pattern. If a DI system were in play in our codebase then we'd probably
+        use that system to implement this approach.</p>
+</section>
+
+<section id = 'AvoidingConditionals'>
+<h3>Avoiding conditionals</h3>
+
+<p>In our examples so far our Toggle Point has been implemented using an if
+        statement. This might make sense for a simple, short-lived toggle. However point
+        conditionals are not advised anywhere where a feature will require several Toggle Points, or
+        where you expect the Toggle Point to be long-lived. A more maintainable
+        alternative is to implement alternative codepaths using some sort of Strategy
+        pattern:</p>
+
+<p class = 'code-label'>invoiceEmailler.js
+</p>
+
+<pre class = 'code'>  function createInvoiceEmailler(additionalContentEnhancer){
+    return {
+      generateInvoiceEmail(){
+        const baseEmail = buildEmailForInvoice(this.invoice);
+        return additionalContentEnhancer(baseEmail);
+      },
+      // ... other invoice emailer methods ...
+  
+    };
+  }</pre>
+
+<p class = 'code-label'>featureAwareFactory.js
+</p>
+
+<pre class = 'code'>  function identityFn(x){ return x; }
+  
+  function createFeatureAwareFactoryBasedOn(featureDecisions){
+    return {
+      invoiceEmailler(){
+        if( featureDecisions.includeOrderCancellationInEmail() ){
+          return createInvoiceEmailler(addOrderCancellationContentToEmail);
+        }else{
+          return createInvoiceEmailler(identityFn);
+        }
+      },
+  
+      // ... other factory methods ...
+    };
+  }</pre>
+
+<p>Here we're applying a Strategy pattern by allowing our invoice emailer to be
+        configured with a content enhancement function. <code>FeatureAwareFactory</code> selects a
+        strategy when creating the invoice emailer, guided by its <code>FeatureDecision</code>. If
+        order cancellation should be in the email it passes in an enhancer function which
+        adds that content to the email. Otherwise it passes in an <code>identityFn</code> enhancer -
+        one which has no effect and simply passes the email back without
+        modifications.</p>
+</section>
+</section>
+
+<section id = 'ToggleConfiguration'>
+<h2>Toggle Configuration</h2>
+
+<section id = 'DynamicRoutingVsDynamicConfiguration'>
+<h3>Dynamic routing vs dynamic configuration</h3>
+
+<p>Earlier we divided feature flags into those whose toggle routing decisions are
+        essentially static for a given code deployment vs those whose decisions vary
+        dynamically at runtime. It's important to note that there are two ways in which a
+        flag's decisions might change at runtime. Firstly, something like a
+        Ops Toggle might be dynamically <i>re-configured</i> from On to Off in response to a
+        system outage. Secondly, some categories of toggles such as Permissioning Toggles
+        and Experiment Toggles make a dynamic routing decision for each request based on
+        some request context such as which user is making the request. The former is
+        dynamic via re-configuration, while the later is inherently dynamic. These
+        inherently dynamic toggles may make highly dynamic <b>decisions</b> but still have a
+        <b>configuration</b> which is quite static, perhaps only changeable via
+        re-deployment. Experiment Toggles are an example of this type of feature flag - we
+        don't really need to be able to modify the parameters of an experiment at runtime.
+        In fact doing so would likely make the experiment statistically invalid.</p>
+</section>
+
+<section id = 'PreferStaticConfiguration'>
+<h3>Prefer static configuration</h3>
+
+<p>Managing toggle configuration via source control and re-deployments is
+        preferable, if the nature of the feature flag allows it. Managing toggle configuration
+        via source control gives us the same benefits that we get by using source control
+        for things like infrastructure as code. It can allows toggle configuration
+        to live alongside the codebase being toggled, which provides a really big win:
+        toggle configuration will move through your Continuous Delivery pipeline in the
+        exact same way as a code change or an infrastructure change would. This enables
+        the full the benefits of CD - repeatable builds which are verified in a consistent
+        way across environments. It also greatly reduces the testing burden of feature flags.
+        There is less need to verify how the release will perform with both a toggle Off
+        and On, since that state is baked into the release and won't be changed (for less
+        dynamic flags at least). Another benefit of toggle configuration living
+        side-by-side in source control is that we can easily see the state of the toggle
+        in previous releases, and easily recreate previous releases if needed.</p>
+</section>
+
+<section id = 'ApproachesForManagingToggleConfiguration'>
+<h3>Approaches for managing toggle configuration</h3>
+
+<p>While static configuration is preferable there are cases such as Ops Toggles where a more dynamic approach is required. Let's look at some options for managing toggle configuration, ranging from approaches which are simple but less dynamic
+    through to some approaches which are highly sophisticated but come with a lot of
+        additional complexity.</p>
+</section>
+
+<section id = 'HardcodedToggleConfiguration'>
+<h3>Hardcoded Toggle Configuration</h3>
+
+<p>The most basic technique - perhaps so basic as to not be considered a Feature
+        Flag - is to simply comment or uncomment blocks of code. For example:</p>
+
+<pre class = 'code'>function reticulateSplines(){
+  //return oldFashionedSplineReticulation();
+  return enhancedSplineReticulation();
+}
+</pre>
+
+<p>Slightly more sophisticated than the commenting approach is the use of a
+        preprocessor's <code>#ifdef</code> feature, where available.</p>
+
+<p>Because this type of hardcoding doesn't allow dynamic re-configuration of a
+        toggle it is only suitable for feature flags where we're willing to follow a pattern of
+        deploying code in order to re-configure the flag.</p>
+</section>
+
+<section id = 'ParameterizedToggleConfiguration'>
+<h3>Parameterized Toggle Configuration</h3>
+
+<p>The build-time configuration provided by hardcoded configuration isn't flexible
+        enough for many use cases, including a lot of testing scenarios. A simple approach which at least allows
+        feature flags to be re-configured without re-building an app or service is to specify
+        Toggle Configuration via command-line arguments or environment variables. This is
+        a simple and time-honored approach to toggling which has been around since well
+        before anyone referred to the technique as Feature Toggling or Feature Flagging. However it comes with
+        limitations. It can become unwieldy to coordinate configuration across a large
+        number of processes, and changes to a toggle's configuration require either a re-deploy or at the
+        very least a process restart (and probably privileged access to servers by the
+        person re-configuring the toggle too).</p>
+</section>
+
+<section id = 'ToggleConfigurationFile'>
+<h3>Toggle Configuration File</h3>
+
+<p>Another option is to read Toggle Configuration from some sort of structured
+        file. It's quite common for this approach to Toggle Configuration to begin life as
+        one part of a more general application configuration file.</p>
+
+<p>With a Toggle Configuration file you can now re-configure a feature flag by simply
+        changing that file rather than re-building application code itself. However,
+        although you don't need to re-build your app to toggle a feature in most cases
+        you'll probably still need to perform a re-deploy in order to re-configure a
+        flag.</p>
+</section>
+
+<section id = 'ToggleConfigurationInAppDb'>
+<h3>Toggle Configuration in App DB</h3>
+
+<p>Using static files to manage toggle configuration can become cumbersome once
+        you reach a certain scale. Modifying configuration via files is relatively fiddly.
+        Ensuring consistency across a fleet of servers becomes a challenge, making changes
+        consistently even more so. In response to this many organizations move Toggle
+        Configuration into some type of centralized store, often an existing application
+        DB. This is usually accompanied by the build-out of some form of admin UI which
+        allows system operators, testers and product managers to view and modify Features
+        Flags and their configuration. </p>
+</section>
+
+<section id = 'DistributedToggleConfiguration'>
+<h3>Distributed Toggle Configuration</h3>
+
+<p>Using a general purpose DB which is already part of the system architecture to
+        store toggle configuration is very common; it's an obvious place to go once
+        Feature Flags are introduced and start to gain traction. However nowadays there
+        are a breed of special-purpose hierarchical key-value stores which are a better
+        fit for managing application configuration - services like Zookeeper, etcd, or
+        Consul. These services form a distributed cluster which provides a shared source
+        of environmental configuration for all nodes attached to the cluster. 
+        Configuration can be modified dynamically whenever required, and all nodes in the
+        cluster are automatically informed of the change - a very handy bonus feature.
+        Managing Toggle Configuration using these systems means we can have Toggle Routers
+        on each and every node in a fleet making decisions based on Toggle Configuration
+        which is coordinated across the entire fleet. </p>
+
+<p>Some of these systems (such as Consul) come with an admin UI which provides a
+        basic way to manage Toggle Configuration. However at some point a small custom app
+        for administering toggle config is usually created.</p>
+</section>
+
+<section id = 'OverridingConfiguration'>
+<h3>Overriding configuration</h3>
+
+<p>So far our discussion has assumed that all configuration is provided by a
+        singular mechanism. The reality for many systems is more sophisticated, with
+        overriding layers of configuration coming from various sources. With Toggle
+        Configuration it's quite common to have a default configuration along with
+        environment-specific overrides. Those overrides may come from something as simple
+        as an additional configuration file or something sophisticated like a Zookeeper
+        cluster. Be aware that any environment-specific overriding runs counter to the
+        Continuous Delivery ideal of having the exact same bits and configuration flow all
+        the way through your delivery pipeline. Often pragmatism dictates that some
+        environment-specific overrides are used, but striving to keep both your deployable
+        units and your configuration as environment-agnostic as possible will lead to a
+        simpler, safer pipeline. We'll re-visit this topic shortly when we talk about
+        testing a feature toggled system.</p>
+
+<section id = 'Per-requestOverrides'>
+<h4>Per-request overrides</h4>
+
+<p>An alternative approach to a environment-specific configuration overrides is
+          to allow a toggle's On/Off state to be overridden on a per-request basis by way
+          of a special cookie, query parameter, or HTTP header. This has a few advantages
+          over a full configuration override. If a service is load-balanced you can still
+          be confident that the override will be applied no matter which service instance
+          you are hitting. You can also override feature flags in a production environment
+          without affecting other users, and you're less likely to accidentally leave an
+          override in place. If the per-request override mechanism uses persistent cookies
+          then someone testing your system can configure their own custom set of toggle
+          overrides which will remain consistently applied in their browser. </p>
+
+<p>The downside of this per-request approach is that it introduces a risk that
+          curious or malicious end-users may modify feature toggle state themselves. Some
+          organizations may be uncomfortable with the idea that some unreleased features
+          may be publicly accessible to a sufficiently determined party.
+          Cryptographically signing your override configuration is one option to alleviate
+          this concern, but regardless this approach will increase the complexity - and
+          attack surface - of your feature toggling system.</p>
+
+<p>I elaborate on this technique for cookie-based overrides in <a href = 'http://blog.thepete.net/blog/2012/11/06/cookie-based-feature-flag-overrides/'>this
+          post</a> and have also <a href = 'http://blog.thepete.net/blog/2013/08/24/introducing-rack-flags/'>described a
+          ruby implementation</a> open-sourced by myself and a Thoughtworks colleague.</p>
+</section>
+</section>
+</section>
+
+<section id = 'WorkingWithFeature-flaggedSystems'>
+<h2>Working with feature-flagged systems </h2>
+
+<p>While feature toggling is absolutely a helpful technique it does also bring
+        additional complexity. There are a few techniques which can help make life easier
+        when working with a feature-flagged system.</p>
+
+<section id = 'ExposeCurrentFeatureToggleConfiguration'>
+<h3>Expose current feature toggle configuration</h3>
+
+<p>It's always been a helpful practice to embed build/version numbers into a
+          deployed artifact and expose that metadata somewhere so that a dev, tester or operator can
+          find out what specific code is running in a given environment. The same idea
+          should be applied with feature flags. Any system using feature flags should
+          expose some way for an operator to discover the current state of the toggle
+          configuration. In an HTTP-oriented SOA system this is often accomplished via
+          some sort of metadata API endpoint or endpoints. See for example Spring Boot's
+          <a href = 'http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html'>Actuator
+          endpoints</a>.</p>
+</section>
+
+<section id = 'TakeAdvantageOfStructuredToggleConfigurationFiles'>
+<h3>Take advantage of structured Toggle Configuration files</h3>
+
+<p>It's typical to store base Toggle Configuration in some sort of structured,
+          human-readable file (often in YAML format) managed via source-control. There are
+          some additional benefits we can derive from this file. Including a
+          human-readable description for each toggle is surprisingly useful, particularly
+          for toggles managed by folks other than the core delivery team. What would you
+          prefer to see when trying to decide whether to enable an Ops toggle
+          during a production outage event: <b>basic-rec-algo</b> or <b>“Use a simplistic
+          recommendation algorithm. This is fast and produces less load on backend
+          systems, but is way less accurate than our standard algorithm.”</b>? Some teams also
+          opt to include additional metadata in their toggle configuration files such as a
+          creation date, a primary developer contact, or even an expiration date for
+          toggles which are intended to be short lived.</p>
+</section>
+
+<section id = 'ManageDifferentTogglesDifferently'>
+<h3>Manage different toggles differently</h3>
+
+<p>As discussed earlier, there are various categories of Feature Toggles with
+          different characteristics. These differences should be embraced, and different
+          toggles managed in different ways, even if all the various toggles might
+          be controlled using the same technical machinery. </p>
+
+<p>Let's revisit our previous example of an ecommerce site which has a
+          Recommended Products section on the homepage. Initially we might have placed
+          that section behind a Release Toggle while it was under development. We might
+          then have moved it to being behind an Experiment Toggle to validate that it was
+          helping drive revenue. Finally we might move it behind an Ops Toggle so that we
+          can turn it off when we're under extreme load. If we've followed the earlier
+          advice around de-coupling decision logic from Toggle Points then these
+          differences in toggle category should have had no impact on the Toggle Point
+          code at all. </p>
+
+<p>However from a feature flag management perspective these transitions
+          absolutely should have an impact. As part of transitioning from Release Toggle
+          to an Experiment Toggle the way the toggle is configured will change, and likely
+          move to a different area - perhaps into an Admin UI rather than a yaml file in
+          source control. Product folks will likely now manage the configuration rather
+          than developers. Likewise, the transition from Experiment Toggle to Ops Toggle
+          will mean another change in how the toggle is configured, where that
+          configuration lives, and who manages the configuration.</p>
+</section>
+
+<section id = 'FeatureTogglesIntroduceValidationComplexity'>
+<h3>Feature Toggles introduce validation complexity</h3>
+
+<p>With feature-flagged systems our Continuous Delivery process becomes more
+          complex, particularly in regard to testing. We'll often need to test
+          multiple codepaths for the same artifact as it moves through a CD pipeline. To
+          illustrate why, imagine we are shipping a system which can either use a new
+          optimized tax calculation algorithm if a toggle is on, or otherwise continue to
+          use our existing algorithm. At the time that a given deployable artifact is
+          moving through our CD pipeline we can't know whether the toggle will at some
+          point be turned On or Off in production - that's the whole point of feature
+          flags after all. Therefore in order to validate all codepaths which may end up 
+          live in production we must perform test our artifact in <b>both</b> states: with 
+          the toggle flipped On and flipped Off. </p>
+
+<div class = 'figure ' id = 'feature-toggles-testing.png'><img src = 'feature-toggles/feature-toggles-testing.png'></img>
+<p class = 'photoCaption'></p>
+</div>
+
+<p>We can see that with a single toggle in play this introduces a requirement to
+          double up on at least some of our testing. With multiple toggles in play we have
+          a combinatoric explosion of possible toggle states. Validating behavior for each
+          of these states would be a monumental task. This can lead to some healthy
+          skepticism towards Feature Flags from folks with a testing focus. </p>
+
+<p>Happily, the situation isn't as bad as some testers might initially imagine.
+          While a feature-flagged release candidate does need testing with a few toggle
+          configurations, it is not necessary to test *every* possible combination. Most
+          feature flags will not interact with each other, and most releases will not
+          involve a change to the configuration of more than one feature flag. </p>
+
+<div class = 'soundbite'>
+<p>a good convention is to enable existing or legacy behavior when a Feature Flag is Off and new or future behavior when it's On.</p>
+</div>
+
+<p>So, which feature toggle configurations should a team test? It's most
+          important to test the toggle configuration which you expect to become live in
+          production, which means the current production toggle configuration plus any
+          toggles which you intend to release flipped On. It's also wise to test the
+          fall-back configuration where those toggles you intend to release are also
+          flipped Off. To avoid any surprise regressions in a future release many teams
+          also perform some tests with all toggles flipped On. Note that this advice only
+          makes sense if you stick to a convention of toggle semantics where existing or
+          legacy behavior is enabled when a feature is Off and new or future behavior is
+          enabled when a feature is On.</p>
+
+<p>If your feature flag system doesn't support runtime configuration then you
+          may have to restart the process you're testing in order to flip a toggle, or
+          worse re-deploy an artifact into a testing environment. This can have a very
+          detrimental effect on the cycle time of your validation process, which in turn
+          impacts the all important feedback loop that CI/CD provides. To avoid this issue
+          consider exposing an endpoint which allows for dynamic in-memory
+          re-configuration of a feature flag. These types of override becomes even more
+          necessary when you are using things like Experiment Toggles where it's even more
+          fiddly to exercise both paths of a toggle.</p>
+
+<p>This ability to dynamically re-configure specific service instances is a very
+          sharp tool. If used inappropriately it can cause a lot of pain and confusion
+          in a shared environment. This facility should only ever be used by automated
+          tests, and possibly as part of manual exploratory testing and debugging. If
+          there is a need for a more general-purpose toggle control mechanism for use in
+          production environments it would be best built out using a real distributed
+          configuration system as discussed in the Toggle Configuration section above.</p>
+</section>
+
+<section id = 'WhereToPlaceYourToggle'>
+<h3>Where to place your toggle</h3>
+
+<section id = 'TogglesAtTheEdge'>
+<h4>Toggles at the edge</h4>
+
+<p>For categories of toggle which need per-request context (Experiment
+            Toggles, Permissioning Toggles) it makes sense to place Toggle Points in the
+            edge services of your system - i.e. the publicly exposed web apps that present
+            functionality to end users. This is where your user's individual requests
+            first enter your domain and thus where your Toggle Router has the most context
+            available to make toggling decisions based on the user and their request. A
+            side-benefit of placing Toggle Points at the edge of your system is that it
+            keeps fiddly conditional toggling logic out of the core of your system. In
+            many cases you can place your Toggle Point right where you're rendering HTML,
+            as in this Rails example:</p>
+
+<p class = 'code-label'>someFile.erb
+</p>
+
+<pre class = 'code'>  &lt;%= if featureDecisions.showRecommendationsSection? %>
+    &lt;%= render &#39;recommendations_section&#39; %>
+  &lt;% end %></pre>
+
+<p>Placing Toggle Points at the edges also makes sense when you are controlling access
+            to new user-facing features which aren't yet ready for launch. In this context you can
+            again control access using a toggle which simply shows or hides UI elements. As an
+            example, perhaps you are building the ability to <a href = 'https://developers.facebook.com/docs/facebook-login'>log in to your application using
+            Facebook</a> but aren't ready to roll it out to users just yet. The implementation of
+            this feature may involve changes in various parts of your architecture, but you can
+            control exposure of the feature with a simple feature toggle at the UI layer which
+            hides the “Log in with Facebook” button.</p>
+
+<p>It's interesting to note that with some of
+            these types of feature flag the bulk of the unreleased functionality itself might
+            actually be publicly exposed, but sitting at a url which is not discoverable by
+            users.</p>
+</section>
+
+<section id = 'TogglesInTheCore'>
+<h4>Toggles in the core </h4>
+
+<p>There are other types of lower-level toggle which must be placed deeper
+          within your architecture. These toggles are usually technical in nature, and
+          control how some functionality is implemented internally. An example would be a
+          Release Toggle which controls whether to use a new piece of caching
+          infrastructure in front of a third-party API or just route requests directly to
+          that API. Localizing these toggling decisions within the service whose
+          functionality is being toggled is the only sensible option in these cases.</p>
+</section>
+</section>
+
+<section id = 'ManagingTheCarryingCostOfFeatureToggles'>
+<h3>Managing the carrying cost of Feature Toggles</h3>
+
+<p>Feature Flags have a tendency to multiply rapidly, particularly when first
+        introduced. They are useful and cheap to create and so often a lot are created.
+        However toggles do come with a carrying cost. They require you to introduce new
+        abstractions or conditional logic into your code. They also introduce a
+        significant testing burden. Knight Capital Group's <a href = 'http://dougseven.com/2014/04/17/knightmare-a-devops-cautionary-tale/'>$460 million dollar
+        mistake</a>
+        serves as a cautionary tale on what can go wrong when you don't manage your
+        feature flags correctly (amongst other things).</p>
+
+<div class = 'soundbite'>
+<p>Savvy teams view their Feature Toggles as inventory which comes with a carrying cost, and work to keep that inventory as low as possible.</p>
+</div>
+
+<p>Savvy teams view the Feature Toggles in their codebase as inventory which comes
+        with a carrying cost and seek to keep that inventory as low as possible. 
+        In order to keep the number of feature flags manageable a team
+        must be proactive in removing feature flags that are no longer needed. Some
+        teams have a rule of always adding a toggle removal task onto the team's backlog
+        whenever a Release Toggle is first introduced. Other teams put “expiration dates”
+        on their toggles. Some go as far as creating “time bombs” which will fail a test
+        (or even refuse to start an application!) if a feature flag is still around after its
+        expiration date. We can also apply a Lean approach to reducing inventory, placing
+        a limit on the number of feature flags a system is allowed to have at any one time. Once
+        that limit is reached if someone wants to add a new toggle they will first need to
+        do the work to remove an existing flag.</p>
+</section>
+</section>
+
+<hr class = 'bodySep'></hr>
+</div>
+
+<div class = 'appendix'>
+<section id = 'Acknowledgements'>
+<h2>Acknowledgements</h2>
+
+<p>Thanks to Brandon Byars and Max Lincoln for providing detailed feedback and
+    suggestions to early drafts of this article. Many thanks to Martin Fowler for support,
+    advice and encouragement. Thanks to my colleagues Michael Wongwaisayawan and Leo Shaw 
+    for editorial review, and to Fernanda Alcocer for making my diagrams look less ugly.</p>
+</section>
+</div>
+
+<div class = 'appendix'>
+<details id = 'SignificantRevisions'>
+<summary>Significant Revisions</summary>
+
+<p><i>09 October 2017: </i>highlight feature flag as a synonym</p>
+
+<p><i>08 February 2016: </i>final part: complete article published</p>
+
+<p><i>05 February 2016: </i>part 7: working with toggled systems</p>
+
+<p><i>02 February 2016: </i>part 6: toggle configuration</p>
+
+<p><i>28 January 2016: </i>part 5: Implementation techniques</p>
+
+<p><i>27 January 2016: </i>part 4: managing different categories of toggles</p>
+
+<p><i>22 January 2016: </i>part 3: ops and permissioning toggles</p>
+
+<p><i>21 January 2016: </i>second installment - release and experiment toggles</p>
+
+<p><i>19 January 2016: </i>published first installment - A Toggling Tale</p>
+</details>
+</div>
+</main>
+
+<nav id = 'bottom-navmenu'>
+<nav class = 'navmenu'>
+<div class = 'nav-head'>  <div class = 'search'>
+    <!-- SiteSearch Google -->
+    <form method='GET' action="https://www.google.com/search">
+      <input type='hidden' name='ie' value='UTF-8'/>
+      <input type='hidden' name='oe' value='UTF-8'/>
+      <input class = 'field' type='text' 
+             name='q' size='15' maxlength='255' value=""/>
+      <button class = 'button' type='submit' 
+             name='btnG' value=" " title = "Search"/>
+      <input type='hidden' name='domains' value="martinfowler.com"/>
+      <input type='hidden' name='sitesearch' value=""/> 
+      <input
+          type='hidden' name='sitesearch' value="martinfowler.com"/>
+    </form>
+  </div>
+
+<div class = 'closediv'>
+<span class = 'close' title = 'close'></span>
+</div>
+</div>
+
+<div class = 'nav-body'>
+<div class = 'topics'>
+<h2>Topics</h2>
+
+<p><a href = '/architecture'>Architecture</a></p>
+
+<p><a href = 'https://refactoring.com'>Refactoring</a></p>
+
+<p><a href = '/agile.html'>Agile</a></p>
+
+<p><a href = '/delivery.html'>Delivery</a></p>
+
+<p><a href = '/microservices'>Microservices</a></p>
+
+<p><a href = '/data'>Data</a></p>
+
+<p><a href = '/testing'>Testing</a></p>
+
+<p><a href = '/dsl.html'>DSL</a></p>
+</div>
+
+<div class = 'about'>
+<h2>about me</h2>
+
+<p><a href = '/aboutMe.html'>About</a></p>
+
+<p><a href = '/books'>Books</a></p>
+
+<p><a href = '/faq.html'>FAQ</a></p>
+</div>
+
+<div class = 'content'>
+<h2>content</h2>
+
+<p><a href = '/videos.html'>Videos</a></p>
+
+<p><a href = '/tags'>Content Index</a></p>
+
+<p><a href = '/fragments'>Fragments</a></p>
+
+<p><a href = '/boardgames'>Board Games</a></p>
+
+<p><a href = '/photos'>Photography</a></p>
+</div>
+
+<div class = 'tw'>
+<h2>Thoughtworks</h2>
+
+<p><a href = 'https://thoughtworks.com'>Home</a></p>
+
+<p><a href = 'https://thoughtworks.com/insights'>Insights</a></p>
+
+<p><a href = 'https://thoughtworks.com/careers'>Careers</a></p>
+
+<p><a href = 'https://thoughtworks.com/radar'>Radar</a></p>
+
+<p><a href = 'https://www.thoughtworks.com/engineering'>Engineering</a></p>
+</div>
+
+<div class = 'feeds'>
+<h2>follow</h2>
+
+<p><a href = '/feed.atom'>RSS</a></p>
+
+<p><a href = 'https://toot.thoughtworks.com/@mfowler'>Mastodon</a></p>
+
+<p><a href = 'https://www.linkedin.com/in/martin-fowler-com/'>LinkedIn</a></p>
+
+<p><a href = 'https://bsky.app/profile/martinfowler.com'>Bluesky</a></p>
+
+<p><a href = 'https://www.twitter.com/martinfowler'>X</a></p>
+
+<p><a href = 'https://boardgamegeek.com/blog/13064/martins-7th-decade'>BGG</a></p>
+</div>
+</div>
+</nav>
+</nav>
+<footer id='page-footer'>
+<div class='tw-logo'>
+<a href='https://www.thoughtworks.com/engineering'>
+<img src='/thoughtworks_white.png'>
+</a>
+</div>
+<div class='menu-button'>
+<div class='icon-bars navmenu-button'></div>
+</div>
+<div class='copyright'>
+<p>© Martin Fowler | <a href="/aboutMe.html#disclosures">Disclosures</a></p>
+</div>
+</footer>
+
+<script src = '/jquery-1.11.3.min.js' type = 'text/javascript'></script>
+
+<script src = '/mfcom.js' type = 'text/javascript'></script>
+
+<script src = 'feature-toggles/highlight.pack.js' type = 'text/javascript'></script>
+
+<script src = 'feature-toggles.js' type = 'text/javascript'></script>
+
+<script type = 'text/javascript'>$(document).ready(function() {
+  $(".contents ul ul").hide();
+  $(".contents .contents-expand").click(function() {
+    $(".contents ul ul").slideToggle(400);
+  });
+});</script>
+</body>
+</html>

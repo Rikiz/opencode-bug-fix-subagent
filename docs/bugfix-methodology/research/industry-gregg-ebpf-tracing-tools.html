@@ -1,0 +1,1928 @@
+<html>
+<head>
+<title>Linux eBPF Tracing Tools</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Brendan Gregg">
+<meta name="GENERATOR" content="Vim">
+<meta name="keywords" content="eBPF,bpf,bcc,BCC,Linux,Linux tracing,tools,examples,DTrace">
+<meta name="description" content="Linux eBPF tracing tools, showing static and dynamic tracing with extended BPF and the open source BCC collection of tools.">
+<link rel="stylesheet" href="page.css">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SYD11KXST1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-SYD11KXST1');
+</script>
+
+<script type="text/javascript">function dosub(id, content) { var container = document.getElementById(id); container.innerHTML = content; }</script>
+</head>
+<body>
+
+<div class="page">
+<div class="nav">
+<p class="navhdr">Brendan's site:</p>
+<a href="/overview.html">Start Here</a><br>
+<a href="/index.html">Homepage</a><br>
+<a href="/blog/index.html">Blog</a><br>
+<!-- <a href="/sitemap.html">Full Site Map</a><br> -->
+<a href="/systems-performance-2nd-edition-book.html">Sys Perf book</a><br>
+<a href="/bpf-performance-tools-book.html">BPF Perf book</a><br>
+<a href="/linuxperf.html">Linux Perf</a><br>
+<a href="/ebpf.html">eBPF Tools</a><br>
+<a href="/perf.html">perf Examples</a><br>
+<a href="/methodology.html">Perf Methods</a><br>
+<a href="/usemethod.html">USE Method</a><br>
+<a href="/tsamethod.html">TSA Method</a><br>
+<a href="/offcpuanalysis.html">Off-CPU Analysis</a><br>
+<a href="/activebenchmarking.html">Active Bench.</a><br>
+<a href="/wss.html">WSS Estimation</a><br>
+<a href="/flamegraphs.html">Flame Graphs</a><br>
+<a href="/flamescope.html">Flame Scope</a><br>
+<a href="/heatmaps.html">Heat Maps</a><br>
+<a href="/frequencytrails.html">Frequency Trails</a><br>
+<a href="/colonygraphs.html">Colony Graphs</a><br>
+<a href="/dtrace.html">DTrace Tools</a><br>
+<a href="/dtracetoolkit.html">DTraceToolkit</a><br>
+<a href="/dtkshdemos.html">DtkshDemos</a><br>
+<a href="/guessinggame.html">Guessing Game</a><br>
+<a href="/specials.html">Specials</a><br>
+<a href="/books.html">Books</a><br>
+<a href="/sites.html">Other Sites</a><br>
+
+</div>
+<!-- remove
+<br>
+<p class="navhdr">This Page:</p>
+<a href="ebpf.html">eBPF Tools</a><br>
+&nbsp; <a href="#screenshot">Screenshot</a><br>
+&nbsp; <a href="#oneliners">One Liners</a><br>
+&nbsp; <a href="#presentation">Presentation</a><br>
+&nbsp; <a href="#eBPF">eBPF</a><br>
+&nbsp; &nbsp; <a href="#prerequisites">Prerequisites</a><br>
+&nbsp; <a href="#bcc">BCC</a><br>
+&nbsp; &nbsp; <a href="#bccinstallation">Installation</a><br>
+&nbsp; &nbsp; <a href="#bcctools">Tools</a><br>
+&nbsp; &nbsp; <a href="#bccprogramming">Programming</a><br>
+&nbsp; <a href="#bpftrace">bpftrace</a><br>
+&nbsp; &nbsp; <a href="#bpftraceinstallation">Installation</a><br>
+&nbsp; &nbsp; <a href="#bpftraceoneliners">Tools</a><br>
+&nbsp; &nbsp; <a href="#bpftraceprogramming">Programming</a><br>
+&nbsp; <a href="#perf">perf</a><br>
+&nbsp; <a href="#references">References</a><br>
+&nbsp; <a href="#other">Other</a><br>
+&nbsp; <a href="#acknowledgements">Acknowledgements</a><br>
+&nbsp; <a href="#updates">Updates</a><br>
+</div>
+-->
+
+<div class="recent">
+<!-- (this is for /index.html etc) recent books: -->
+<!-- <center><a href="https://informit.com/sale/booksgiving"><img border=0 width=180 src="/Images/booksgiving2021.jpg"></center><br><b>Book sale until Dec 1, 2021: 55% off for 2 or more</b></a><br><br> -->
+<center><a href="/systems-performance-2nd-edition-book.html"><img src="/Images/sysperf2nd_bookcover_360.jpg" width=180></a><br><font size=-2><i><a href="/systems-performance-2nd-edition-book.html">Systems Performance 2nd Ed.</a></i></font></center><br><br>
+
+<center><a href="/bpf-performance-tools-book.html"><img src="/Images/bpfperftools_bookcover_360.jpg" width=180></a><br><font size=-2><i><a href="/bpf-performance-tools-book.html">BPF Performance Tools book</a></i></font></center>
+<!--
+<br><center><a href="https://www.portal.reinvent.awsevents.com/connect/search.ww?#loadSearch-searchPhrase=OPN303&searchType=session&tc=0&sortBy=abbreviationSort&p="><img src="/Images/Speaker/reInvent2019_200.jpg" width=180" border=0></a><br><font size=-2><i>I'm speaking at <a href="https://www.portal.reinvent.awsevents.com/connect/search.ww?#loadSearch-searchPhrase=OPN303&searchType=session&tc=0&sortBy=abbreviationSort&p=">AWS re:Invent 2019</a></i></font></center>
+-->
+<br>
+
+Recent posts:<br>
+<ul style="padding-left:18px">
+  
+	   <li class="recent">07 Feb 2026 &raquo;<br>
+	   <a href="/blog/2026-02-07/why-i-joined-openai.html">  
+	   Why I joined OpenAI</a></li>
+  
+	   <li class="recent">05 Dec 2025 &raquo;<br>
+	   <a href="/blog/2025-12-05/leaving-intel.html">  
+	   Leaving Intel</a></li>
+  
+	   <li class="recent">28 Nov 2025 &raquo;<br>
+	   <a href="/blog/2025-11-28/ai-virtual-brendans.html">  
+	   On "AI Brendans" or "Virtual Brendans"</a></li>
+  
+	   <li class="recent">22 Nov 2025 &raquo;<br>
+	   <a href="/blog/2025-11-22/intel-is-listening.html">  
+	   Intel is listening, don't waste your shot</a></li>
+  
+	   <li class="recent">17 Nov 2025 &raquo;<br>
+	   <a href="/blog/2025-11-17/third-stage-engineering.html">  
+	   Third Stage Engineering</a></li>
+  
+	   <li class="recent">04 Aug 2025 &raquo;<br>
+	   <a href="/blog/2025-08-04/when-to-hire-a-computer-performance-engineering-team-2025-part1.html">  
+	   When to Hire a Computer Performance Engineering Team (2025) part 1 of 2</a></li>
+  
+	   <li class="recent">22 May 2025 &raquo;<br>
+	   <a href="/blog/2025-05-22/3-years-of-extremely-remote-work.html">  
+	   3 Years of Extremely Remote Work</a></li>
+  
+	   <li class="recent">01 May 2025 &raquo;<br>
+	   <a href="/blog/2025-05-01/doom-gpu-flame-graphs.html">  
+	   Doom GPU Flame Graphs</a></li>
+  
+	   <li class="recent">29 Oct 2024 &raquo;<br>
+	   <a href="/blog/2024-10-29/ai-flame-graphs.html">  
+	   AI Flame Graphs</a></li>
+  
+	   <li class="recent">22 Jul 2024 &raquo;<br>
+	   <a href="/blog/2024-07-22/no-more-blue-fridays.html">  
+	   No More Blue Fridays</a></li>
+  
+	   <li class="recent">24 Mar 2024 &raquo;<br>
+	   <a href="/blog/2024-03-24/linux-crisis-tools.html">  
+	   Linux Crisis Tools</a></li>
+  
+	   <li class="recent">17 Mar 2024 &raquo;<br>
+	   <a href="/blog/2024-03-17/the-return-of-the-frame-pointers.html">  
+	   The Return of the Frame Pointers</a></li>
+  
+	   <li class="recent">10 Mar 2024 &raquo;<br>
+	   <a href="/blog/2024-03-10/ebpf-documentary.html">  
+	   eBPF Documentary</a></li>
+  
+	   <li class="recent">28 Apr 2023 &raquo;<br>
+	   <a href="/blog/2023-04-28/ebpf-security-issues.html">  
+	   eBPF Observability Tools Are Not Security Tools</a></li>
+  
+	   <li class="recent">01 Mar 2023 &raquo;<br>
+	   <a href="/blog/2023-03-01/computer-performance-future-2022.html">  
+	   USENIX SREcon APAC 2022: Computing Performance: What's on the Horizon</a></li>
+  
+	   <li class="recent">17 Feb 2023 &raquo;<br>
+	   <a href="/blog/2023-02-17/srecon-apac-2023.html">  
+	   USENIX SREcon APAC 2023: CFP</a></li>
+  
+	   <li class="recent">02 May 2022 &raquo;<br>
+	   <a href="/blog/2022-05-02/brendan-at-intel.html">  
+	   Brendan@Intel.com</a></li>
+  
+	   <li class="recent">15 Apr 2022 &raquo;<br>
+	   <a href="/blog/2022-04-15/netflix-farewell-1.html">  
+	   Netflix End of Series 1</a></li>
+  
+	   <li class="recent">09 Apr 2022 &raquo;<br>
+	   <a href="/blog/2022-04-09/tensorflow-library-performance.html">  
+	   TensorFlow Library Performance</a></li>
+  
+	   <li class="recent">19 Mar 2022 &raquo;<br>
+	   <a href="/blog/2022-03-19/why-dont-you-use.html">  
+	   Why Don't You Use ...</a></li>
+  
+</ul>
+<a href="/blog/index.html">Blog index</a><br>
+<a href="/blog/about.html">About</a><br>
+<a href="/blog/rss.xml">RSS</a><br>
+<!-- also edit _layouts/default.html -->
+<!--
+<br><a href="https://www.usenix.org/conference/lisa18"><img src="https://www.usenix.org/sites/default/files/lisa18_banner_join-me.png" width=180></a><br><font size=-2><i>I am program co-chair for LISA 2018</i></font>
+-->
+
+</div>
+
+<div class="content">
+
+<h1>Linux Extended BPF (eBPF) Tracing Tools</h1>
+
+<div style="float:right;padding-left:30px;padding-right:10px;padding-bottom:2px">
+<a href="BPF/bcc_tracing_tools_early2019.png"><img style="border:1px solid black" src="BPF/bcc_tracing_tools_early2019.png" alt="" title="BCC Performance Tools" width="250" /></a><br>
+<center><font size=-1><i>BCC performance tools</i></font></center><br>
+<a href="BPF/bpftrace_tools_early2019.png"><img style="border:1px solid black" src="BPF/bpftrace_tools_early2019.png" alt="" title="bpftrace Performance Tools" width="250" /></a><br>
+<center><font size=-1><i>bpftrace performance tools</i></font></center><br>
+<!--
+<a href="BPF/bpf_performance_tools_book.png"><img style="border:1px solid black" src="BPF/bpf_performance_tools.png" alt="" title="BPF Performance Tools
+" width="250" /></a><br>
+<center><font size=-1><i>BPF Performance Tools (book) colored <font color="red">red</font>.</i></font></center><br>
+-->
+<div align="right"><a href="bpf-performance-tools-book.html"><img style="border:1px solid black" src="Images/bpfperftools_bookcover_250.png" width="125"></a><br>
+<font size=-1><i>My BPF Perf Tools book</i></font></div><br>
+</div>
+
+<p>This page shows examples of performance analysis tools using enhancements to BPF (Berkeley Packet Filter) which were added to the Linux 4.x series kernels, allowing BPF to do much more than just filtering packets. These enhancements allow custom analysis programs to be executed on Linux dynamic tracing, static tracing, and profiling events.</p>
+
+<p>The main and recommended front-ends for BPF tracing are <a href="#bcc">BCC</a> and <a href="#bpftrace">bpftrace</a>: BCC for complex tools and daemons, and bpftrace for one-liners and short scripts. If you are looking for tools to run, try BCC then bpftrace. If you want to program your own, start with bpftrace, and only use BCC if needed. I've ported many of my older tracing tools to both BCC and bpftrace, and their repositories provide over 100 tools between them. I also developed over 100 more for my book: <a href="bpf-performance-tools-book.html">BPF Performance Tools: Linux System and Application Observability</a>.</p>
+
+<p>eBPF tracing is suited for answering questions like:</p>
+
+<ul>
+<li>Are any ext4 operations taking longer than 50 ms?</li>
+<li>What is run queue latency, as a histogram?</li>
+<li>Which packets and apps are experiencing TCP retransmits? Trace efficiently (without tracing send/receive).</li>
+<li>What is the stack trace when threads block (off-CPU), and how long do they block for?</li>
+</ul>
+
+<p>eBPF can also be used for security modules and software defined networks. I'm not covering those here (yet, anyway). Also note: eBPF is often called just "BPF", especially on lkml.</p>
+
+<p><lightgreenp><b>If you are new to eBPF tracing, start at the <a href="#frontends">Front Ends</a> to understand the options</b>. For end users, you can also see my post <a href="https://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html">Learn eBPF Tracing: Tutorial and Examples</a>; for product developers, see <a href="https://www.brendangregg.com/blog/2021-07-03/how-to-add-bpf-observability.html">How To Add eBPF Observability To Your Product</a>.</p>
+
+<p>Table of contents:</p>
+
+<ul><p>
+<table border=0><tr><td valign="top" width=24%>
+&nbsp; <a href="#screenshot">1. Screenshot</a><br>
+&nbsp; <a href="#oneliners">2. One Liners</a><br>
+&nbsp; <a href="#presentation">3. Presentation</a><br>
+&nbsp; <a href="#eBPF">4. eBPF</a><br>
+&nbsp; &nbsp; &nbsp; <a href="#prerequisites">4.1. Prerequisites</a><br>
+&nbsp; &nbsp; &nbsp; <a href="#frontends">4.2. Front Ends</a><br>
+</td><td valign="top" width=24%>
+&nbsp; <a href="#bcc">5. BCC</a><br>
+&nbsp; &nbsp; &nbsp; <a href="#bccinstallation">5.1. Installation</a><br>
+&nbsp; &nbsp; &nbsp; <a href="#bccgeneralchecklist">5.2. Perf Checklist</a><br>
+&nbsp; &nbsp; &nbsp; <a href="#bcctools">5.3. Tools</a><br>
+&nbsp; &nbsp; &nbsp; <a href="#bccprogramming">5.4. Programming</a><br>
+</td><td valign="top" width=24%>
+&nbsp; <a href="#bpftrace">6. bpftrace</a><br>
+&nbsp; &nbsp; &nbsp; <a href="#bpftraceinstallation">6.1. Installation</a><br>
+&nbsp; &nbsp; &nbsp; <a href="#bpftraceoneliners">6.2. One-Liners</a><br>
+&nbsp; &nbsp; &nbsp; <a href="#bpftraceprogramming">6.3. Programming</a><br>
+</td><td valign="top" width=24%>
+&nbsp; <a href="#perf">7. perf</a><br>
+&nbsp; <a href="#references">8. References</a><br>
+&nbsp; <a href="#other">9. Other</a><br>
+&nbsp; <a href="#acknowledgements">10. Acknowledgements</a><br>
+&nbsp; <a href="#updates">11. Updates</a><br>
+</td></tr></table>
+</p></ul>
+
+<p>On this page I'll describe eBPF, the front-ends, and demonstrate some of the tracing tools I've developed.</p>
+
+<a name="screenshot"></a>
+<h1>1. Screenshot</h1>
+
+<p>Starting with a screenshot, here's an example of tracing and showing block (disk) I/O as a latency heat map:</p>
+
+<p><center><a href="eBPF/tracex3_heatmap_01.png"><img border=0 src="eBPF/tracex3_heatmap_01.png" width=634></a></center></p>
+
+<p>I added some annotations to that screenshot. If you are new to this visualization, see my page on <a href="/HeatMaps/latency.html">latency heat maps</a>.</p>
+
+<p>This uses kernel dynamic tracing (kprobes) to instrument functions for the issue and completion of block device I/O. Custom eBPF programs execute when these kprobes are hit, which record timestamps on the issue of I/O, fetch them on completion, calculate the delta time, and then store this in a log 2 histogram. The user space program reads this histogram array periodically, once per second, and draws the heat map. The summarization is all done in kernel context, for efficiency.</p>
+
+<a name="oneliners"></a>
+<h1>2. One Liners</h1>
+
+<p>Useful one-liners using the <a href="#bcc">bcc</a> (eBPF) tools:</p>
+
+<h3>Single Purpose Tools</h3>
+
+<pre class="plain">
+<font color="#4040f0"># Trace new processes:</font>
+execsnoop
+
+<font color="#4040f0"># Trace file opens with process and filename:</font>
+opensnoop
+
+<font color="#4040f0"># Summarize block I/O (disk) latency as a power-of-2 distribution by disk:</font>
+biolatency -D
+
+<font color="#4040f0"># Summarize block I/O size as a power-of-2 distribution by program name:</font>
+bitesize
+
+<font color="#4040f0"># Trace common ext4 file system operations slower than 1 millisecond:</font>
+ext4slower 1
+
+<font color="#4040f0"># Trace TCP active connections (connect()) with IP address and ports:</font>
+tcpconnect
+
+<font color="#4040f0"># Trace TCP passive connections (accept()) with IP address and ports:</font>
+tcpaccept
+
+<font color="#4040f0"># Trace TCP connections to local port 80, with session duration:</font>
+tcplife -L 80
+
+<font color="#4040f0"># Trace TCP retransmissions with IP addresses and TCP state:</font>
+tcpretrans
+
+<font color="#4040f0"># Sample stack traces at 49 Hertz for 10 seconds, emit folded format (for flame graphs):</font>
+profile -fd -F 49 10
+
+<font color="#4040f0"># Trace details and latency of resolver DNS lookups:</font>
+gethostlatency
+
+<font color="#4040f0"># Trace commands issued in all running bash shells:</font>
+bashreadline
+</pre>
+
+<h3>Multi Tools: Kernel Dynamic Tracing</h3>
+
+<pre class="plain">
+<font color="#4040f0"># Count "tcp_send*" kernel function, print output every second:</font>
+funccount -i 1 'tcp_send*'
+
+<font color="#4040f0"># Count "vfs_*" calls for PID 185:</font>
+funccount -p 185 'vfs_*'
+
+<font color="#4040f0"># Trace file names opened, using dynamic tracing of the kernel do_sys_open() function:</font>
+trace 'p::do_sys_open "%s", arg2'
+
+<font color="#4040f0"># Same as before ("p:: is assumed if not specified):</font>
+trace 'do_sys_open "%s", arg2'
+
+<font color="#4040f0"># Trace the return of the kernel do_sys_open() funciton, and print the retval:</font>
+trace 'r::do_sys_open "ret: %d", retval'
+
+<font color="#4040f0"># Trace do_nanosleep() kernel function and the second argument (mode), with kernel stack traces:</font>
+trace -K 'do_nanosleep "mode: %d", arg2'
+
+<font color="#4040f0"># Trace do_nanosleep() mode by providing the prototype (no debuginfo required):</font>
+trace 'do_nanosleep(struct hrtimer_sleeper *t, enum hrtimer_mode mode) "mode: %d", mode'
+
+<font color="#4040f0"># Trace do_nanosleep() with the task address (may be NULL), noting the dereference:</font>
+trace 'do_nanosleep(struct hrtimer_sleeper *t, enum hrtimer_mode mode) "task: %x", t->task'
+
+<font color="#4040f0"># Frequency count tcp_sendmsg() size:</font>
+argdist -C 'p::tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size):u32:size'
+
+<font color="#4040f0"># Summarize tcp_sendmsg() size as a power-of-2 histogram:</font>
+argdist -H 'p::tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size):u32:size'
+
+<font color="#4040f0"># Frequency count stack traces that lead to the submit_bio() function (disk I/O issue):</font>
+stackcount submit_bio
+
+<font color="#4040f0"># Summarize the latency (time taken) by the vfs_read() function for PID 181:</font>
+funclatency -p 181 -u vfs_read
+</pre>
+
+<h3>Multi Tools: User Level Dynamic Tracing</h3>
+
+<pre class="plain">
+<font color="#4040f0"># Trace the libc library function nanosleep() and print the requested sleep details:</font>
+trace 'p:c:nanosleep(struct timespec *req) "%d sec %d nsec", req->tv_sec, req->tv_nsec'
+
+<font color="#4040f0"># Count the libc write() call for PID 181 by file descriptor:</font>
+argdist -p 181 -C 'p:c:write(int fd):int:fd' 
+
+<font color="#4040f0"># Summarize the latency (time taken) by libc getaddrinfo(), as a power-of-2 histogram in microseconds:</font>
+funclatency.py -u 'c:getaddrinfo'
+</pre>
+
+<h3>Multi Tools: Kernel Static Tracing</h3>
+
+<pre class="plain">
+<font color="#4040f0"># Count stack traces that led to issuing block I/O, tracing its kernel tracepoint:</font>
+stackcount t:block:block_rq_insert
+</pre>
+<p><i>Under construction...</i></p>
+
+<h3>Multi Tools: User Statically Defined Tracing (USDT)</h3>
+
+<pre class="plain">
+<font color="#4040f0"># Trace the pthread_create USDT probe, and print arg1 as hex:</font>
+trace 'u:pthread:pthread_create "%x", arg1'
+</pre>
+<p><i>Under construction...</i></p>
+
+<p>These one-liners demonstrate various capabilities of bcc/eBPF. You can also print these out as a cheatsheet.</p>
+
+<a name="presentation"></a>
+<h1>3. Presentation</h1>
+
+<p>My recent talk on eBPF tracing tools at O'Reilly Velocity 2017 (<a href="https://www.slideshare.net/brendangregg/velocity-2017-performance-analysis-superpowers-with-linux-ebpf">slideshare</a>, <a href="https://www.youtube.com/watch?v=bj3qdEDbCD4">youtube</a>, <a href="/Slides/Velocity2017_BPF_superpowers.pdf">PDF</a>).</p>
+
+<p>
+<ul>
+<div style="float:left;padding-right:5px">
+<iframe src="https://www.slideshare.net/slideshow/embed_code/key/sBa6i02G1Ga4qz" width="391" height="290" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:0px solid #CCC; border-width:0px; margin-bottom:0px; max-width: 100%;" allowfullscreen> </iframe></div>
+<div id="youtube1" onclick='dosub("youtube1", "<iframe width=515 height=290 src=https://www.youtube.com/embed/bj3qdEDbCD4 frameborder=0 allowfullscreen></iframe>")'><img src="Images/youtube-Velocity2017.png" border=0></div>
+<!-- <a href="https://www.youtube.com/watch?v=bj3qdEDbCD4"><img src="Images/youtube-Velocity2017.png" border=0></a> -->
+<!-- <iframe width="515" height="290" src="https://www.youtube.com/embed/bj3qdEDbCD4" frameborder="0" allowfullscreen></iframe> -->
+</ul>
+</p>
+
+<!--
+<p>A recent talk on eBPF tracing tools at LCA 2017 (<a href="http://www.slideshare.net/brendangregg/bpf-tracing-and-more">slideshare</a>, <a href="https://www.youtube.com/watch?v=JRFNIKUROPE">youtube</a>):</p>
+
+<p>
+<iframe src="http://www.slideshare.net/slideshow/embed_code/key/qcXY00isj2PfEW" width="391" height="290" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:0px; max-width: 100%;" allowfullscreen> </iframe>
+<iframe width="515" height="290" src="https://www.youtube.com/embed/JRFNIKUROPE" frameborder="0" allowfullscreen></iframe>
+</p>
+-->
+
+<p>Other presentations:</p>
+
+<ul>
+<li>BPF: Tracing and More, by Brendan Gregg at linux.conf.au 2017 (<a href="http://www.slideshare.net/brendangregg/bpf-tracing-and-more">slideshare</a>, <a href="https://www.youtube.com/watch?v=JRFNIKUROPE">youtube</a>, <a href="/Slides/LCA2017_BPF_tracing_and_more.pdf">PDF</a>).</li>
+<li>Linux 4.x Tracing Tools: Using BPF Superpowers, by Brendan Gregg at USENIX LISA 2016 (<a href="http://www.slideshare.net/brendangregg/linux-4x-tracing-tools-using-bpf-superpowers">slideshare</a>, <a href="https://www.youtube.com/watch?v=UmOU3I36T2U">youtube</a>, <a href="Slides/LISA2016_BPF_tools_16_9.pdf">PDF</a>).</li>
+<li>My <a href="https://www.youtube.com/watch?v=GsMs3n8CB6g">Give me 15 minutes and I'll change your view of Linux tracing</a> demo from LISA 2016.</li>
+<li><a href="http://www.slideshare.net/goldshtn/staring-into-the-ebpf-abyss">Staring into the eBPF Abyss</a> (slides) by Sasha Goldshtein for SREcon Europe 2016.</li>
+<li><a href="http://www.slideshare.net/vh21/meet-cutebetweenebpfandtracing">Meet-cute between eBPF and Kernel Tracing</a> (slides) by Viller Hsiao, 2016.</li>
+<li><a href="http://www.slideshare.net/suselab/ebpf-trace-from-kernel-to-userspace">eBPF Trace from Kernel to Userspace</a> (slides) by Gary Lin for Technology Sharing Day, 2016</li>
+<li><a href="/blog/2016-03-05/linux-bpf-superpowers.html">Linux 4.x Performance: Using BPF Superpowers</a> (slides &amp; video) by Brendan Gregg at Facebook's Performance@Scale conference, 2016.</li>
+<li><a href="https://events.linuxfoundation.org/sites/events/files/slides/bpf_collabsummit_2015feb20.pdf">BPF - in-kernel virtual machine</a> (slides PDF) by Alexei Starovoitov, Linux Collaboration Summit, 2015.</li>
+</ul>
+
+<a name="eBPF"></a>
+<h1>4. eBPF</h1>
+
+<div style="float:right;padding-left:5px"><a href="eBPF/pony_ebpf01.png"><img border=0 src="eBPF/pony_ebpf01.png" width=150px></a><br><center><font size=-1><i>eBPF unofficial logo</i></font></center></div>
+<p>BPF originated as a technology for optimizing packet filters. If you run tcpdump with an expression (matching on a host or port), it gets compiled into optimal BPF bytecode which is executed by an in-kernel sandboxed virtual machine. Extended BPF (aka eBPF, which I keep calling "enhanced BPF" by accident, but it can also be called just BPF) extended what this BPF virtual machine could do: allowing it to run on events other than packets, and do actions other than filtering.</p>
+
+<p>eBPF can be used to for software defined networks, DDoS mitigation (early packet drop), improving network performance (eXpress Data Path), intrusion detection, and more. On this page I'm focusing on its use for observability tools, where it is used as shown in the following workflow:</p>
+
+<p><center><a href="eBPF/linux_ebpf_internals.png"><img border=0 src="eBPF/linux_ebpf_internals.png" width=750></a></center></p>
+
+<p>Our observability tool has BPF code to perform certain actions: measure latency, summarize as a histogram, grab stack traces, etc. That BPF code is compiled to BPF byte code and then sent to the kernel, where a verifier may reject it if it is deemed unsafe (which includes not allowing loops or backwards branches). If the BPF bytecode is accepted, it can then be attached to different event sources:</p>
+
+<ul>
+<li><b>kprobes</b>: kernel dynamic tracing.</li>
+<li><b>uprobes</b>: user level dynamic tracing.</li>
+<li><b>tracepoints</b>: kernel static tracing.</li>
+<li><b>perf_events</b>: timed sampling and PMCs.</li>
+</ul>
+
+<p>The BPF program has two ways to pass measured data back to user space: either per-event details, or via a BPF map. BPF maps can implement arrays, associative arrays, and histograms, and are suited for passing summary statistics.</p>
+
+<a name="prerequisites"></a>
+<h2>4.1. Prerequisites</h2>
+
+<p>A Linux kernel compiled with CONFIG_BPF_SYSCALL (eg, Ubuntu does this), and at least the 4.4 kernel (eg, Ubuntu Xenial) so that histogram, statistic, and per-event tracing is supported. The following diagram shows other features with the Linux version eBPF supported arrived in green:</p>
+
+<p><center><a href="eBPF/linux_ebpf_support.png"><img border=0 src="eBPF/linux_ebpf_support.png" width=750></a></center></p>
+
+<a name="frontends"></a>
+<h2>4.2. Front Ends</h2>
+
+<p>There are multiple different front-ends for eBPF. Here's a summary, and I'll cover bcc, bpftrace, and perf in the following sections. I'd recommend trying out bcc and bpftrace (highlighted).</p>
+
+<p><table border=1 cellpadding=5px>
+<tr><th>Front end</th><th>Difficulty</th><th>Pros</th><th>Cons</th><th>References</th></tr>
+<tr><td><b>BPF bytecode</b></td><td>Brutal</td><td>Precise control</td><td>Insanely difficult</td><td>Kernel source: struct bpf_insn prog in <a href="https://github.com/torvalds/linux/blob/master/samples/bpf/sock_example.c#L47">samples/bpf/sock_example.c</a></td><tr>
+<tr><td><b>C</b></td><td>Hard</td><td>Build stand-alone binaries</td><td>Difficult</td><td>Kernel source: <a href="https://github.com/torvalds/linux/blob/master/samples/bpf/tracex1_kern.c">samples/bpf/tracex1_kern.c</a> and <a href="https://github.com/torvalds/linux/blob/master/samples/bpf/tracex1_user.c">samples/bpf/tracex1_user.c</a></td><tr>
+<tr><td><b>perf</b></td><td>Hard</td><td>Use perf's capabilities: custom events, stack walking</td><td>Difficult, not yet well documented</td><td>Section below: <a href="#perf">7. perf</a>.</td>
+<tr bgcolor="#c0ffc0"><td><b>bcc</b></td><td>Moderate</td><td>Custom output, CO-RE binaries, large community, production use (e.g., Facebook, Netflix)</td><td>Verbose</td><td>Section below: <a href="#bcc">5. bcc</a>.</td></tr>
+<tr bgcolor="lightgreen"><td><b>bpftrace</b></td><td>Easy</td><td>Powerful one-liners, many capabilities, growing community, production use (e.g., Netflix, Facebook)</td><td>Some limits on code and output</td><td>Section below: <a href="#bpftrace">6. bpftrace</a>.</td></tr>
+<tr><td><b>ply</b></td><td>Easy</td><td>Powerful one-liners, small binary, for embedded</td><td>Limited control of code and output</td><td>github: <a href="https://github.com/iovisor/ply">github.com/iovisor/ply</a>.</td></tr>
+</table></p>
+
+<p>I've previously summarized these on three dimensions: ease of use, scope &amp; capability, and stage of development. Here are the BPF front-ends vs the standard built-in Linux tracers (ftrace and perf):</p>
+
+<center><a href="eBPF/ebpf_tracing_landscape_jan2019.png"><img border=0 src="eBPF/ebpf_tracing_landscape_jan2019.png" width=500></a></center>
+
+<p>I've shown perf+BPF separately to classic <a href="perf.html">perf</a> and ftrace.</p>
+
+<a name="bcc"></a>
+<h1>5. BCC</h1>
+
+<p>BPF Compiler Collection is on <a href="https://github.com/iovisor/bcc">github.com/iovisor/bcc</a>, and provides a large collection of tracing examples tools, as well as C, Python, and lua interfaces for developing them. The diagram on the top right of this page illustrates these bcc tools.</p>
+
+<p>Prerequisites are the same as eBPF above, and Python. If you are on an older kernel (between 4.1 and 4.8) and the bcc tool you want to run doesn't work, take a look in bcc's tools/old directory, which might have a legacy version that employs workarounds.</p>
+
+<p>Example tracing code can be found in the bcc /examples/tracing directory, and in the tools, under the /tools directory. Each tool also has an example .txt file in /tools, and a man page in /man/man8.</p>
+
+<p>I contributed many tools to bcc, including their man pages and examples files, as well as some bcc capabilities and fixes. I also created the <a href="Perf/bcc_tracing_tools.pg">tool</a> and <a href="Perf/linux_ebpf_support.png">events</a> diagrams, the <a href="https://github.com/iovisor/bcc/blob/master/docs/tutorial.md">Tutorial</a>, the <a href="https://github.com/iovisor/bcc/blob/master/docs/tutorial_bcc_python_developer.md">Developer's Tutorial</a>, the <a href="https://github.com/iovisor/bcc/blob/master/docs/reference_guide.md">Reference Guide</a>, and published many <a href="http://www.brendangregg.com/blog/">posts</a> on bcc/eBPF. I'll summarize some content here, but I've written and published a lot more detail in those resources for those wishing to dig deeper.</p>
+
+<p><b>Update 04-Nov-2020</b>: The Python interface is now considered deprecated in favor of the new C libbpf interface. For more information see my <a href="http://www.brendangregg.com/blog/2020-11-04/bpf-co-re-btf-libbpf.html">future of BPF perf tools</a> post.</p>
+
+<a name="bccinstallation"></a>
+<h2>5.1. bcc: Installation</h2>
+
+<p>See the <a href="https://github.com/iovisor/bcc/blob/master/INSTALL.md">bcc install instructions</a> for getting started on different Linux distros. Here are recent Ubuntu instructions, as an example:</p>
+
+<pre>
+# <b>echo "deb [trusted=yes] https://repo.iovisor.org/apt/xenial xenial-nightly main" | \
+    sudo tee /etc/apt/sources.list.d/iovisor.list</b>
+# <b>sudo apt-get update</b>
+# <b>sudo apt-get install bpfcc-tools</b>	# or the old package name: bcc-tools
+</pre>
+
+<p>bcc tools will be installed under /usr/share/bcc/tools.</p>
+
+<a name="bccgeneralchecklist"></a>
+<h2>5.2. bcc: General Performance Checklist</h2>
+
+<p>This checklist can be useful if you don't know where to start. It tours various bcc tools to analyze different targets, which may unearth activity you were previously unaware of. I first included this in the <a href="https://github.com/iovisor/bcc/blob/master/docs/tutorial.md">bcc tutorial</a>, after a Linux basics checklist of standard tools. It's assumed you've already run such basics (dmesg, vmstat, iostat, top, etc) and now want to dig deeper.</p>
+
+<h3>1. execsnoop</h3>
+
+<p>Trace new processes via exec() syscalls, and print the parent process name and other details:</p>
+
+<pre>
+# <b>execsnoop</b>
+PCOMM            PID    RET ARGS
+bash             15887    0 /usr/bin/man ls
+preconv          15894    0 /usr/bin/preconv -e UTF-8
+man              15896    0 /usr/bin/tbl
+man              15897    0 /usr/bin/nroff -mandoc -rLL=169n -rLT=169n -Tutf8
+man              15898    0 /usr/bin/pager -s
+nroff            15900    0 /usr/bin/locale charmap
+nroff            15901    0 /usr/bin/groff -mtty-char -Tutf8 -mandoc -rLL=169n -rLT=169n
+groff            15902    0 /usr/bin/troff -mtty-char -mandoc -rLL=169n -rLT=169n -Tutf8
+groff            15903    0 /usr/bin/grotty
+[...]
+</pre>
+
+<h3>2. opensnoop</h3>
+
+<p>Trace open() syscalls and print process name and path name details:</p>
+
+<pre>
+# <b>opensnoop</b>
+PID    COMM               FD ERR PATH
+27159  catalina.sh         3   0 /apps/tomcat8/bin/setclasspath.sh
+4057   redis-server        5   0 /proc/4057/stat
+2360   redis-server        5   0 /proc/2360/stat
+30668  sshd                4   0 /proc/sys/kernel/ngroups_max
+30668  sshd                4   0 /etc/group
+30668  sshd                4   0 /root/.ssh/authorized_keys
+30668  sshd                4   0 /root/.ssh/authorized_keys
+30668  sshd               -1   2 /var/run/nologin
+30668  sshd               -1   2 /etc/nologin
+30668  sshd                4   0 /etc/login.defs
+30668  sshd                4   0 /etc/passwd
+30668  sshd                4   0 /etc/shadow
+30668  sshd                4   0 /etc/localtime
+4510   snmp-pass           4   0 /proc/cpuinfo
+[...]
+</pre>
+
+<h3>3. ext4slower</h3>
+
+<p>Trace slow ext4 operations that are slower than a provided threshold (bcc has versions of this for btrfs, XFS, and ZFS as well):</p>
+
+<pre>
+# <b>ext4slower 1</b>
+Tracing ext4 operations slower than 1 ms
+TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
+06:49:17 bash           3616   R 128     0           7.75 cksum
+06:49:17 cksum          3616   R 39552   0           1.34 [
+06:49:17 cksum          3616   R 96      0           5.36 2to3-2.7
+06:49:17 cksum          3616   R 96      0          14.94 2to3-3.4
+06:49:17 cksum          3616   R 10320   0           6.82 411toppm
+06:49:17 cksum          3616   R 65536   0           4.01 a2p
+06:49:17 cksum          3616   R 55400   0           8.77 ab
+06:49:17 cksum          3616   R 36792   0          16.34 aclocal-1.14
+06:49:17 cksum          3616   R 15008   0          19.31 acpi_listen
+06:49:17 cksum          3616   R 6123    0          17.23 add-apt-repository
+06:49:17 cksum          3616   R 6280    0          18.40 addpart
+06:49:17 cksum          3616   R 27696   0           2.16 addr2line
+06:49:17 cksum          3616   R 58080   0          10.11 ag
+</pre>
+
+<h3>4. biolatency</h3>
+
+<p>Summarize block device I/O latency as a histogram every second:</p>
+
+<pre>
+# <b>biolatency -mT 1</b>
+Tracing block device I/O... Hit Ctrl-C to end.
+
+21:33:40
+     msecs               : count     distribution
+         0 -> 1          : 69       |****************************************|
+         2 -> 3          : 16       |*********                               |
+         4 -> 7          : 6        |***                                     |
+         8 -> 15         : 21       |************                            |
+        16 -> 31         : 16       |*********                               |
+        32 -> 63         : 5        |**                                      |
+        64 -> 127        : 1        |                                        |
+
+21:33:41
+     msecs               : count     distribution
+         0 -> 1          : 60       |************************                |
+         2 -> 3          : 100      |****************************************|
+         4 -> 7          : 41       |****************                        |
+         8 -> 15         : 11       |****                                    |
+        16 -> 31         : 9        |***                                     |
+        32 -> 63         : 6        |**                                      |
+        64 -> 127        : 4        |*                                       |
+
+21:33:42
+     msecs               : count     distribution
+         0 -> 1          : 110      |****************************************|
+         2 -> 3          : 78       |****************************            |
+         4 -> 7          : 64       |***********************                 |
+         8 -> 15         : 8        |**                                      |
+        16 -> 31         : 12       |****                                    |
+        32 -> 63         : 15       |*****                                   |
+        64 -> 127        : 8        |**                                      |
+[...]
+</pre>
+
+<h3>5. biosnoop</h3>
+
+<p>Trace block device I/O with process, disk, and latency details:</p>
+
+<pre>
+# <b>biosnoop</b>
+TIME(s)        COMM           PID    DISK    T  SECTOR    BYTES   LAT(ms)
+0.000004001    supervise      1950   xvda1   W  13092560  4096       0.74
+0.000178002    supervise      1950   xvda1   W  13092432  4096       0.61
+0.001469001    supervise      1956   xvda1   W  13092440  4096       1.24
+0.001588002    supervise      1956   xvda1   W  13115128  4096       1.09
+1.022346001    supervise      1950   xvda1   W  13115272  4096       0.98
+1.022568002    supervise      1950   xvda1   W  13188496  4096       0.93
+1.023534000    supervise      1956   xvda1   W  13188520  4096       0.79
+1.023585003    supervise      1956   xvda1   W  13189512  4096       0.60
+2.003920000    xfsaild/md0    456    xvdc    W  62901512  8192       0.23
+2.003931001    xfsaild/md0    456    xvdb    W  62901513  512        0.25
+2.004034001    xfsaild/md0    456    xvdb    W  62901520  8192       0.35
+2.004042000    xfsaild/md0    456    xvdb    W  63542016  4096       0.36
+2.004204001    kworker/0:3    26040  xvdb    W  41950344  65536      0.34
+2.044352002    supervise      1950   xvda1   W  13192672  4096       0.65
+[...]
+</pre>
+
+<h3>6. cachestat</h3>
+
+<p>Show the page cache hit/miss ratio and size, and summarize every second:</p>
+
+<pre>
+# <b>cachestat</b>
+    HITS   MISSES  DIRTIES  READ_HIT% WRITE_HIT%   BUFFERS_MB  CACHED_MB
+  170610    41607       33      80.4%      19.6%           11        288
+  157693     6149       33      96.2%       3.7%           11        311
+  174483    20166       26      89.6%      10.4%           12        389
+  434778       35       40     100.0%       0.0%           12        389
+  435723       28       36     100.0%       0.0%           12        389
+  846183    83800   332534      55.2%       4.5%           13        553
+   96387       21       24     100.0%       0.0%           13        553
+  120258       29       44      99.9%       0.0%           13        553
+  255861       24       33     100.0%       0.0%           13        553
+  191388       22       32     100.0%       0.0%           13        553
+[...]
+</pre>
+
+<h3>7. tcpconnect</h3>
+
+<p>Trace TCP active connections (connect()):</p>
+
+<pre>
+# <b>tcpconnect</b>
+PID    COMM         IP SADDR            DADDR            DPORT
+25333  recordProgra 4  127.0.0.1        127.0.0.1        28527
+25338  curl         4  100.66.3.172     52.22.109.254    80
+25340  curl         4  100.66.3.172     31.13.73.36      80
+25342  curl         4  100.66.3.172     104.20.25.153    80
+25344  curl         4  100.66.3.172     50.56.53.173     80
+25365  recordProgra 4  127.0.0.1        127.0.0.1        28527
+26119  ssh          6  ::1              ::1              22
+25388  recordProgra 4  127.0.0.1        127.0.0.1        28527
+25220  ssh          6  fe80::8a3:9dff:fed5:6b19 fe80::8a3:9dff:fed5:6b19 22
+[...]
+</pre>
+
+<h3>8. tcpaccept</h3>
+
+<p>Trace TCP passive connections (accept()):</p>
+
+<pre>
+# <b>tcpaccept</b>
+PID    COMM         IP RADDR            LADDR            LPORT
+2287   sshd         4  11.16.213.254    100.66.3.172     22  
+4057   redis-server 4  127.0.0.1        127.0.0.1        28527
+4057   redis-server 4  127.0.0.1        127.0.0.1        28527
+4057   redis-server 4  127.0.0.1        127.0.0.1        28527
+4057   redis-server 4  127.0.0.1        127.0.0.1        28527
+2287   sshd         6  ::1              ::1              22  
+4057   redis-server 4  127.0.0.1        127.0.0.1        28527
+4057   redis-server 4  127.0.0.1        127.0.0.1        28527
+2287   sshd         6  fe80::8a3:9dff:fed5:6b19 fe80::8a3:9dff:fed5:6b19 22  
+4057   redis-server 4  127.0.0.1        127.0.0.1        28527
+[...]
+</pre>
+
+<h3>9. tcpretrans</h3>
+
+<p>Trace TCP retransmits and TLPs:</p>
+
+<pre>
+# <b>tcpretrans</b>
+TIME     PID    IP LADDR:LPORT          T> RADDR:RPORT          STATE
+01:55:05 0      4  10.153.223.157:22    R> 69.53.245.40:34619   ESTABLISHED
+01:55:05 0      4  10.153.223.157:22    R> 69.53.245.40:34619   ESTABLISHED
+01:55:17 0      4  10.153.223.157:22    R> 69.53.245.40:22957   ESTABLISHED
+[...]
+</pre>
+
+<h3>10. gethostlatency</h3>
+
+<p>Show latency for getaddrinfo/gethostbyname[2] library calls, system wide:</p>
+
+<pre>
+# <b>gethostlatency</b>
+TIME      PID    COMM          LATms HOST
+06:10:24  28011  wget          90.00 www.iovisor.org
+06:10:28  28127  wget           0.00 www.iovisor.org
+06:10:41  28404  wget           9.00 www.netflix.com
+06:10:48  28544  curl          35.00 www.netflix.com.au
+06:11:10  29054  curl          31.00 www.plumgrid.com
+06:11:16  29195  curl           3.00 www.facebook.com
+06:11:24  25313  wget           3.00 www.usenix.org
+06:11:25  29404  curl          72.00 foo
+06:11:28  29475  curl           1.00 foo 
+[...]
+</pre>
+
+<h3>11. runqlat</h3>
+
+<p>Show run queue (scheduler) latency as a histogram, every 5 seconds:</p>
+
+<pre>
+# <b>runqlat -m 5</b>
+Tracing run queue latency... Hit Ctrl-C to end.
+
+     msecs               : count     distribution
+         0 -> 1          : 2085     |****************************************|
+         2 -> 3          : 8        |                                        |
+         4 -> 7          : 20       |                                        |
+         8 -> 15         : 191      |***                                     |
+        16 -> 31         : 420      |********                                |
+
+     msecs               : count     distribution
+         0 -> 1          : 1798     |****************************************|
+         2 -> 3          : 11       |                                        |
+         4 -> 7          : 45       |*                                       |
+         8 -> 15         : 441      |*********                               |
+        16 -> 31         : 1030     |**********************                  |
+
+     msecs               : count     distribution
+         0 -> 1          : 1588     |****************************************|
+         2 -> 3          : 7        |                                        |
+         4 -> 7          : 49       |*                                       |
+         8 -> 15         : 556      |**************                          |
+        16 -> 31         : 1206     |******************************          |
+
+[...]
+</pre>
+
+<h3>12. profile</h3>
+
+<p>Sample stack traces at 49 Hertz, then print unique stacks with the number of occurrences seen:</p>
+
+<pre>
+# <b>profile</b>
+Sampling at 49 Hertz of all threads by user + kernel stack... Hit Ctrl-C to end.
+^C 
+[...]
+    ffffffff811a2eb0 find_get_entry
+    ffffffff811a338d pagecache_get_page
+    ffffffff811a51fa generic_file_read_iter
+    ffffffff81231f30 __vfs_read
+    ffffffff81233063 vfs_read
+    ffffffff81234565 SyS_read
+    ffffffff818739bb entry_SYSCALL_64_fastpath
+    00007f4757ff9680 read
+    -                dd (14283)
+        29
+
+    ffffffff8141c067 copy_page_to_iter
+    ffffffff811a54e8 generic_file_read_iter
+    ffffffff81231f30 __vfs_read
+    ffffffff81233063 vfs_read
+    ffffffff81234565 SyS_read
+    ffffffff818739bb entry_SYSCALL_64_fastpath
+    00007f407617d680 read
+    -                dd (14288)
+        32
+
+    ffffffff813af58c common_file_perm
+    ffffffff813af6f8 apparmor_file_permission
+    ffffffff8136f89b security_file_permission
+    ffffffff81232f6e rw_verify_area
+    ffffffff8123303e vfs_read
+    ffffffff81234565 SyS_read
+    ffffffff818739bb entry_SYSCALL_64_fastpath
+    00007f407617d680 read
+    -                dd (14288)
+        39
+
+[...]
+</pre>
+
+<a name="bcctools"></a>
+<h2>5.3. bcc: Tools</h2>
+
+<p><center><a href="Perf/bcc_tracing_tools.png"><img border=0 src="Perf/bcc_tracing_tools.png" width=750></a></center></p>
+
+<p>The <a href="https://github.com/iovisor/bcc#tools">bcc tools</a> section on github lists these with short descriptions. These tools are mostly for performance observability and debugging.</p>
+
+<p>There are two types of tools:</p>
+
+<ul>
+<li><b>Single purpose</b>: These tools do one thing and do it well (Unix philosophy). They include execsnoop, opensnoop, ext4slower, biolatency, tcpconnect, oomkill, runqlat, etc. They should be easy to learn and use. Most of the previous examples in the General Performance Checklist were single purpose.</li>
+<li><b>Multi-tools</b>: These are powerful tools that can do many things, provided you know which arguments and options to use. They featured in the one-liners section earlier on this page, and include trace, argdist, funccount, funclatency, and stackcount.</li>
+</ul>
+
+<p>Each tool has three related parts. Using biolatency as an example:</p>
+
+<h3>1/3. The source</h3>
+
+<pre>
+$ <b>more libbpf-tools/biolatency.c</b>
+// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+// Copyright (c) 2020 Wenbo Zhang
+//
+// Based on biolatency(8) from BCC by Brendan Gregg.
+// 15-Jun-2020   Wenbo Zhang   Created this.
+#include <argp.h>
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <time.h>
+#include <bpf/libbpf.h>
+#include <sys/resource.h>
+#include <bpf/bpf.h>
+#include "blk_types.h"
+#include "biolatency.h"
+#include "biolatency.skel.h"
+#include "trace_helpers.h"
+
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
+
+static struct env {
+	char *disk;
+	time_t interval;
+	int times;
+[...]
+</pre>
+
+<p>This is the user-space component; in libbpf-tools there is also a biolatency.h header file and a biolatency.bpf.c for kernel BPF code.</p>
+
+<p>Note that bcc also includes the older deprecated versions in Python; E.g.:
+
+<pre>
+$ <b>more tools/biolatency.py</b>
+#!/usr/bin/python
+# @lint-avoid-python-3-compatibility-imports
+#
+# biolatency    Summarize block device I/O latency as a histogram.
+#               For Linux, uses BCC, eBPF.
+#
+# USAGE: biolatency [-h] [-T] [-Q] [-m] [-D] [interval] [count]
+#
+# Copyright (c) 2015 Brendan Gregg.
+# Licensed under the Apache License, Version 2.0 (the "License")
+#
+# 20-Sep-2015   Brendan Gregg   Created this.
+[...]
+</pre>
+
+<p>Tools should begin with a block comment to describe basics: what the tool does, its synopsis, major change history.</p>
+
+<h3>2/3. An examples file</h3>
+
+<pre>
+$ <b>more tools/biolatency_example.txt</b>
+Demonstrations of biolatency, the Linux eBPF/bcc version.
+
+
+biolatency traces block device I/O (disk I/O), and records the distribution
+of I/O latency (time), printing this as a histogram when Ctrl-C is hit.
+For example:
+
+# ./biolatency
+Tracing block device I/O... Hit Ctrl-C to end.
+^C
+     usecs           : count     distribution
+       0 -> 1        : 0        |                                      |
+       2 -> 3        : 0        |                                      |
+       4 -> 7        : 0        |                                      |
+       8 -> 15       : 0        |                                      |
+      16 -> 31       : 0        |                                      |
+      32 -> 63       : 0        |                                      |
+      64 -> 127      : 1        |                                      |
+     128 -> 255      : 12       |********                              |
+     256 -> 511      : 15       |**********                            |
+     512 -> 1023     : 43       |*******************************       |
+    1024 -> 2047     : 52       |**************************************|
+    2048 -> 4095     : 47       |**********************************    |
+    4096 -> 8191     : 52       |**************************************|
+    8192 -> 16383    : 36       |**************************            |
+   16384 -> 32767    : 15       |**********                            |
+   32768 -> 65535    : 2        |*                                     |
+   65536 -> 131071   : 2        |*                                     |
+
+The latency of the disk I/O is measured from the issue to the device to its
+completion. A -Q option can be used to include time queued in the kernel.
+
+This example output shows a large mode of latency from about 128 microseconds
+to about 32767 microseconds (33 milliseconds). The bulk of the I/O was
+between 1 and 8 ms, which is the expected block device latency for
+rotational storage devices.
+
+The highest latency seen while tracing was between 65 and 131 milliseconds:
+the last row printed, for which there were 2 I/O.
+[...]
+</pre>
+
+<p>There are detailed examples files in the /tools directory, which include tool output and discussion of what it means.</p>
+
+<h3>3/3. A man page</h3>
+
+<pre>
+$ <b>nroff -man man/man8/biolatency.8 | more</b>
+biolatency(8)                                                    biolatency(8)
+
+
+
+NAME
+       biolatency - Summarize block device I/O latency as a histogram.
+
+SYNOPSIS
+       biolatency [-h] [-T] [-Q] [-m] [-D] [interval [count]]
+
+DESCRIPTION
+       biolatency  traces block device I/O (disk I/O), and records the distri-
+       bution of I/O latency (time). This is printed as a histogram either  on
+       Ctrl-C, or after a given interval in seconds.
+
+       The latency of the disk I/O is measured from the issue to the device to
+       its completion. A -Q option can be used to include time queued  in  the
+       kernel.
+
+       This  tool uses in-kernel eBPF maps for storing timestamps and the his-
+       togram, for efficiency.
+
+       This works by tracing various kernel blk_*()  functions  using  dynamic
+       tracing,  and  will  need  updating to match any changes to these func-
+       tions.
+
+       Since this uses BPF, only the root user can use this tool.
+
+REQUIREMENTS
+       CONFIG_BPF and bcc.
+
+OPTIONS
+       -h Print usage message.
+
+       -T     Include timestamps on output.
+[...]
+</pre>
+
+<p>The man pages are the reference for what the tool does, what options it has, what the output means including column definitions, and any caveats including overhead.</p>
+
+<a name="bccprogramming"></a>
+<h2>5.4. bcc: Programming</h2>
+
+<h2>5.4.1. bcc: Programming: libbpf C</h2>
+
+<p><i>Under construction.</i></p>
+
+<h2>5.4.2. bcc: Programming: Python</h2>
+
+<p>While this is generally deprecated, especially with observability tools that have been moving to libbpf C, you may still find a use case where Python is the best fit. Start with the <a href="https://github.com/iovisor/bcc/blob/master/docs/tutorial_bcc_python_developer.md">bcc Python Developer Tutorial</a>. It has over 15 lessons that cover all the functions and caveats you'll likely run into. Also see the <a href="https://github.com/iovisor/bcc/blob/master/docs/reference_guide.md">bcc Reference Guide</a>, which explains the API for the eBPF C and the bcc Python. I created both of these. My goal was to be practical and terse: show real examples and code snippets, cover internals and caveats, and do so as briefly as possible. If you hit page down once or twice, you'll hit the next heading, as I've deliberately kept sections short to avoid a wall of text.</p>
+
+<p>For people who have more of a casual interest in how bcc/BPF is programmed, I'll summarize key things to know next, and then explain the code from one tool in detail.</p>
+
+<h3>5 Things To Know</h3>
+
+<p>If you want to dive into coding without reading those references, here's five things to know:</p>
+
+<ol>
+<li><b>eBPF C is restricted</b>: no unbounded loops or kernel function calls. You can only use the bpf_* functions (and some compiler built-ins).</li>
+<li><b>All memory must be read onto the BPF stack first before manipulation</b> via bpf_probe_read(), which does necessary checks. If you want to dereference a-&gt;b-&gt;c-&gt;d, then just try doing it first, as bcc has a rewriter that may turn it into the necessary bpf_probe_read()s. If it doesn't work, add explicit bpf_probe_reads()s.</li>
+<li><b>There are 3 ways to output data</b> from kernel to user:</li>
+<ol>
+<li><b>bpf_trace_printk()</b>. Debugging only, this writes to trace_pipe and can clash with other programs and tracers. It's very simple, so I've used it early on in the tutorial, but you should use the following instead:</li>
+<li><b>BPF_PERF_OUTPUT()</b>. A way to sending per-event details to user space, via a custom struct you define. (The Python program currently needs a ct version of the struct definition &ndash; this should be automatic one day.)</li>
+<li><b>BPF_HISTOGRAM()</b> or other BPF maps. Maps are a key-value hash from which more advanced data structures can be built. They can be used for summary statistics or histograms, and read periodically from user space (efficient).</li>
+</ol>
+<li><b>Use static tracepoints</b> (tracepoints/USDT) instead of dynamic tracing (kprobes/uprobes) wherever possible. It's often not possible, but do try. Dynamic tracing is an unstable API, so your programs will break if the code it's instrumenting changes from one release to another.</li>
+<li><b>Check for bcc developments or switch to bpftrace</b>. Compared to bpftrace, bcc Python is far more verbose and laborious to code.</li>
+</ol>
+
+<h3>Tool example: biolatency.py</h3>
+
+<p>The following are all the lines from my original <a href="eBPF/biolatency.txt">biolatency.py</a> tool, enumerated and commented:</p>
+
+<pre>
+     1	#!/usr/bin/python
+     2	# @lint-avoid-python-3-compatibility-imports
+</pre>
+
+<p>Line 1: we're Python. Line 2: I believe suppress a lint warning (these were added for another major companies' build environment).</p>
+
+<pre>
+     3	#
+     4	# biolatency    Summarize block device I/O latency as a histogram.
+     5	#               For Linux, uses BCC, eBPF.
+     6	#
+     7	# USAGE: biolatency [-h] [-T] [-Q] [-m] [-D] [interval] [count]
+     8	#
+     9	# Copyright (c) 2015 Brendan Gregg.
+    10	# Licensed under the Apache License, Version 2.0 (the "License")
+    11	#
+    12	# 20-Sep-2015   Brendan Gregg   Created this.
+</pre>
+
+<p>I have a certain style to my header comments. Line 4 names the tool, and hase a single sentence description. Line 5 adds any caveats: for Linux only, uses BCC/eBPF. It then has a synopsis line, copyright, and a history of major changes.</p>
+
+<pre>
+    13	
+    14	from __future__ import print_function
+    15	from bcc import BPF
+    16	from time import sleep, strftime
+    17	import argparse
+</pre>
+
+<p>Note that we import BPF, which we'll use to interact with eBPF in the kernel.</p>
+
+<pre>
+    18	
+    19	# arguments
+    20	examples = """examples:
+    21	    ./biolatency            # summarize block I/O latency as a histogram
+    22	    ./biolatency 1 10       # print 1 second summaries, 10 times
+    23	    ./biolatency -mT 1      # 1s summaries, milliseconds, and timestamps
+    24	    ./biolatency -Q         # include OS queued time in I/O time
+    25	    ./biolatency -D         # show each disk device separately
+    26	"""
+    27	parser = argparse.ArgumentParser(
+    28	    description="Summarize block device I/O latency as a histogram",
+    29	    formatter_class=argparse.RawDescriptionHelpFormatter,
+    30	    epilog=examples)
+    31	parser.add_argument("-T", "--timestamp", action="store_true",
+    32	    help="include timestamp on output")
+    33	parser.add_argument("-Q", "--queued", action="store_true",
+    34	    help="include OS queued time in I/O time")
+    35	parser.add_argument("-m", "--milliseconds", action="store_true",
+    36	    help="millisecond histogram")
+    37	parser.add_argument("-D", "--disks", action="store_true",
+    38	    help="print a histogram per disk device")
+    39	parser.add_argument("interval", nargs="?", default=99999999,
+    40	    help="output interval, in seconds")
+    41	parser.add_argument("count", nargs="?", default=99999999,
+    42	    help="number of outputs")
+    43	args = parser.parse_args()
+    44	countdown = int(args.count)
+    45	debug = 0
+    46	
+</pre>
+
+<p>Lines 19 to 44 are argument processing. I'm using Python's argparse here.</p>
+
+<p>My intent is to make this a Unix-like tool, something similar to vmstat/iostat, to make it easy for others to recognize and learn. Hence the style of options and arguments, and also to do one thing and do it well. In this case, showing disk I/O latency as a histogram. I could have added a mode to dump per-event details, but made that a separate tool, biosnoop.py.</p>
+
+<!--
+<p>Here's a rough convention for choosing argument options:</p>
+
+<p><ul>
+<table border=1>
+<tr><th>Option</th><th>Alternate</th><th>Expectation</th></tr>
+<tr><td>-a</td><td>--all</td><td>all events</td></tr>
+<tr><td>-c CMD
+</td><td>--cmd ...
+</td><td>run this command</td></tr>
+<tr><td>-d SECONDS
+</td><td>--duration ...
+</td><td>duration of tool execution</td></tr>
+<tr><td>-h
+</td><td>--help
+</td><td>help</td></tr>
+<tr><td>-i FILE
+</td><td>--input ...
+</td><td>input file</td></tr>
+<tr><td>-i SECONDS
+</td><td>--interval ...
+</td><td>summary interval</td></tr>
+<tr><td>-n name
+</td><td>--name ...
+</td><td>this process name only</td></tr>
+<tr><td>-o FILE
+</td><td>--output ...
+</td><td>output file</td></tr>
+<tr><td>-p PID
+</td><td>--pid ...
+</td><td>this process ID only</td></tr>
+<tr><td>-P
+</td><td>--by-process
+</td><td>per-process ID breakdown</td></tr>
+<tr><td>-P PORT
+</td><td>--port ...
+</td><td>this TCP port only</td></tr>
+<tr><td>-t or -T
+</td><td>--[no]timestamp
+</td><td>include or exclude timestamps</td></tr>
+<tr><td>-v
+</td><td>--verbose
+</td><td>verbose output</td></tr>
+<tr><td>-x
+</td><td>--extended, --errors
+</td><td>extended output, or only failures</td></tr>
+<tr><td>[interval [count]]</td><td>-</td><td>
+summary interval, and # of outputs</td></tr>
+</table>
+</ul></p>
+--!>
+
+<p>You may be writing bcc/eBPF for other reasons, including agents to other monitoring software, and don't need to worry about the user interface.</p>
+
+<pre>
+    47	# define BPF program
+    48	bpf_text = """
+    49	#include &lt;uapi/linux/ptrace.h>&gt;
+    50	#include &lt;linux/blkdev.h&gt;
+    51	
+    52	typedef struct disk_key {
+    53	    char disk[DISK_NAME_LEN];
+    54	    u64 slot;
+    55	} disk_key_t;
+    56	BPF_HASH(start, struct request *);
+    57	STORAGE
+    58	
+    59	// time block I/O
+    60	int trace_req_start(struct pt_regs *ctx, struct request *req)
+    61	{
+    62	    u64 ts = bpf_ktime_get_ns();
+    63	    start.update(&req, &ts);
+    64	    return 0;
+    65	}
+    66	
+    67	// output
+    68	int trace_req_completion(struct pt_regs *ctx, struct request *req)
+    69	{
+    70	    u64 *tsp, delta;
+    71	
+    72	    // fetch timestamp and calculate delta
+    73	    tsp = start.lookup(&req);
+    74	    if (tsp == 0) {
+    75	        return 0;   // missed issue
+    76	    }
+    77	    delta = bpf_ktime_get_ns() - *tsp;
+    78	    FACTOR
+    79	
+    80	    // store as histogram
+    81	    STORE
+    82	
+    83	    start.delete(&req);
+    84	    return 0;
+    85	}
+    86	"""
+</pre>
+
+<p>The eBPF program is declared as an inline C assigned to the variable bpf_text.</p>
+
+<p>Line 56 declares a hash array caled "start", which uses a struct request pointer as the key. The trace_req_start() function fetches a timestamp using bpf_ktime_get_ns() and then stores it in this hash, keyed by *req (I'm just using that pointer address as a UUID). The trace_req_completion() function then does a lookup on the hash with its *req, to fetch the start time of the request, which is then used to calculate the delta time on line 77. Line 83 deletes the timestamp from the hash.</p>
+
+<p>The prototypes to these functions begin with a struct pt_regs * for registers, and then as many of the probed function arguments as you want to include. I've included the first function argument in each, struct request *.</p>
+
+<p>This program also declares storage for the output data and stores it, but there's a problem: biolatency has a -D option to emit per-disk histograms, instead of one histogram for everything, and this changes the storage code. So this eBPF program contains the text STORAGE and STORE (and FACTOR) which are merely strings that we'll search and replace with code next, depending on the options. I'd rather avoid code-that-writes-code if possible, since it makes it harder to debug.</p>
+
+<pre>
+    87	
+    88	# code substitutions
+    89	if args.milliseconds:
+    90	    bpf_text = bpf_text.replace('FACTOR', 'delta /= 1000000;')
+    91	    label = "msecs"
+    92	else:
+    93	    bpf_text = bpf_text.replace('FACTOR', 'delta /= 1000;')
+    94	    label = "usecs"
+    95	if args.disks:
+    96	    bpf_text = bpf_text.replace('STORAGE',
+    97	        'BPF_HISTOGRAM(dist, disk_key_t);')
+    98	    bpf_text = bpf_text.replace('STORE',
+    99	        'disk_key_t key = {.slot = bpf_log2l(delta)}; ' +
+   100	        'bpf_probe_read(&key.disk, sizeof(key.disk), ' +
+   101	        'req-&gt;rq_disk-&gt;disk_name); dist.increment(key);')
+   102	else:
+   103	    bpf_text = bpf_text.replace('STORAGE', 'BPF_HISTOGRAM(dist);')
+   104	    bpf_text = bpf_text.replace('STORE',
+   105	        'dist.increment(bpf_log2l(delta));')
+</pre>
+
+<p>The FACTOR code just changes the units of the time we're recording, depending on the -m option.</p>
+
+<p>Line 95 checks if per-disk has been requested (-D), and if so, replaces the STORAGE and STORE strings with code to do per-disk histograms. It uses the disk_key struct declared on line 52 which is the disk name and the slot (bucket) in the power-of-2 histogram. Line 99 takes the delta time and turns it into the power-of-2 slot index using the bpf_log2l() helper function. Lines 100 and 101 fetch the disk name via bpf_probe_read(), which is how all data is copied onto BPF's stack for operation. Line 101 includes many dereferences: req-&gt;rq_disk, rq_disk-&gt;disk_name: bcc's rewriter has transparently turned these into bpf_probe_read()s as well.</p>
+
+<p>Lines 103 to 105 deal with the single histogram case (not per-disk). A histogram is declared named "dist" using the BPF_HISTOGRAM macro. The slot (bucket) is found using the bpf_log2l() helper function, and then incremented in the histogram.</p>
+
+<p>This example is a little gritty, which is both good (realistic) and bad (intimidating). See the tutorial I linked to earlier for more simple examples.</p>
+
+<pre>
+   106	if debug:
+   107	    print(bpf_text)
+</pre>
+
+<p>Since I have code that writes code, I need a way to debug the final output. If debug is set, print it out.</p>
+
+<pre>
+   108	
+   109	# load BPF program
+   110	b = BPF(text=bpf_text)
+   111	if args.queued:
+   112	    b.attach_kprobe(event="blk_account_io_start", fn_name="trace_req_start")
+   113	else:
+   114	    b.attach_kprobe(event="blk_start_request", fn_name="trace_req_start")
+   115	    b.attach_kprobe(event="blk_mq_start_request", fn_name="trace_req_start")
+   116	b.attach_kprobe(event="blk_account_io_completion",
+   117	    fn_name="trace_req_completion")
+   118	
+</pre>
+
+<p>Line 110 loads the eBPF program.</p>
+
+<p>Since this program was written before eBPF had tracepoint support, I wrote it to use kprobes (kernel dynamic tracing). It should be rewritten to use tracepoints, as they are a stable API, although that then also requires a later kernel version (Linux 4.7+).</p>
+
+<p>biolatency.py has a -Q option to included time queued in the kernel. We can see how it's implemented in this code. If it is set, line 112 attaches our eBPF trace_req_start() function with a kprobe on the blk_account_io_start() kernel function, which tracks the request when it's first queued in the kernel. If not set, lnes 114 and 115 attach our eBPF function to different kernel functions, which is when the disk I/O is issued (it can be either of these). This only works because the first argument to any of these kernels functions is the same: struct request *. If their arguments were different, I'd need separate eBPF functions for each to handle that.</p>
+
+<pre>
+   119	print("Tracing block device I/O... Hit Ctrl-C to end.")
+   120	
+   121	# output
+   122	exiting = 0 if args.interval else 1
+   123	dist = b.get_table("dist")
+</pre>
+
+<p>Line 123 fetches the "dist" histogram that was declared and populated by the STORAGE/STORE code.</p>
+
+<pre>
+   124	while (1):
+   125	    try:
+   126	        sleep(int(args.interval))
+   127	    except KeyboardInterrupt:
+   128	        exiting = 1
+   129	
+   130	    print()
+   131	    if args.timestamp:
+   132	        print("%-8s\n" % strftime("%H:%M:%S"), end="")
+   133	
+   134	    dist.print_log2_hist(label, "disk")
+   135	    dist.clear()
+   136	
+   137	    countdown -= 1
+   138	    if exiting or countdown == 0:
+   139	        exit()
+</pre>
+
+<p>This has logic for printing every interval, a certain number of times (countdown). Lines 131 and 132 print a timestamp if the -T option was used.</p>
+
+<p>Line 134 prints the histogram, or histograms if we're doing per-disk. The first argument is the label variable, which contains "usecs" or "msecs", and decorates the column of values in the output. The second argument is labels the secondary key, if dist has per-disk histograms. How print_log2_hist() can identify whether this is a single histogram or has a secondary key, I'll leave as an adventurous exercise in code spelunking of bcc and eBPF internals.</p>
+
+<p>Line 135 clears the histogram, ready for the next interval.</p>
+
+<p>Here is some sample output:</p>
+
+<pre>
+# <b>biolatency</b>
+Tracing block device I/O... Hit Ctrl-C to end.
+^C
+     usecs           : count     distribution
+       0 -> 1        : 0        |                                      |
+       2 -> 3        : 0        |                                      |
+       4 -> 7        : 0        |                                      |
+       8 -> 15       : 0        |                                      |
+      16 -> 31       : 0        |                                      |
+      32 -> 63       : 0        |                                      |
+      64 -> 127      : 1        |                                      |
+     128 -> 255      : 12       |********                              |
+     256 -> 511      : 15       |**********                            |
+     512 -> 1023     : 43       |*******************************       |
+    1024 -> 2047     : 52       |**************************************|
+    2048 -> 4095     : 47       |**********************************    |
+    4096 -> 8191     : 52       |**************************************|
+    8192 -> 16383    : 36       |**************************            |
+   16384 -> 32767    : 15       |**********                            |
+   32768 -> 65535    : 2        |*                                     |
+   65536 -> 131071   : 2        |*                                     |
+</pre>
+
+<p>Per-disk output:</p>
+
+<pre>
+# <b>biolatency -D</b>
+Tracing block device I/O... Hit Ctrl-C to end.
+^C
+disk = 'xvdb'
+     usecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 0        |                                        |
+        32 -> 63         : 0        |                                        |
+        64 -> 127        : 18       |****                                    |
+       128 -> 255        : 167      |****************************************|
+       256 -> 511        : 90       |*********************                   |
+
+disk = 'xvdc'
+     usecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 0        |                                        |
+        32 -> 63         : 0        |                                        |
+        64 -> 127        : 22       |****                                    |
+       128 -> 255        : 179      |****************************************|
+       256 -> 511        : 88       |*******************                     |
+
+disk = 'xvda1'
+     usecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 0        |                                        |
+        32 -> 63         : 0        |                                        |
+        64 -> 127        : 0        |                                        |
+       128 -> 255        : 0        |                                        |
+       256 -> 511        : 167      |****************************************|
+       512 -> 1023       : 44       |**********                              |
+      1024 -> 2047       : 9        |**                                      |
+      2048 -> 4095       : 4        |                                        |
+      4096 -> 8191       : 34       |********                                |
+      8192 -> 16383      : 44       |**********                              |
+     16384 -> 32767      : 33       |*******                                 |
+     32768 -> 65535      : 1        |                                        |
+     65536 -> 131071     : 1        |                                        |
+</pre>
+
+<p>From the output we can see that xvdb and xvdc have similar latency histograms, whereas xvda1 is quite different and bimodal, with a higher latency mode between 4 and 32 milliseconds.</p>
+
+<a name="bpftrace"></a>
+<h1>6. bpftrace</h1>
+
+<p>bpftrace is at <a href="https://github.com/iovisor/bpftrace">github.com/iovisor/bpftrace</a>, and is a high-level front-end for BPF tracing, which uses libraries from <a href="#bcc">bcc</a>. bpftrace is ideal for ad hoc instrumentation with powerful custom one-liners and short scripts, whereas bcc is ideal for complex tools and daemons. bpftrace was created by <a href="http://ajor.co.uk/">Alastair Robertson</a> as a spare time project.</p>
+
+<p>I contributed many capabilities and fixes to bpftrace, as well as tools and their example files and man pages. I also created the bpftrace <a href="https://github.com/iovisor/bpftrace/blob/master/docs/tutorial_one_liners.md">One-Liners Tutorial</a>, the <a href="https://github.com/iovisor/bpftrace/blob/master/docs/reference_guide.md">Reference Guide</a>, and the <a href="https://github.com/iovisor/bpftrace/blob/master/docs/internals_development.md">Internals Development Guide</a>, and published blog <a href="http://www.brendangregg.com/blog/">posts</a>. I'll summarize bpftrace here, but I've written and published a lot more detail in those resources for those wishing to dig deeper.</p>
+
+<a name="bpftraceinstallation"></a>
+<h2>6.1. bpftrace: Installation</h2>
+
+<p>See the <a href="https://github.com/iovisor/bpftrace/blob/master/INSTALL.md">bpftrace install instructions</a> for getting started on different Linux distros. One of these might be possible!:
+
+<pre>
+# <b>snap install bpftrace</b>
+# <b>yum install bpftrace</b>
+# <b>apt-get install bpftrace</b>
+</pre>
+
+<p>But these are still <b>under development</b>, and you may need to refer to the full instructions in the previous link to get it to work. The only place I know where it "just works" is within some large tech companies who have built it in their internal repos.</p>
+
+<p>To test if your install works, try a basic one-liner:</p>
+
+<pre>
+# <b>sudo bpftrace -e 'BEGIN { printf("Hello BPF!\n"); exit(); }'</b>
+Attaching 1 probe...
+Hello BPF!
+</pre>
+
+<a name="bpftraceoneliners"></a>
+<h2>6.2. bpftrace: One-Liners</h2>
+
+<p>The following are from my <a href="https://github.com/iovisor/bpftrace/blob/master/docs/tutorial_one_liners.md">One-Liners Tutorial</a>, which has more details on each:</p>
+
+<pre>
+1. Listing probes
+<b>bpftrace -l 'tracepoint:syscalls:sys_enter_*'</b>
+
+2. Hello world
+<b>bpftrace -e 'BEGIN { printf("hello world\n"); }'</b>
+
+3. File opens
+<b>bpftrace -e 'tracepoint:syscalls:sys_enter_open { printf("%s %s\n", comm, str(args->filename)); }'</b>
+
+4. Syscall counts by process
+<b>bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @[comm] = count(); }'</b>
+
+5. Distribution of read() bytes
+<b>bpftrace -e 'tracepoint:syscalls:sys_exit_read /pid == 18644/ { @bytes = hist(args->retval); }'</b>
+
+6. Kernel dynamic tracing of read() bytes
+<b>bpftrace -e 'kretprobe:vfs_read { @bytes = lhist(retval, 0, 2000, 200); }'</b>
+
+7. Timing read()s
+<b>bpftrace -e 'kprobe:vfs_read { @start[tid] = nsecs; }
+    kretprobe:vfs_read /@start[tid]/ { @ns[comm] = hist(nsecs - @start[tid]); delete(@start[tid]); }'</b>
+
+8. Count process-level events
+<b>bpftrace -e 'tracepoint:sched:sched* { @[name] = count(); } interval:s:5 { exit(); }'</b>
+
+9. Profile on-CPU kernel stacks
+<b>bpftrace -e 'profile:hz:99 { @[stack] = count(); }'</b>
+
+10. Scheduler tracing
+<b>bpftrace -e 'tracepoint:sched:sched_switch { @[stack] = count(); }'</b>
+
+11. Block I/O tracing
+<b>bpftrace -e 'tracepoint:block:block_rq_complete { @ = hist(args->nr_sector * 512); }'</b>
+</pre>
+
+<p>If you can run and understand these one-liners, you'll have learned a lot of bpftrace.</p>
+
+<p>Here is some output of file opens:</p>
+
+<pre>
+# <b>bpftrace -e 'tracepoint:syscalls:sys_enter_open { printf("%s %s\n", comm, str(args->filename)); }'</b>
+Attaching 1 probe...
+snmpd /proc/net/dev
+snmpd /proc/net/if_inet6
+snmpd /sys/class/net/docker0/device/vendor
+snmpd /proc/sys/net/ipv4/neigh/docker0/retrans_time_ms
+snmpd /proc/sys/net/ipv6/neigh/docker0/retrans_time_ms
+snmpd /proc/sys/net/ipv6/conf/docker0/forwarding
+snmpd /proc/sys/net/ipv6/neigh/docker0/base_reachable_time_ms
+snmpd /sys/class/net/eth0/device/vendor
+snmpd /sys/class/net/eth0/device/device
+snmpd /proc/sys/net/ipv4/neigh/eth0/retrans_time_ms
+snmpd /proc/sys/net/ipv6/neigh/eth0/retrans_time_ms
+snmpd /proc/sys/net/ipv6/conf/eth0/forwarding
+snmpd /proc/sys/net/ipv6/neigh/eth0/base_reachable_time_ms
+snmpd /sys/class/net/lo/device/vendor
+snmpd /proc/sys/net/ipv4/neigh/lo/retrans_time_ms
+snmpd /proc/sys/net/ipv6/neigh/lo/retrans_time_ms
+snmpd /proc/sys/net/ipv6/conf/lo/forwarding
+snmpd /proc/sys/net/ipv6/neigh/lo/base_reachable_time_ms
+snmp-pass /proc/cpuinfo
+snmp-pass /proc/stat
+</pre>
+
+<p>Tracing which files have been opened can be a quick way to locate config files, log files, data files, libraries, and other things of interest.</p>
+
+<p>Here is some output of timing read()s:</p>
+
+<pre>
+# <b>bpftrace -e 'kprobe:vfs_read { @start[tid] = nsecs; }
+    kretprobe:vfs_read /@start[tid]/ { @ns[comm] = hist(nsecs - @start[tid]); delete(@start[tid]); }'</b>
+Attaching 2 probes...
+^C
+
+@ns[sleep]: 
+[1K, 2K)               1 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+
+@ns[ls]: 
+[256, 512)             1 |@@@@@@@@@@@@@@@@@                                   |
+[512, 1K)              3 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1K, 2K)               1 |@@@@@@@@@@@@@@@@@                                   |
+[2K, 4K)               1 |@@@@@@@@@@@@@@@@@                                   |
+[4K, 8K)               0 |                                                    |
+[8K, 16K)              0 |                                                    |
+[16K, 32K)             1 |@@@@@@@@@@@@@@@@@                                   |
+
+@ns[systemd]: 
+[4K, 8K)               9 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+
+@ns[snmpd]: 
+[512, 1K)             18 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1K, 2K)               3 |@@@@@@@@                                            |
+[2K, 4K)               9 |@@@@@@@@@@@@@@@@@@@@@@@@@@                          |
+[4K, 8K)               2 |@@@@@                                               |
+[8K, 16K)              3 |@@@@@@@@                                            |
+[16K, 32K)             3 |@@@@@@@@                                            |
+[32K, 64K)             1 |@@                                                  |
+[64K, 128K)            0 |                                                    |
+[128K, 256K)           1 |@@                                                  |
+
+@ns[snmp-pass]: 
+[256, 512)             6 |@@@@@@@                                             |
+[512, 1K)              4 |@@@@                                                |
+[1K, 2K)               0 |                                                    |
+[2K, 4K)               0 |                                                    |
+[4K, 8K)               0 |                                                    |
+[8K, 16K)              0 |                                                    |
+[16K, 32K)             1 |@                                                   |
+[32K, 64K)            13 |@@@@@@@@@@@@@@@                                     |
+[64K, 128K)            3 |@@@                                                 |
+[128K, 256K)          43 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[256K, 512K)           5 |@@@@@@                                              |
+
+@ns[sshd]: 
+[1K, 2K)               7 |@@@@@@@@@@                                          |
+[2K, 4K)              30 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        |
+[4K, 8K)              35 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[8K, 16K)             33 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   |
+[16K, 32K)             1 |@                                                   |
+</pre>
+
+<p>The ASCII histogram shows the distribution of the latency, helping you see if it is multi-modal, or if there are latency outliers.</p>
+
+<a name="bpftraceprogramming"></a>
+<h2>6.3. bpftrace: Programming Summary</h2>
+
+<p>This is a summary/cheat sheet for programming in bpftrace.
+See the <a href="https://github.com/iovisor/bpftrace/blob/master/docs/reference_guide.md">bpftrace reference guide</a> for more information.</p>
+<p>This is also available as a separate page you can print out: <a href="BPF/bpftrace-cheat-sheet.html">bpftrace cheat sheet</a>.
+
+<h3>Syntax</h3>
+
+<pre class="narrow">probe[,probe,...] /filter/ { action }</pre>
+
+<p>The probe specifies what events to instrument, the filter is optional and can filter down the events based on a boolean expression, and the action is the mini program that runs.</p>
+
+<p>Here's hello world:</p>
+
+<pre class="narrow">
+# <b>bpftrace -e 'BEGIN { printf("Hello eBPF!\n"); }'</b>
+</pre>
+
+<p>The probe is <tt>BEGIN</tt>, a special probe that runs at the beginning of the program (like awk). There's no filter. The action is a <tt>printf()</tt> statement.</p>
+
+<p>Now a real example:</p>
+
+<pre class="narrow">
+# <b>bpftrace -e 'kretprobe:vfs_read /pid == 181/ { @bytes = hist(retval); }'</b>
+</pre>
+
+<p>This uses a kretprobe to instrument the return of the sys_read() kernel function. If the PID is 181, a special map variable <tt>@bytes</tt> is populated with a log2 histogram function with the return value <tt>retval</tt> of sys_read(). This produces a histogram of the returned read size for PID 181. Is your app doing lots of 1 byte reads? Maybe that can be optimized.</p>
+
+<h3>Probe Types</h3>
+
+<p>These are libraries of probes which are related. The currently supported types are (more will be added):</p>
+
+<ul><table border=1>
+<tr><th>Alias</th><th>Type</th><th>Description</th></tr>
+<tr><td>t</td><td>tracepoint</td><td>Kernel static instrumentation points</td></tr>
+<tr><td>U</td><td>usdt</td><td>User-level statically defined tracing</td></tr>
+<tr><td>k</td><td>kprobe</td><td>Kernel dynamic function instrumentation (standard)</td></tr>
+<tr><td>kr</td><td>kretprobe</td><td>Kernel dynamic function return instrumentation (standard)</td></tr>
+<tr><td>f</td><td>kfunc</td><td>Kernel dynamic function instrumentation (BPF based)</td></tr>
+<tr><td>fr</td><td>kretfunc</td><td>Kernel dynamic function return instrumentation (BPF based)</td></tr>
+<tr><td>u</td><td>uprobe</td><td>User-level dynamic function instrumentation</td></tr>
+<tr><td>ur</td><td>uretprobe</td><td>User-level dynamic function return instrumentation</td></tr>
+<tr><td>s</td><td>software</td><td>Kernel software-based events</td></tr>
+<tr><td>h</td><td>hardware</td><td>Hardware counter-based instrumentation</td></tr>
+<tr><td>w</td><td>watchpoint</td><td>Memory watchpoint events</td></tr>
+<tr><td>p</td><td>profile</td><td>Timed sampling across all CPUs</td></tr>
+<tr><td>i</td><td>interval</td><td>Timed reporting (from one CPU)</td></tr>
+<tr><td></td><td>iter</td><td>Iterator tracing over kernel objects</td></tr>
+<tr><td></td><td>BEGIN</td><td>Start of bpftrace</td></tr>
+<tr><td></td><td>END</td><td>End of bpftrace</td></tr>
+</table></ul>
+
+<p>Dynamic instrumentation lets you trace any software function in a running binary without restarting it. However, the functions it exposes are not considered a stable API, as they can change from one software version to another, breaking the bpftrace tools you develop. Try to use the static probe types wherever possible, as they are usually best effort stable.</p>
+
+<h3>Variable Types</h3>
+
+<ul><table border=1>
+<tr><th>Variable</th><th>Description</th></tr>
+<tr><td><tt>@name</tt></td><td>global</td></tr>
+<tr><td><tt>@name[key]</tt></td><td>hash</td></tr>
+<tr><td><tt>@name[tid]</tt></td><td>thread-local</td></tr>
+<tr><td><tt>$name</tt></td><td>scratch</td></tr>
+</table></ul>
+
+<p>Variables with a '@' prefix use BPF maps, which can behave like associative arrays. They can be populated in one of two ways:</p>
+
+<ul>
+<li>variable assignment: <tt>@name = x;</tt></li>
+<li>function assignment: <tt>@name = hist(x);</tt></li>
+</ul>
+
+<p>There are various map-populating functions as builtins that provide quick ways to summarize data.</p>
+
+<h3>Builtin Variables</h3>
+
+<ul><table border=1>
+<tr><th>Variable</th><th>Description</th></tr>
+<tr><td><tt>pid</tt></td><td>Process ID</td></tr>
+<tr><td><tt>tid</tt></td><td>Thread ID</td></tr>
+<tr><td><tt>uid</tt></td><td>User ID</td></tr>
+<tr><td><tt>username</tt></td><td>Username</td></tr>
+<tr><td><tt>comm</tt></td><td>Process or command name</td></tr>
+<tr><td><tt>curtask</tt></td><td>Current task_struct as a u64</td></tr>
+<tr><td><tt>nsecs</tt></td><td>Current time in nanoseconds</td></tr>
+<tr><td><tt>elapsed</tt></td><td>Time in nanoseconds since bpftrace start</td></tr>
+<tr><td><tt>kstack</tt></td><td>Kernel stack trace</td></tr>
+<tr><td><tt>ustack</tt></td><td>User-level stack trace</td></tr>
+<tr><td><tt>arg0...argN</tt></td><td>Function arguments</td></tr>
+<tr><td><tt>args</tt></td><td>Tracepoint arguments</td></tr>
+<tr><td><tt>retval</tt></td><td>Function return value</td></tr>
+<tr><td><tt>func</tt></td><td>Function name</td></tr>
+<tr><td><tt>probe</tt></td><td>Full probe name</td></tr>
+<tr><td><tt>$1...$N</tt></td><td>Positional parameters</td></tr>
+<tr><td><tt>cgroup</tt></td><td>Default cgroup v2 ID</td></tr>
+</table></ul>
+
+<h3>Builtin Functions</h3>
+
+<ul><table border=1>
+<tr><th>Function</th><th>Description</th></tr>
+<tr><td><tt>printf("...")</tt></td><td>Print formatted string</td></tr>
+<tr><td><tt>time("...")</tt></td><td>Print formatted time</td></tr>
+<tr><td><tt>join(char *arr[])</tt></td><td>Join array of strings with a space</td></tr>
+<tr><td><tt>str(char *s [, int length])</tt></td><td>Return string from s pointer</td></tr>
+<tr><td><tt>buf(void *p [, int length])</tt></td><td>Return a hexadecimal string from p pointer</td></tr>
+<tr><td><tt>strncmp(char *s1, char *s2, int length)</tt></td><td>Compares two strings up to length</td></tr>
+<tr><td><tt>sizeof(expression)</tt></td><td>Returns the size of the expression</td></tr>
+<tr><td><tt>kstack([limit])</tt></td><td>Kernel stack trace up to limit frames</td></tr>
+<tr><td><tt>ustack([limit])</tt></td><td>User-level stack trace up to limit frames</td></tr>
+<tr><td><tt>ksym(void *p)</tt></td><td>Resolve kernel address to symbol</td></tr>
+<tr><td><tt>usym(void *p)</tt></td><td>Resolve user-space address to symbol</td></tr>
+<tr><td><tt>kaddr(char *name)</tt></td><td>Resolve kernel symbol name to address</td></tr>
+<tr><td><tt>uaddr(char *name)</tt></td><td>Resolve user-space symbol name to address</td></tr>
+<tr><td><tt>ntop([int af,]int|char[4:16] addr)</tt></td><td>Convert IP address data to text</td></tr>
+<tr><td><tt>reg(char *name)</tt></td><td>Return register value</td></tr>
+<tr><td><tt>cgroupid(char *path)</tt></td><td>Return cgroupid for /sys/fs/cgroup/... path</td></tr>
+<tr><td><tt>time("...")</tt></td><td>Print formatted time</td></tr>
+<tr><td><tt>system("...")</tt></td><td>Run shell command</td></tr>
+<tr><td><tt>cat(char *filename)</tt></td><td>Print file content</td></tr>
+<tr><td><tt>signal(char[] sig | int sig)</tt></td><td>Send a signal to the current task</td></tr>
+<tr><td><tt>override(u64 rc)</tt></td><td>Override a kernel function return value</td></tr>
+<tr><td><tt>exit()</tt></td><td>Exits bpftrace</td></tr>
+<tr><td><tt>@ = count()</tt></td><td>Count events</td></tr>
+<tr><td><tt>@ = sum(x)</tt></td><td>Sum the value</td></tr>
+<tr><td><tt>@ = hist(x)</tt></td><td>Power-of-2 histogram for x</td></tr>
+<tr><td><tt>@ = lhist(x, min, max, step)</tt></td><td>Linear histogram for x</td></tr>
+<tr><td><tt>@ = min(x)</tt></td><td>Record the minimum value seen</td></tr>
+<tr><td><tt>@ = max(x)</tt></td><td>Record the maximum value seen</td></tr>
+<tr><td><tt>@ = stats(x)</tt></td><td>Return the count, average, and total for this value</td></tr>
+<tr><td><tt>delete(@x[key])</tt></td><td>Delete the map element</td></tr>
+<tr><td><tt>clear(@x)</tt></td><td>Delete all keys from the map</td></tr>
+</table></ul>
+
+<p>There are additional lesser-used functions and capabilities not summarized here. See the <a href="https://github.com/iovisor/bpftrace/blob/master/docs/reference_guide.md">Reference Guide</a>.</p>
+
+<a name="perf"></a>
+<h1>7. perf</h1>
+
+<p>eBPF can also be used from the Linux perf command (aka perf_events) in Linux 4.4 and newer. The newer the better, as perf/BPF support keeps improving with each release. I've provided one example so far on my perf page: <a href="perf.html#eBPF">perf eBPF</a>.</p>
+
+<!--- XXX move perf eBPF section here and reference --->
+
+<a name="references"></a>
+<h1>8. References</h1>
+
+<ul>
+<li><a href="https://github.com/iovisor/bcc">bcc (BPF Compiler Collection)</a> (github): tools, tutorial, reference guide, examples, man pages.</li>
+<li><a href="https://github.com/iovisor/bpf-docs">BPF docs</a> (github): BPF docs.</li>
+<li><a href="https://www.kernel.org/doc/Documentation/networking/filter.txt">Documentation/networking/filter.txt</a> (kernel.org) BPF &amp; eBPF docs in the kernel source.</li>
+</ul>
+
+<a name="other"></a>
+<h1>9. Other eBPF Uses</h1>
+
+<p>Other uses outside of observability. Just links for now.</pl>
+
+<ul>
+<li><a href="https://cilium.io/">Cilium</a>: API-aware networking and security.</li>
+<li><a href="https://lwn.net/Articles/475043/">Yet another new approach to seccomp</a> by Jonathan Corbet.</li>
+<li><a href="https://www.slideshare.net/Netronome/ebpfxdp-sigcomm-2018">eBPF/XDP SmartNIC offload (slides)</a> by David Beckett and Jakub Kicinski (Netronome).</li>
+<li><a href="https://events.linuxfoundation.org/wp-content/uploads/2017/11/When-eBPF-Meets-FUSE-Improving-Performance-of-User-File-Systems-Ashish-Bijlani-Georgia-Tech.pdf">When eBPF Meets FUSE (PDF)</a> slides for OSS, by Ashish Bijlani.</li>
+<li><a href="https://cilium.io/blog/2018/04/17/why-is-the-kernel-community-replacing-iptables/">Why is the kernel community replacing iptables with BPF?</a> by Thomas Graf (cilium).</li>
+</ul>
+
+<a name="acknowledgements"></a>
+<h1>10. Acknowledgements</h1>
+
+<p>Many people have worked on tracers and contributed in different ways over the years to get to where we are today, including those who worked on the Linux frameworks that bcc/eBPF makes use of: tracepoints, kprobes, uprobes, ftrace, and perf_events. The most recent contributors include Alexei Starovoitov and Daniel Borkmann, who have lead eBPF development, and Brenden Blanco and Yonghong Song, who have lead bcc development. Many of the single purpose bcc tools were written by me (execsnoop, opensnoop, biolatency, ext4slower, tcpconnect, gethostlatency, etc), and two of the most important multi-tools (trace and argdist) were written by Sasha Goldshtein. I wrote a longer list of acknowledgements at the end of <a href="/blog/2016-10-27/dtrace-for-linux-2016.html">this post</a>. Thank you everyone!</p>
+
+<a name="updates"></a>
+<h1>11. Updates</h1>
+
+<p>Other resources about <b>eBPF for observability</b>, organized by year. (<i>I'm still updating these updates...</i>)</p>
+
+<h2>2013</h2>
+
+<ul>
+<li><a href="https://lkml.org/lkml/2013/9/30/627">enhanced BPF</a> by Alexei Starovoitov</li>
+<li><a href="https://lwn.net/Articles/575444/">tracing filters with BPF</a> by Alexei Starovoitov</li>
+</ul>
+
+<h2>2014</h2>
+
+<ul>
+<li><a href="https://lkml.org/lkml/2014/6/27/545">BPF syscall, maps, verifier, samples</a> by Alexei Starovoitov</li>
+</ul>
+
+<h2>2015</h2>
+
+<ul>
+<li><a href="/blog/2015-05-15/ebpf-one-small-step.html">Linux eBPF</a></li>
+<li><a href="/blog/2015-09-22/bcc-linux-4.3-tracing.html">bcc: Taming Linux 4.3+ Tracing Superpowers</a></li>
+<li><a href="/blog/2015-10-31/tcpconnect-tcpaccept-bcc.html">tcpconnect and tcpaccept for Linux (bcc)</a></li>
+</ul>
+
+<h2>2016</h2>
+<ul>
+<li><a href="/blog/2016-01-18/ebpf-stack-trace-hack.html">Linux eBPF Stack Trace Hack (bcc)</a></li>
+<li><a href="/blog/2016-01-20/ebpf-offcpu-flame-graph.html">Linux eBPF Off-CPU Flame Graph (bcc)</a></li>
+<li><a href="/blog/2016-02-01/linux-wakeup-offwake-profiling.html">Linux Wakeup and Off-Wake Profiling (bcc)</a></li>
+<li><a href="/blog/2016-02-05/ebpf-chaingraph-prototype.html">Linux chain graph prototype (bcc)</a></li>
+<li><a href="https://www.slideshare.net/brendangregg/linux-bpf-superpowers">Linux 4.x Performance: Using BPF Superpowers (slides)</a></li>
+<li><a href="/blog/2016-02-08/linux-ebpf-bcc-uprobes.html">Linux eBPF/bcc uprobes</a></li>
+<li><a href="/blog/2016-03-28/linux-bpf-bcc-road-ahead-2016.html">Linux BPF/bcc Road Ahead</a></li>
+<li><a href="/blog/2016-06-14/ubuntu-xenial-bcc-bpf.html">Ubuntu Xenial bcc/BPF</a></li>
+<li><a href="https://qmonnet.github.io/whirl-offload/2016/09/01/dive-into-bpf/">Dive into BPF: a list of reading material</a> by Quentin Monnet</li>
+<li><a href="/blog/2016-10-01/linux-bcc-security-capabilities.html">Linux bcc/BPF Tracing Security Capabilities</a></li>
+<li><a href="/blog/2016-10-04/linux-bcc-mysqld-qslower.html">Linux MySQL Slow Query Tracing with bcc/BPF</a></li>
+<li><a href="/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html">Linux bcc/BPF ext4 Latency Tracing</a></li>
+<li><a href="/blog/2016-10-08/linux-bcc-runqlat.html">Linux bcc/BPF Run Queue (Scheduler) Latency</a></li>
+<li><a href="/blog/2016-10-12/linux-bcc-nodejs-usdt.html">Linux bcc/BPF Node.js USDT Tracing</a></li>
+<li><a href="http://www.slideshare.net/goldshtn/staring-into-the-ebpf-abyss">Staring into the eBPF Abyss (slides)</a> by Sasha Goldshtein.</li>
+<li><a href="http://www.slideshare.net/vh21/meet-cutebetweenebpfandtracing">Meet-cute between eBPF and Kernel Tracing (slides)</a> by Viller Hsiao.</li>
+<li><a href="http://www.slideshare.net/suselab/ebpf-trace-from-kernel-to-userspace">eBPF Trace from Kernel to Userspace (slides)</a> by Gary Lin.</li>
+<li><a href="/blog/2016-10-15/linux-bcc-tcptop.html">Linux bcc tcptop</a></li>
+<li><a href="/blog/2016-10-21/linux-efficient-profiler.html">Linux 4.9's Efficient BPF-based Profiler</a></li>
+<li><a href="/blog/2016-10-27/dtrace-for-linux-2016.html">DTrace for Linux 2016</a></li>
+<li><a href="http://www.slideshare.net/brendangregg/linux-4x-tracing-tools-using-bpf-superpowers">Linux 4.x Tracing Tools: Using BPF Superpowers (slides)</a></li>
+<li><a href="/blog/2016-11-30/linux-bcc-tcplife.html">Linux bcc/BPF tcplife: TCP Lifespans</a></li>
+</ul>
+
+<h2>2017</h2>
+<ul>
+<li><a href="/blog/2017-01-31/golang-bcc-bpf-function-tracing.html">Golang bcc/BPF Function Tracing</a></li>
+<li><a href="https://www.slideshare.net/brendangregg/bpf-tracing-and-more">BPF: Tracing and More (slides)</a> (<a href="https://www.youtube.com/watch?v=JRFNIKUROPE">youtube</a>)</li>
+<li><a href="https://ferrisellis.com/posts/ebpf_past_present_future/">eBPF, part1: Past, Present, and Future</a> by Ferris Ellis</li>
+<li><a href="https://ferrisellis.com/posts/ebpf_syscall_and_maps/">eBPF, part 2: Syscall and Map Types</a> by Ferris Ellis</li>
+<li><a href="https://www.slideshare.net/brendangregg/velocity-2017-performance-analysis-superpowers-with-linux-ebpf">Performance Analysis Superpowers with Linux eBPF (slides)</a> (<a href="https://www.youtube.com/watch?v=bj3qdEDbCD4">youtube</a>)</li>
+<li><a href="https://blogs.dropbox.com/tech/2017/09/optimizing-web-servers-for-high-throughput-and-low-latency/">Optimizing web servers for high throughput and low latency</a> (uses some bcc/BPF) by Alexey Ivanov.</li>
+<li><a href="https://www.slideshare.net/brendangregg/linux-4x-tracing-performance-analysis-with-bccbpf">Linux 4.x Tracing: Performance Analysis with bcc/BPF (slides)</a> (<a href="https://www.youtube.com/watch?v=oc9000dM9-k">youtube</a>)</li>
+<li><a href="https://lwn.net/Articles/740157/">A thorough introduction to eBPF</a> by Matt Fleming.</li>
+<li><a href="https://opensource.com/article/17/11/bccbpf-performance">7 tools for analyzing performance in Linux with bcc/BPF</a>.</li>
+<li><a href="https://twitter.com/goldshtn/status/926131097741774848">JVM Monitoring with BPF at USENIX LISA17</a>.</li>
+</ul>
+
+<h2>2018</h2>
+<ul>
+<li><a href="https://lwn.net/Articles/744522/">BPFd: Running BCC tools remotely across systems and architectures</a> by Joel Fernandes</li>
+<li><a href="http://www.brendangregg.com/blog/2018-02-09/kpti-kaiser-meltdown-performance.html">KPTI/KAISER Meltdown performance analysis</a> (includes some bcc/BPF analysis)</li>
+<li><a href="https://jvns.ca/blog/2018/02/05/rust-bcc/">Writing eBPF tracing tools in Rust</a> by Julia Evans.</li>
+<li><a href="https://jvns.ca/blog/2018/02/24/an-ltrace-clone-using-ebpf/">Prototyping an ltrace clone using eBPF</a> by Julia Evans.</li>
+<li><a href="https://lwn.net/Articles/747640/">Some advanced BCC topics</a> by Matt Fleming.</li>
+<li><a href="https://lwn.net/Articles/753601/">Using user-space tracepoints with BPF</a> by Matt Fleming.</li>
+<li><a href="https://www.circonus.com/2018/05/linux-system-monitoring-with-ebpf/">Linux system monitoring with eBPF</a> by Circonus.</li>
+<li><a href="http://www.brendangregg.com/blog/2018-03-22/tcp-tracepoints.html">TCP Tracepoints</a></li>
+<li><a href="https://www.slideshare.net/suselab/ebpf-maps-101">eBPF maps 101</a> by Al Cho (SUSE).</li>
+<li><a href="http://www.brendangregg.com/blog/2018-05-31/linux-tcpdrop.html">Linux bcc/eBPF tcpdrop</a></li>
+<a href="https://www.slideshare.net/HeinrichHartmann/advanced-linux-system-monitoring-with-ebpf">Linux System Monitoring with eBPF (slides)</a> by Heinrich Hartmann (Circonus).</li>
+<li><a href="https://twitter.com/brendangregg/status/1002646110228316160">BPF verifier future</a> by Alexei Starovoitov.</li>
+<li><a href="https://github.com/draios/sysdig/wiki/eBPF-(beta)">Sysdig developes eBPF support</a> by Gianluca Borello.</li>
+<li><a href="https://www.youtube.com/watch?v=Yrjk4W-F9iY">Low-Overhead System Tracing With eBPF (youtube)</a> talk (<a href="https://www.slideshare.net/AkshayKapoor22/low-overhead-system-tracing-with-ebpf">slides</a>) by Akshay Kapoor.</li>
+<li><a href="https://www.slideshare.net/kerneltlv/building-network-functions-with-ebpf-bcc">Building Network Functions with eBPF & BCC (slides)</a> by Shmulik Ladkani (Meta Networks).</li>
+<li><a href="https://allanmcaleavy.com/2018/08/27/taking-ebpf-bcc-tools-for-a-quick-spin-in-rhel-7-6-beta/">Taking eBPF (bcc tools) for a quick spin in RHEL 7.6 (beta)</a>, by Allan McAleavy.</li>
+<li><a href="https://blog.cloudflare.com/introducing-ebpf_exporter/">Introducing ebpf_exporter</a> by Ivan Babrou (Cloudflare).</li>
+<li><a href="https://bolinfest.github.io/opensnoop-native/">How I ended up writing opensnoop in pure C using eBPF</a> by Michael Bolin.</li>
+<li><a href="http://smackerelofopinion.blogspot.com/2018/11/high-level-tracing-with-bpftrace.html">High-level tracing with bpftrace</a> by Colin Ian King.</li>
+<li><a href="https://www.youtube.com/watch?v=GkMltybVHkU">eBPF Powered Distributed Kubernetes Performance Analysis (video)</a> talk at KubeCon by Lorenzo Fontana.</li>
+<li><a href="https://www.youtube.com/watch?v=ug3lYZdN0Bk">Low-Overhead Tracing Using eBPF for Observability into Kubernetes Apps and Services (video)</a> talk at KubeCon by Gaurav Gupta.</li>
+<li><a href="https://arighi.blogspot.com/2018/12/linux-easy-keylogger-with-ebpf.html">Linux: easy keylogger with eBPF</a> by Andrea Righi.</li>
+</ul>
+
+<h2>2019</h2>
+<ul>
+<li><a href="https://habr.com/ru/company/selectel/blog/450818/">From High Ceph Latency to Kernel Patch with eBPF/BCC</a> by &#1040;&#1083;&#1077;&#1082;&#1089;&#1077;&#1081; &#1047;&#1072;&#1093;&#1072;&#1088;&#1086;&#1074;.</li>
+<li><a href="/blog/2019-01-01/learn-ebpf-tracing.html">Learn eBPF Tracing: Tutorial and Examples</a> by myself.</li>
+<li><a href="bpf-performance-tools-book.html">BPF Performance Tools: Linux System and Application Observability (book)</a> by myself, published by Addison Wesley.</li>
+<li><a href="https://lwn.net/Articles/793749/">Kernel analysis with bpftrace (lwn.net)</a> by myself.</li>
+<li><a href="https://kirshatrov.com/2019/12/25/bpf-playground">Playing with BPF</a> by Kir Shatrov.</li>
+<li><a href="/blog/2019-08-19/bpftrace.html">A thorough introduction to bpftrace</a> by myself.</li>
+<li><a href="/blog/2019-12-02/bpf-a-new-type-of-software.html">BPF: A New Type of Software</a> by myself.</li>
+<li><a href="/blog/2019-12-22/bpf-theremin.html">BPF Theremin, Tetris, and Typewriters</a> by myself.</li>
+<li><a href="/blog/2020-11-04/bpf-co-re-btf-libbpf.html">BPF binaries: BTF, CO-RE, and the future of BPF perf tools</a> by myself.</li>
+</ul>
+
+<h2>2020</h2>
+<ul>
+<li><a href="https://devopsspiral.com/articles/linux/ebpf-unlock/">Unlocking eBPF power</a> by Micha&lstrok; Wcis&lstrok;o shows a proof of concept tool that unlocks your laptop when your phone is nearby, using bpftrace.</li>
+<li><a href="https://ebpf.io/">ebpf.io</a>: eBPF (BPF) now has its own website.</li>
+<li><a href="/blog/2020-11-04/bpf-co-re-btf-libbpf.html">BPF binaries: BTF, CO-RE, and the future of BPF perf tools</a> by myself.</li>
+</ul>
+
+<h2>2021</h2>
+<ul>
+<li><a href="/blog/2021-06-15/bpf-internals.html">USENIX LISA2021 BPF Internals (eBPF)</a> by myself.</li>
+<li><a href="/blog/2021-07-03/how-to-add-bpf-observability.html">How To Add eBPF Observability To Your Product</a> by myself.</li>
+</ul>
+
+</div>
+
+<div class="navmobile">
+<hr><center>Site Navigation</center><br><ul>
+<p class="navhdr">Brendan's site:</p>
+<a href="/overview.html">Start Here</a><br>
+<a href="/index.html">Homepage</a><br>
+<a href="/blog/index.html">Blog</a><br>
+<!-- <a href="/sitemap.html">Full Site Map</a><br> -->
+<a href="/systems-performance-2nd-edition-book.html">Sys Perf book</a><br>
+<a href="/bpf-performance-tools-book.html">BPF Perf book</a><br>
+<a href="/linuxperf.html">Linux Perf</a><br>
+<a href="/ebpf.html">eBPF Tools</a><br>
+<a href="/perf.html">perf Examples</a><br>
+<a href="/methodology.html">Perf Methods</a><br>
+<a href="/usemethod.html">USE Method</a><br>
+<a href="/tsamethod.html">TSA Method</a><br>
+<a href="/offcpuanalysis.html">Off-CPU Analysis</a><br>
+<a href="/activebenchmarking.html">Active Bench.</a><br>
+<a href="/wss.html">WSS Estimation</a><br>
+<a href="/flamegraphs.html">Flame Graphs</a><br>
+<a href="/flamescope.html">Flame Scope</a><br>
+<a href="/heatmaps.html">Heat Maps</a><br>
+<a href="/frequencytrails.html">Frequency Trails</a><br>
+<a href="/colonygraphs.html">Colony Graphs</a><br>
+<a href="/dtrace.html">DTrace Tools</a><br>
+<a href="/dtracetoolkit.html">DTraceToolkit</a><br>
+<a href="/dtkshdemos.html">DtkshDemos</a><br>
+<a href="/guessinggame.html">Guessing Game</a><br>
+<a href="/specials.html">Specials</a><br>
+<a href="/books.html">Books</a><br>
+<a href="/sites.html">Other Sites</a><br>
+
+</ul><hr>
+</div>
+<div class="recentmobile">
+<ul>
+<!-- (this is for /index.html etc) recent books: -->
+<!-- <center><a href="https://informit.com/sale/booksgiving"><img border=0 width=180 src="/Images/booksgiving2021.jpg"></center><br><b>Book sale until Dec 1, 2021: 55% off for 2 or more</b></a><br><br> -->
+<center><a href="/systems-performance-2nd-edition-book.html"><img src="/Images/sysperf2nd_bookcover_360.jpg" width=180></a><br><font size=-2><i><a href="/systems-performance-2nd-edition-book.html">Systems Performance 2nd Ed.</a></i></font></center><br><br>
+
+<center><a href="/bpf-performance-tools-book.html"><img src="/Images/bpfperftools_bookcover_360.jpg" width=180></a><br><font size=-2><i><a href="/bpf-performance-tools-book.html">BPF Performance Tools book</a></i></font></center>
+<!--
+<br><center><a href="https://www.portal.reinvent.awsevents.com/connect/search.ww?#loadSearch-searchPhrase=OPN303&searchType=session&tc=0&sortBy=abbreviationSort&p="><img src="/Images/Speaker/reInvent2019_200.jpg" width=180" border=0></a><br><font size=-2><i>I'm speaking at <a href="https://www.portal.reinvent.awsevents.com/connect/search.ww?#loadSearch-searchPhrase=OPN303&searchType=session&tc=0&sortBy=abbreviationSort&p=">AWS re:Invent 2019</a></i></font></center>
+-->
+<br>
+
+Recent posts:<br>
+<ul style="padding-left:18px">
+  
+	   <li class="recent">07 Feb 2026 &raquo;<br>
+	   <a href="/blog/2026-02-07/why-i-joined-openai.html">  
+	   Why I joined OpenAI</a></li>
+  
+	   <li class="recent">05 Dec 2025 &raquo;<br>
+	   <a href="/blog/2025-12-05/leaving-intel.html">  
+	   Leaving Intel</a></li>
+  
+	   <li class="recent">28 Nov 2025 &raquo;<br>
+	   <a href="/blog/2025-11-28/ai-virtual-brendans.html">  
+	   On "AI Brendans" or "Virtual Brendans"</a></li>
+  
+	   <li class="recent">22 Nov 2025 &raquo;<br>
+	   <a href="/blog/2025-11-22/intel-is-listening.html">  
+	   Intel is listening, don't waste your shot</a></li>
+  
+	   <li class="recent">17 Nov 2025 &raquo;<br>
+	   <a href="/blog/2025-11-17/third-stage-engineering.html">  
+	   Third Stage Engineering</a></li>
+  
+	   <li class="recent">04 Aug 2025 &raquo;<br>
+	   <a href="/blog/2025-08-04/when-to-hire-a-computer-performance-engineering-team-2025-part1.html">  
+	   When to Hire a Computer Performance Engineering Team (2025) part 1 of 2</a></li>
+  
+	   <li class="recent">22 May 2025 &raquo;<br>
+	   <a href="/blog/2025-05-22/3-years-of-extremely-remote-work.html">  
+	   3 Years of Extremely Remote Work</a></li>
+  
+	   <li class="recent">01 May 2025 &raquo;<br>
+	   <a href="/blog/2025-05-01/doom-gpu-flame-graphs.html">  
+	   Doom GPU Flame Graphs</a></li>
+  
+	   <li class="recent">29 Oct 2024 &raquo;<br>
+	   <a href="/blog/2024-10-29/ai-flame-graphs.html">  
+	   AI Flame Graphs</a></li>
+  
+	   <li class="recent">22 Jul 2024 &raquo;<br>
+	   <a href="/blog/2024-07-22/no-more-blue-fridays.html">  
+	   No More Blue Fridays</a></li>
+  
+	   <li class="recent">24 Mar 2024 &raquo;<br>
+	   <a href="/blog/2024-03-24/linux-crisis-tools.html">  
+	   Linux Crisis Tools</a></li>
+  
+	   <li class="recent">17 Mar 2024 &raquo;<br>
+	   <a href="/blog/2024-03-17/the-return-of-the-frame-pointers.html">  
+	   The Return of the Frame Pointers</a></li>
+  
+	   <li class="recent">10 Mar 2024 &raquo;<br>
+	   <a href="/blog/2024-03-10/ebpf-documentary.html">  
+	   eBPF Documentary</a></li>
+  
+	   <li class="recent">28 Apr 2023 &raquo;<br>
+	   <a href="/blog/2023-04-28/ebpf-security-issues.html">  
+	   eBPF Observability Tools Are Not Security Tools</a></li>
+  
+	   <li class="recent">01 Mar 2023 &raquo;<br>
+	   <a href="/blog/2023-03-01/computer-performance-future-2022.html">  
+	   USENIX SREcon APAC 2022: Computing Performance: What's on the Horizon</a></li>
+  
+	   <li class="recent">17 Feb 2023 &raquo;<br>
+	   <a href="/blog/2023-02-17/srecon-apac-2023.html">  
+	   USENIX SREcon APAC 2023: CFP</a></li>
+  
+	   <li class="recent">02 May 2022 &raquo;<br>
+	   <a href="/blog/2022-05-02/brendan-at-intel.html">  
+	   Brendan@Intel.com</a></li>
+  
+	   <li class="recent">15 Apr 2022 &raquo;<br>
+	   <a href="/blog/2022-04-15/netflix-farewell-1.html">  
+	   Netflix End of Series 1</a></li>
+  
+	   <li class="recent">09 Apr 2022 &raquo;<br>
+	   <a href="/blog/2022-04-09/tensorflow-library-performance.html">  
+	   TensorFlow Library Performance</a></li>
+  
+	   <li class="recent">19 Mar 2022 &raquo;<br>
+	   <a href="/blog/2022-03-19/why-dont-you-use.html">  
+	   Why Don't You Use ...</a></li>
+  
+</ul>
+<a href="/blog/index.html">Blog index</a><br>
+<a href="/blog/about.html">About</a><br>
+<a href="/blog/rss.xml">RSS</a><br>
+<!-- also edit _layouts/default.html -->
+<!--
+<br><a href="https://www.usenix.org/conference/lisa18"><img src="https://www.usenix.org/sites/default/files/lisa18_banner_join-me.png" width=180></a><br><font size=-2><i>I am program co-chair for LISA 2018</i></font>
+-->
+
+</ul>
+</div>
+</div>
+
+<hr>
+Created: 28-Dec-2016<br>
+Last Updated: 07-Sep-2021<br>
+<font size=-1>Copyright 2021 Brendan Gregg</font><br>
+</body>
+</html>

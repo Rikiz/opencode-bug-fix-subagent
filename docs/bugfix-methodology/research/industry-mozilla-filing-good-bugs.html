@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Filing good bugs &mdash; Firefox Source Docs  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_js.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom_theme.css?v=624589a5" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/dark_mode.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/firefox.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=30646c52"></script>
+      <script src="../_static/scrollable_regions.js?v=017340cf"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Helpful error messages for web developers" href="helpful-error-messages.html" />
+    <link rel="prev" title="Engineering Show and Tell" href="engineering_show_and_tell.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Firefox Source Docs
+              <img src="../_static/firefox-wordmark.svg" class="logo" alt="Logo"/>
+          </a><! -- This code is governed by the BSD license -->
+
+<div>
+  <h3>Quick search</h3>
+  <script>
+    (function () {
+      var cx = "dd12886298f75dbef";
+      var gcse = document.createElement("script");
+      gcse.async = true;
+      gcse.src = "https://cse.google.com/cse.js?cx=" + cx;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(gcse, s);
+    })();
+  </script>
+  <gcse:search></gcse:search>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary/index.html">A Glossary of Common Terms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">A Quick Guide to Mozilla Applications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Getting Set Up To Work On The Firefox Codebase</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Working On Firefox</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Working on Firefox</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="contribution_quickref.html">Firefox Contributors’ Quick Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stack_quickref.html">Working with stack of patches Quick Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reviewable-patch-series.html">Making a patch series reviewable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phabricator_vs_github.html">Phabricator vs GitHub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pocket-guide-shipping-firefox.html">Pocket Guide: Shipping Firefox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="editor.html">Editor / IDE integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reviews.html">Getting reviews</a></li>
+<li class="toctree-l2"><a class="reference internal" href="levelling-up.html">Levelling up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how_to_submit_a_patch.html">How to submit a patch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-collection.html">Data Collection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-review.html">Data Review</a></li>
+<li class="toctree-l2"><a class="reference internal" href="searchfox.html">Searchfox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ai-coding.html">Firefox AI Coding Policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jujutsu.html">Introduction to Jujutsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="git-tricks.html">Git Tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Review_FAQ.html">Code Review FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reviewer_checklist.html">Reviewer Checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging/index.html">Debugging Firefox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signing/configure_development_certificate.html">Configure Development Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signing/signing_macos_build.html">Signing Local macOS Builds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directory_structure.html">Firefox Source Code Directory Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="build/artifact_builds.html">Understanding Artifact Builds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="build/building_mobile_firefox.html">Firefox for Mobile Devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="build/working_with_esr_115.html">Working with ESR115</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engineering_show_and_tell.html">Engineering Show and Tell</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Filing good bugs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#good-first-bugs">Good first bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="helpful-error-messages.html">Helpful error messages for web developers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../bug-mgmt/index.html">Bug Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crash-reporting/index.html">Firefox Crash Reporting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Firefox User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/3d_view/index.html">3D view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/about_colon_debugging/index.html">about:debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/accessibility_inspector/index.html">Accessibility Inspector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/application/index.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/browser_console/index.html">Browser Console</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/browser_toolbox/index.html">Browser Toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/custom_formatters/index.html">Custom Formatters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/debugger/index.html">The Firefox JavaScript Debugger</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/debugger-api/index.html">Debugger-API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/deprecated_tools/index.html">Deprecated tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/devtoolsapi/index.html">DevTools API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/devtoolscolors/index.html">DevToolsColors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/dom_property_viewer/index.html">DOM Property Viewer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/eyedropper/index.html">Eyedropper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/index/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/javascript_tracer/index.html">JavaScript Tracer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/json_viewer/index.html">JSON viewer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/keyboard_shortcuts/index.html">All keyboard shortcuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/local_mode/index.html">Local Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/measure_a_portion_of_the_page/index.html">Measure a portion of the page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/memory/index.html">Memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/migrating_from_firebug/index.html">Migrating from Firebug</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/network_monitor/index.html">Network Monitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/page_inspector/index.html">Page Inspector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/performance/index.html">Performance Tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/responsive_design_mode/index.html">Responsive Design Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/rulers/index.html">Rulers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/settings/index.html">Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/shader_editor/index.html">Shader Editor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/storage_inspector/index.html">Storage Inspector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/style_editor/index.html">Style Editor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/taking_screenshots/index.html">Taking screenshots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/tips/index.html">Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/tools_toolbox/index.html">Toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/validators/index.html">Validators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/view_source/index.html">View Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/web_audio_editor/index.html">Web Audio Editor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/web_console/index.html">Web Console</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/working_with_iframes/index.html">Working with iframes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools-user/index.html">Firefox DevTools User Docs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Source Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../mots/index.html">Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../browser/index.html">Firefox Front-end</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dom/index.html">DOM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../editor/index.html">Editor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../layout/index.html">Style system (CSS) &amp; Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gfx/index.html">Graphics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipc/index.html">Processes, Threads and IPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools/README.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools/architecture-overview.html">Architecture overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools/bugs-issues.html">Bugs and issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devtools/index.html">Firefox DevTools Contributor Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../toolkit/index.html">Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../js/index.html">SpiderMonkey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jsloader/index.html">JS Loader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mobile/android/geckoview/index.html">GeckoView</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mobile/android/fenix/index.html">Fenix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mobile/android/focus-android/index.html">Focus for Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dom/bindings/webidl/index.html">WebIDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/libpref/index.html">libpref</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networking/index.html">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../remote/index.html">Remote Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../permissions/index.html">Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uriloader/index.html">File Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../widget/cocoa/index.html">Firefox on macOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../widget/windows/index.html">Firefox on Windows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../toolkit/components/ml/index.html">Firefox AI Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../toolkit/components/pageextractor/index.html">Page Extractor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../accessible/index.html">Accessibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../media/index.html">Media Playback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-quality/index.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../writing-rust-code/index.html">Writing Rust Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rust-components/index.html">Rust Components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/profiler/index.html">Gecko Profiler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance/index.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../storage/index.html">Database bindings (SQLite, KV, …)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../xpcom/index.html">XPCOM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nspr/index.html">NSPR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/nss/index.html">Network Security Services (NSS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-security/index.html">Web Security Checks in Gecko</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rlbox/index.html">RLBox sandboxing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The Firefox Build System</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../mach/index.html">Mach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/try/index.html">Pushing to Try</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/buildsystem/index.html">Build System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../taskcluster/index.html">Firefox CI and Taskgraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/moztreedocs/index.html">Managing Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mozbuild/vendor/index.html">Vendoring Third Party Components</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testing &amp; Test Infrastructure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../testing/automated-testing/index.html">Automated Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/treeherder-try/index.html">Understanding Treeherder Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/sheriffed-intermittents/index.html">Sheriffed intermittent failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/tests-for-new-config/index.html">Turning on Firefox tests for a new configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/intermittent/index.html">Avoiding intermittent tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/debugging-intermittents/index.html">Debugging Intermittent Test Failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/testing-policy/index.html">Testing Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/ci-configs/index.html">Configuration Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/browser-chrome/index.html">Browser chrome mochitests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/chrome-tests/index.html">Chrome Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/geckodriver/index.html">geckodriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/test-verification/index.html">Test Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/webrender/index.html">WebRender Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/mochitest-plain/index.html">Mochitest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/xpcshell/index.html">XPCShell tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/tps/index.html">TPS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web-platform/index.html">web-platform-tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gtest/index.html">GTest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/fuzzing/index.html">Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/sanitizer/index.html">Sanitizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing/perfdocs/index.html">Performance Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/code-coverage/index.html">Code coverage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-rust-code/index.html">Testing &amp; Debugging Rust Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AI Agent Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ai-agent-tools/index.html">AI Agent Tools for Firefox Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Releases &amp; Updates</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../update-infrastructure/index.html">Mozilla Update Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../update-infrastructure/index.html#watershed-updates">Watershed Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../update-infrastructure/index.html#desupport-updates">Desupport Updates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/update-verify/index.html">Update Verify</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Localization &amp; Internationalization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intl/index.html">Internationalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../l10n/index.html">Localization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Firefox and Python</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../mozbase/index.html">mozbase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/index.html">Using third-party Python packages</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Metrics Collected in Firefox</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../metrics/index.html">Firefox metrics</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Firefox Source Docs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  --><div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Working on Firefox</a></li>
+      <li class="breadcrumb-item active">Filing good bugs</li>
+<li class="wy-breadcrumbs-aside">
+  <a
+    href="https://bugzilla.mozilla.org/enter_bug.cgi?product=Developer+Infrastructure&component=Firefox+Source+Docs%3A+Content&short_desc=Documentation+issue+on+contributing/filing-good-bugs&comment=URL+=+https://firefox-source-docs.mozilla.org/contributing/filing-good-bugs.html&bug_file_loc=https://firefox-source-docs.mozilla.org/contributing/filing-good-bugs.html"
+    rel="nofollow"
+    >Report an issue</a
+  >
+  /
+  <a
+    href="https://github.com/mozilla-firefox/firefox/blob/main/docs/contributing/filing-good-bugs.md"
+    rel="nofollow"
+    >View page source</a
+  >
+</li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="filing-good-bugs">
+<h1>Filing good bugs<a class="headerlink" href="#filing-good-bugs" title="Link to this heading"></a></h1>
+<p>Getting started working on a bug can be hard, specially if you lack
+context.</p>
+<p>This guide is meant to provide a list of steps to provide the necessary
+information to open an actionable bug.</p>
+<ul class="simple">
+<li><p><strong>Use a descriptive title</strong>. Avoid jargon and abbreviations where
+possible, they make it hard for other people to find existing bugs,
+and to understand them.</p></li>
+<li><p><strong>Explain the problem in depth</strong> and provide the steps to reproduce. Be
+as specific as possible, and include things such as operating system
+and version if reporting a bug.</p></li>
+<li><p>If you can, <strong>list files and lines of code</strong> that may need to be
+modified. Ideally provide a patch for getting started.
+Do not hesitate to add permalinks to <a class="reference external" href="https://searchfox.org/firefox-main/source/">Searchfox</a>
+pointing to the file and lines.</p></li>
+<li><p>If applicable, <strong>provide a test case</strong> or document that can be used to
+test the bug is solved. For example, if the bug title was “HTML
+inspector fails when inspecting a page with one million of nodes”,
+you would provide an HTML document with one million of nodes, and we
+could use it to test the implementation, and make sure you’re looking
+at the same thing we’re looking at. You could use services like
+jsfiddle, codepen or jsbin to share your test cases. Other people use
+GitHub, or their own web server.</p></li>
+</ul>
+<section id="good-first-bugs">
+<h2>Good first bugs<a class="headerlink" href="#good-first-bugs" title="Link to this heading"></a></h2>
+<p>If you’re looking to open a bug as a “good first bug” for new contributors, please adhere to the following guidelines:</p>
+<ol class="arabic simple">
+<li><p><strong>Complexity</strong>
+Ensure the bug is not overly complex. New contributors are already navigating the learning curve of Firefox’s codebase and workflows. An overly complicated bug can be overwhelming.</p></li>
+<li><p><strong>Tagging</strong>
+Use the Bugzilla keyword <code class="docutils literal notranslate"><span class="pre">good-first-bug</span></code> to mark it appropriately.</p></li>
+<li><p><strong>Language Specification</strong>
+In the whiteboard section, specify the primary language of the bug using the <code class="docutils literal notranslate"><span class="pre">[lang=XX]</span></code> format. For instance, <code class="docutils literal notranslate"><span class="pre">[lang=C++]</span></code> for C++ or <code class="docutils literal notranslate"><span class="pre">[lang=py]</span></code> for Python.</p></li>
+<li><p><strong>Mentorship</strong>
+Commit to guiding the new contributor by adding yourself as a mentor for the bug. Please keep the mentor field up to date, if you no longer have time set it to empty or find another available mentor.</p></li>
+<li><p><strong>Documentation</strong>
+Provide links to essential documentation that can assist the contributor. For example, you might include:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../setup/contributing_code.html"><span class="doc">How To Contribute Code To Firefox</span></a></p></li>
+<li><p><a class="reference internal" href="contribution_quickref.html"><span class="doc">Firefox Contributors’ Quick Reference</span></a></p></li>
+<li><p><a class="reference internal" href="stack_quickref.html"><span class="doc">Working with stack of patches Quick Reference</span></a></p></li>
+</ul>
+</li>
+</ol>
+<p>By following these guidelines, you’ll be setting up new contributors for success and fostering a welcoming environment for them.</p>
+<p>These good first bugs can be browsed on <a class="reference external" href="https://codetribute.mozilla.org/">https://codetribute.mozilla.org/</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="engineering_show_and_tell.html" class="btn btn-neutral float-left" title="Engineering Show and Tell" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="helpful-error-messages.html" class="btn btn-neutral float-right" title="Helpful error messages for web developers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
