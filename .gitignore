@@ -1,3 +1,5 @@
 node_modules/
-/.bugfix/runs/
+/.issue-fix/runs/
+.codegraph/
+eval/results/*.log
 .env

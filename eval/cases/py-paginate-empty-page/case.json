@@ -1,0 +1,17 @@
+{
+  "id": "py-paginate-empty-page",
+  "language": "python",
+  "type": "bug",
+  "issue_clarity": 2,
+  "test_coverage": 1,
+  "difficulty": "unknown",
+  "ticket": "ticket.md",
+  "repo": "repo",
+  "oracle": [
+    "tests/__init__.py",
+    "tests/test_billing_oracle.py"
+  ],
+  "test_cmd": "python3 -m unittest discover -s tests -t . -q",
+  "reference_patch": "reference.patch",
+  "toolchain": "python3"
+}

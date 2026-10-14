@@ -1,0 +1,14 @@
+{
+  "id": "rust-percent-plus",
+  "language": "rust",
+  "type": "bug",
+  "issue_clarity": 3,
+  "test_coverage": 0,
+  "difficulty": "unknown",
+  "ticket": "ticket.md",
+  "repo": "repo",
+  "oracle": ["tests/percent_decode_oracle.rs"],
+  "test_cmd": "cargo test --quiet",
+  "reference_patch": "reference.patch",
+  "toolchain": "cargo"
+}

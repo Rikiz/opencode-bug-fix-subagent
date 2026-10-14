@@ -1,0 +1,11 @@
+--- a/src/csv.js
++++ b/src/csv.js
+@@ -8,7 +8,7 @@
+  * @returns {string[][]}
+  */
+ function parseRows(text) {
+-  const lines = text.split('\n')
++  const lines = text.replace(/\n$/, '').split('\n')
+   const rows = []
+   for (const line of lines) {
+     const row = line.split(',')

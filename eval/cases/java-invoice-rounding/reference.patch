@@ -1,0 +1,11 @@
+--- a/src/main/java/com/example/invoice/Invoice.java
++++ b/src/main/java/com/example/invoice/Invoice.java
+@@ -12,7 +12,7 @@
+      * @param ratePercent   non-negative tax rate, e.g. 10 for 10%
+      */
+     public static long totalWithTax(long subtotalCents, int ratePercent) {
+-        long tax = subtotalCents * ratePercent / 100;
++        long tax = (subtotalCents * ratePercent + 50) / 100;
+         return subtotalCents + tax;
+     }
+ }

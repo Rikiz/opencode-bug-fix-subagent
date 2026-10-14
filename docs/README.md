@@ -6,6 +6,7 @@
 
 | 你想知道 | 看哪篇 |
 |---|---|
+| **怎么用 `issue-fix` agent 修一个 bug 单**（装、跑、七个结局、消融评测） | [`designs/opencode-issue-fix-extension.md`](designs/opencode-issue-fix-extension.md) · [`../eval/README.md`](../eval/README.md) |
 | OpenCode 自定义 agent 到底怎么实现、权限怎么算、为什么我的配置没生效 | [`opencode-agents/`](opencode-agents/README.md) |
 | 业内怎么"基于问题单修 bug"（含论文与量化论断） | [`bugfix-methodology/`](bugfix-methodology/README.md) |
 | 业内怎么定位"多仓/多服务"的问题（前端+后端+DB+网关） | [`multi-repo-bugfix/`](multi-repo-bugfix/README.md) |
@@ -41,6 +42,8 @@
 > `multi-repo-bugfix` 目录中曾存在一份文件名错误的 PDF（实为物理论文），已核实并移除，更正记录见 `multi-repo-bugfix/research/README.md`。
 
 ### 3. 流程设计：`designs/`
+
+[`designs/opencode-issue-fix-extension.md`](designs/opencode-issue-fix-extension.md) —— **单仓问题单修复扩展**（当前主产物）：十阶段状态机与六道门禁、七个结局、权限矩阵、M0 在 1.19.0 上的实测记录（E1–E12）与三条由此产生的规划修订、M1 资产清单、M2–M5 里程碑。
 
 [`designs/multi-repo-issue-fix-flow.md`](designs/multi-repo-issue-fix-flow.md) —— 多仓问题单修复流程设计（v1，未实现）：角色拓扑、S0–S7 阶段、证据账本 schema、状态机、权限矩阵（含 5 个实测陷阱）、工具接入点、消融矩阵与指标、风险登记表。
 

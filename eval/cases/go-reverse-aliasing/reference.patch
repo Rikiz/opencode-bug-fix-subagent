@@ -1,0 +1,12 @@
+--- a/slice/reverse.go
++++ b/slice/reverse.go
+@@ -3,7 +3,8 @@
+ 
+ // Reverse returns a reversed copy of s. The input must not be modified.
+ func Reverse(s []int) []int {
+-	out := s[:len(s):len(s)]
++	out := make([]int, len(s))
++	copy(out, s)
+ 	for i, j := 0, len(out)-1; i < j; i, j = i+1, j-1 {
+ 		out[i], out[j] = out[j], out[i]
+ 	}

@@ -1,0 +1,16 @@
+{
+  "id": "js-csv-trailing-row",
+  "language": "javascript",
+  "type": "bug",
+  "issue_clarity": 2,
+  "test_coverage": 0,
+  "difficulty": "unknown",
+  "ticket": "ticket.md",
+  "repo": "repo",
+  "oracle": [
+    "test/csv_oracle.test.js=csv_oracle.js"
+  ],
+  "test_cmd": "node --test",
+  "reference_patch": "reference.patch",
+  "toolchain": "node"
+}

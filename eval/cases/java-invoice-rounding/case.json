@@ -1,0 +1,14 @@
+{
+  "id": "java-invoice-rounding",
+  "language": "java",
+  "type": "bug",
+  "issue_clarity": 2,
+  "test_coverage": 0,
+  "difficulty": "unknown",
+  "ticket": "ticket.md",
+  "repo": "repo",
+  "oracle": ["InvoiceOracle.java", "run-oracle.sh"],
+  "test_cmd": "bash run-oracle.sh",
+  "reference_patch": "reference.patch",
+  "toolchain": "javac"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "go-reverse-aliasing",
+  "language": "go",
+  "type": "bug",
+  "issue_clarity": 3,
+  "test_coverage": 0,
+  "difficulty": "unknown",
+  "ticket": "ticket.md",
+  "repo": "repo",
+  "oracle": ["slice/reverse_oracle_test.go"],
+  "test_cmd": "go test ./... -count=1",
+  "reference_patch": "reference.patch",
+  "toolchain": "go"
+}
