@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bugfix Multi-Agent 工作流：证据化诊断与演进方案</title>
+<style>
+  :root {
+    --ink: #0f172a; --ink2: #334155; --muted: #64748b; --faint: #94a3b8;
+    --bg: #f8fafc; --card: #fff; --border: #e2e8f0;
+    --blue: #2563eb; --blue1: #dbeafe; --blue2: #eff6ff;
+    --red: #dc2626; --red1: #fee2e2;
+    --amber: #d97706; --amber1: #fef3c7;
+    --green: #059669; --green1: #d1fae5;
+    --violet: #7c3aed; --violet1: #ede9fe;
+    --slate: #475569;
+    --radius: 14px; --radius-sm: 9px;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font:400 15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;
+    background:var(--bg); color:var(--ink);
+  }
+
+  /* ── Layout ── */
+  .wrap { max-width:1280px; margin:0 auto; padding:36px 28px 80px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .grid-auto { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+
+  /* ── Section ── */
+  section { margin-top:36px; scroll-margin-top:76px; }
+  .sec-label {
+    display:inline-block; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--blue); background:var(--blue1); padding:3px 12px; border-radius:99px; margin-bottom:10px;
+  }
+  h2 { font-size:24px; font-weight:700; letter-spacing:-.01em; color:var(--ink); }
+  h3 { font-size:17px; font-weight:700; color:var(--ink); margin-bottom:6px; }
+  h4 { font-size:14px; font-weight:700; color:var(--slate); margin-bottom:4px; }
+  .deck { color:var(--muted); margin:6px 0 20px; max-width:780px; }
+
+  /* ── Card ── */
+  .card {
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:22px 24px; box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .card.p0 { border-left:4px solid var(--red); }
+  .card.p1 { border-left:4px solid var(--amber); }
+
+  /* ── Hero ── */
+  .hero {
+    background:linear-gradient(135deg, #0f172a 0%, #1e3a5f 45%, #1e4d7b 100%);
+    border-radius:var(--radius); padding:48px 44px 36px; color:#fff; position:relative; overflow:hidden;
+  }
+  .hero::after {
+    content:''; position:absolute; right:-40px; top:-60px; width:360px; height:360px;
+    background:radial-gradient(circle, rgba(255,255,255,.06) 0%, transparent 70%);
+    border-radius:50%;
+  }
+  .hero h1 { font-size:34px; font-weight:800; letter-spacing:-.02em; position:relative; z-index:1; line-height:1.2; }
+  .hero .sub { color:#bcd8f0; font-size:15.5px; margin-top:10px; max-width:750px; position:relative; z-index:1; line-height:1.55; }
+  .hero .date { color:#7da6cc; font-size:13px; margin-top:20px; position:relative; z-index:1; }
+
+  .kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:26px; position:relative; z-index:1; }
+  .kpi {
+    background:rgba(255,255,255,.10); backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,.13);
+    border-radius:var(--radius-sm); padding:18px 20px;
+  }
+  .kpi .val { font-size:31px; font-weight:800; letter-spacing:-.02em; display:block; line-height:1.1; }
+  .kpi .val.red { color:#fca5a5; }
+  .kpi .val.amber { color:#fcd34d; }
+  .kpi .dsc { color:#93b8d8; font-size:12.5px; display:block; margin-top:6px; line-height:1.35; }
+
+  /* ── Timeline Table ── */
+  .tbl { width:100%; border-collapse:collapse; font-size:14.5px; margin-top:14px; }
+  .tbl th, .tbl td { padding:10px 14px; text-align:left; }
+  .tbl th { background:#f1f5f9; color:var(--slate); font-weight:700; font-size:12.5px; letter-spacing:.03em; text-transform:uppercase; }
+  .tbl td { border-bottom:1px solid var(--border); }
+  .tbl tr:last-child td { border-bottom:none; font-weight:700; }
+  .tbl .num { text-align:right; font-variant-numeric:tabular-nums; }
+
+  /* ── Bar chart ── */
+  .bar-group { margin-top:12px; }
+  .bar-item { display:grid; grid-template-columns:108px 1fr 68px; align-items:center; gap:14px; margin:12px 0; }
+  .bar-label { font-size:14px; font-weight:600; color:var(--ink2); }
+  .bar-track { height:22px; background:#e2e8f0; border-radius:99px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:99px; transition:width .6s ease; }
+  .bar-val { font-size:14px; font-weight:700; color:var(--ink2); text-align:right; font-variant-numeric:tabular-nums; }
+
+  /* ── Finding tags ── */
+  .tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 9px; border-radius:99px; }
+  .tag.p0 { background:var(--red1); color:var(--red); }
+  .tag.p1 { background:var(--amber1); color:var(--amber); }
+
+  /* ── Flow diagram ── */
+  .flow-h {
+    display:flex; align-items:flex-start; justify-content:center; gap:0; flex-wrap:wrap;
+    margin:22px 0; position:relative;
+  }
+  .flow-node {
+    padding:14px 16px; border-radius:var(--radius-sm); font-size:13px; font-weight:600; text-align:center;
+    border:2px solid var(--border); background:var(--card); min-width:100px; max-width:140px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    position:relative; z-index:1;
+  }
+  .flow-node .sm { font-size:11px; font-weight:400; color:var(--muted); margin-top:3px; }
+  .flow-node.entry { border-color:var(--blue); background:var(--blue2); color:var(--blue); }
+  .flow-node.decision { border-color:var(--amber); background:var(--amber1); color:var(--amber); }
+  .flow-node.confirm { border-color:var(--green); background:var(--green1); color:var(--green); }
+  .flow-node.escalate { border-color:var(--red); background:var(--red1); color:var(--red); }
+  .flow-conn {
+    display:flex; align-items:center; padding:0 6px; color:var(--faint); font-size:20px; font-weight:300;
+    flex-shrink:0; line-height:1; position:relative; z-index:1;
+  }
+
+  /* ── Evidence ledger ── */
+  .ledger { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:14px; }
+  .ledger-item {
+    border-radius:var(--radius-sm); padding:16px; border:2px solid var(--border);
+    background:var(--card);
+  }
+  .ledger-item .file { font-family:"SF Mono","Fira Code","JetBrains Mono",monospace; font-size:12.5px; font-weight:700; color:var(--violet); margin-bottom:6px; }
+  .ledger-item p { font-size:13px; color:var(--muted); }
+
+  /* ── Gate ── */
+  .gate-row { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .gate-card { border-radius:var(--radius-sm); padding:18px; background:var(--green1); border-top:4px solid var(--green); }
+  .gate-card .numeral { font-size:28px; font-weight:800; color:var(--green); opacity:.35; display:block; line-height:1; margin-bottom:4px; }
+  .gate-card h4 { font-size:14.5px; color:#064e3b; }
+  .gate-card p { font-size:13px; color:#047857; margin-top:4px; }
+
+  /* ── Roadmap ── */
+  .roadmap-item { border:1px solid var(--border); border-radius:var(--radius-sm); padding:20px; background:var(--card); }
+  .roadmap-item .wk { font-size:12px; font-weight:700; color:var(--blue); letter-spacing:.03em; text-transform:uppercase; }
+  .roadmap-item h3 { margin-top:2px; }
+  .roadmap-item ul { padding-left:20px; margin-top:6px; color:var(--ink2); font-size:14px; }
+  .roadmap-item li { margin:5px 0; }
+
+  /* ── Ablation table ── */
+  .ablate { width:100%; border-collapse:collapse; font-size:14px; margin-top:12px; }
+  .ablate th, .ablate td { padding:9px 14px; text-align:left; }
+  .ablate th { background:#f1f5f9; color:var(--slate); font-weight:700; font-size:12px; letter-spacing:.03em; }
+  .ablate td { border-bottom:1px solid var(--border); }
+
+  /* ── State machine ── */
+  .state-flow { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; margin:16px 0; }
+  .state {
+    padding:8px 16px; border-radius:99px; font-size:13px; font-weight:600; border:2px solid var(--border);
+    background:var(--card); white-space:nowrap;
+  }
+  .state.active { border-color:var(--blue); background:var(--blue1); color:var(--blue); }
+  .state.complete { border-color:var(--green); background:var(--green1); color:var(--green); }
+  .state.warn { border-color:var(--red); background:var(--red1); color:var(--red); }
+  .state-arr { color:var(--faint); font-size:16px; font-weight:300; }
+
+  /* ── Accordion / expand ── */
+  .expand-trigger {
+    font-size:13px; color:var(--blue); cursor:pointer; border:none; background:none;
+    padding:0; font-weight:600; display:inline-flex; align-items:center; gap:4px;
+  }
+  .expand-body { display:none; }
+  .expand-body.open { display:block; }
+
+  /* ── Misc ── */
+  .callout {
+    border-left:4px solid var(--amber); background:var(--amber1); border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+    padding:14px 18px; color:#78350f; font-size:14px; margin-top:14px; line-height:1.55;
+  }
+  .callout.blue { border-left-color:var(--blue); background:var(--blue1); color:#1e3a5f; }
+  .callout.red { border-left-color:var(--red); background:var(--red1); color:#7f1d1d; }
+  .footnote { font-size:12.5px; color:var(--faint); margin-top:10px; }
+  .refs { font-size:13px; color:var(--muted); line-height:1.7; }
+  .refs a { color:var(--blue); text-decoration:none; }
+  .refs a:hover { text-decoration:underline; }
+  footer {
+    margin-top:48px; text-align:center; color:var(--faint); font-size:12.5px;
+    padding:20px 0; border-top:1px solid var(--border);
+  }
+
+  /* ── Presentation navigation ── */
+  .deck-nav {
+    position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:8px;
+    padding:10px 16px; margin:0 -4px 20px; background:rgba(248,250,252,.92);
+    border-bottom:1px solid var(--border); backdrop-filter:blur(10px);
+  }
+  .deck-nav .nav-title {
+    font-size:13px; font-weight:700; color:var(--ink2); margin-right:auto; white-space:nowrap;
+  }
+  .deck-nav .nav-links { display:flex; gap:4px; overflow-x:auto; max-width:70%; scrollbar-width:none; }
+  .deck-nav .nav-links::-webkit-scrollbar { display:none; }
+  .deck-nav .nav-link {
+    border:none; background:transparent; color:var(--muted); font:inherit; font-size:12px;
+    font-weight:600; padding:6px 9px; border-radius:99px; cursor:pointer; white-space:nowrap;
+  }
+  .deck-nav .nav-link:hover { background:var(--blue1); color:var(--blue); }
+  .deck-nav .nav-link[aria-current="true"] { background:var(--blue); color:#fff; }
+  .deck-nav .btn {
+    border:1px solid var(--border); background:var(--card); color:var(--ink2); font:inherit;
+    font-size:12px; font-weight:700; padding:6px 12px; border-radius:99px; cursor:pointer;
+  }
+  .deck-nav .btn:hover { border-color:var(--blue); color:var(--blue); }
+  hr { border:none; border-top:1px solid var(--border); margin:28px 0; }
+
+  code { font-family:"SF Mono","Fira Code","JetBrains Mono",monospace; font-size:13px; background:#f1f5f9; padding:1px 5px; border-radius:4px; }
+  strong { color:var(--ink); }
+
+  svg { display:block; }
+
+  @media(max-width:960px) {
+    .grid2,.grid3,.grid4,.gate-row,.ledger,.kpi-row { grid-template-columns:1fr 1fr; }
+    .flow-h { gap:8px; }
+    .flow-conn { transform:rotate(90deg); padding:4px 0; }
+    .hero { padding:32px 24px; }
+    .hero h1 { font-size:26px; }
+  }
+  @media(max-width:600px) {
+    .grid2,.grid3,.grid4,.gate-row,.ledger,.kpi-row { grid-template-columns:1fr; }
+    .wrap { padding:18px 14px 48px; }
+    .hero { padding:24px 18px; }
+    .hero h1 { font-size:22px; }
+    .tbl { font-size:12.5px; }
+  }
+  @media(max-width:760px) {
+    .deck-nav { flex-wrap:wrap; }
+    .deck-nav .nav-title { width:100%; }
+    .deck-nav .nav-links { order:3; width:100%; max-width:none; }
+    .deck-nav .btn { margin-left:auto; }
+  }
+  @media print {
+    .deck-nav { display:none; }
+    body { background:#fff; }
+    .wrap { max-width:none; padding:0; }
+    section, .card, .hero { break-inside:avoid; page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="deck-nav" aria-label="演示章节导航">
+  <span class="nav-title">Bugfix Multi-Agent 诊断</span>
+  <div class="nav-links" role="tablist">
+    <button class="nav-link" type="button" data-target="sec-facts">结论</button>
+    <button class="nav-link" type="button" data-target="sec-failure">失败原因</button>
+    <button class="nav-link" type="button" data-target="sec-validation">交叉验证</button>
+    <button class="nav-link" type="button" data-target="sec-research">研究依据</button>
+    <button class="nav-link" type="button" data-target="sec-architecture">目标架构</button>
+    <button class="nav-link" type="button" data-target="sec-gates">确认门禁</button>
+    <button class="nav-link" type="button" data-target="sec-scheduling">调度策略</button>
+    <button class="nav-link" type="button" data-target="sec-roadmap">演进路线</button>
+    <button class="nav-link" type="button" data-target="sec-metrics">指标</button>
+    <button class="nav-link" type="button" data-target="sec-actions">立即执行</button>
+  </div>
+  <button class="btn" type="button" id="fullscreen-btn" data-tooltip="进入全屏演示">全屏</button>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<div class="hero">
+  <h1>Bugfix Multi-Agent 工作流<br>证据化诊断与演进方案</h1>
+  <p class="sub">核心判断：定位失败不是 Agent 不够多，而是缺少可检验、可终止的&#x2003;<strong style="color:#fcd34d">诊断协议</strong>。系统能不停产出报告与审查，却没有把&ldquo;下一轮调查&rdquo;限定为能区分候选根因的最小区分实验。应将 Phase 3 从&ldquo;调查 &rarr; 审查 &rarr; 再调查&rdquo;的文档流水线，升级为&ldquo;<strong style="color:#fcd34d">可复现 &rarr; 候选账本 &rarr; 最小区分实验 &rarr; 证据门禁 &rarr; 可验证修复</strong>&rdquo;的闭环。</p>
+  <p class="date">基于输入工作流与公开工程/研究资料 · 2026-09-29</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><span class="val red">3 轮</span><span class="dsc">调查均未收敛（全部 NEEDS_DYNAMIC）</span></div>
+    <div class="kpi"><span class="val amber">270.5m</span><span class="dsc">Phase 3 列出时长的最短串行路径</span></div>
+    <div class="kpi"><span class="val">64m</span><span class="dsc">Round 1 审查单步耗时（超越最长调查）</span></div>
+    <div class="kpi"><span class="val">1</span><span class="dsc">应是状态单写控制面（当前被分散写入）</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════ §0 事实账本 ═══════════════ -->
+<section id="sec-facts">
+  <span class="sec-label">执行结论</span>
+  <h2>先统一度量，再优化系统</h2>
+  <p class="deck">输入数据中存在度量不一致：Phase 3 &ldquo;约 168m&rdquo;与所列分钟数无法同时成立。必须先区分 wall-clock、关键路径、Agent active time、队列等待与工具等待，才有可能做可信的优化归因。</p>
+
+  <div class="card" style="margin-top:18px">
+    <h3>Phase 3 时间与角色账本</h3>
+    <table class="tbl">
+      <thead><tr><th>轮次</th><th class="num">调查关键路径</th><th class="num">审查</th><th class="num">状态更新</th><th class="num">最短串行路径</th></tr></thead>
+      <tbody>
+        <tr><td>Round 1 · 4 路静态调查</td><td class="num">60.6m</td><td class="num">64.0m</td><td class="num">10.2m</td><td class="num"><strong>134.8m</strong></td></tr>
+        <tr><td>Round 2 · 动态调查（CodeMate-WebView）</td><td class="num">40.2m</td><td class="num">22.6m</td><td class="num">9.8m</td><td class="num"><strong>72.6m</strong></td></tr>
+        <tr><td>Round 3 · 动态调查（CodeMate-WebView）</td><td class="num">45.1m</td><td class="num">10.6m</td><td class="num">7.4m</td><td class="num"><strong>63.1m</strong></td></tr>
+        <tr><td>合计</td><td class="num"><strong>145.9m</strong></td><td class="num"><strong>97.2m</strong></td><td class="num"><strong>27.4m</strong></td><td class="num"><strong>270.5m</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="bar-group">
+      <div class="bar-item"><span class="bar-label">investigator</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--blue)"></div></div><span class="bar-val">211.1m</span></div>
+      <div class="bar-item"><span class="bar-label">reviewer</span><div class="bar-track"><div class="bar-fill" style="width:46%;background:var(--amber)"></div></div><span class="bar-val">97.2m</span></div>
+      <div class="bar-item"><span class="bar-label">state mgr</span><div class="bar-track"><div class="bar-fill" style="width:13%;background:var(--violet)"></div></div><span class="bar-val">27.4m</span></div>
+    </div>
+    <div class="callout blue" style="margin-top:16px">
+      <strong>&ldquo;约 168m&rdquo; 与逐项相加的 270.5m 无法同时成立。</strong>可能原因：分钟数非 wall-clock、阶段存在未披露重叠、或原始统计口径不一致。当前无法可靠计算吞吐量与成本。
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>现有流程的结构事实（直接从输入确认）</h3>
+    <table class="tbl">
+      <thead><tr><th>项目</th><th>事实</th></tr></thead>
+      <tbody>
+        <tr><td>拓扑</td><td>team-leader 负责任务发布/调度/wait；investigator ↔ locate-reviewer 可 P2P send-message</td></tr>
+        <tr><td>状态</td><td>belief-state.json 贯穿流程；team-leader 与 hypothesis-manager 均被描述为会更新它</td></tr>
+        <tr><td>定位迭代</td><td>Round 1: 4 仓库静态；Round 2 &amp; 3: 同一 CodeMate-WebView 动态调查</td></tr>
+        <tr><td>审查结果</td><td>三次 locate-reviewer verdict 均为 NEEDS_DYNAMIC_INVESTIGATION</td></tr>
+        <tr><td>串行约束</td><td>每轮 investigator → reviewer → RECORD → APPLY_REVIEW 严格串行</td></tr>
+        <tr><td>停止条件与下游矛盾</td><td>三轮均未收敛，但 Phase 4 假定存在 confirmed_root_cause</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════ §1 失败原因 ═══════════════ -->
+<section id="sec-failure">
+  <span class="sec-label">根因诊断</span>
+  <h2>当前失败的证据化原因</h2>
+  <p class="deck">以下发现由工作流定义直接支持；不把缺失 trace 推定为模型幻觉或工具故障。</p>
+
+  <div class="grid-auto">
+    <div class="card p0">
+      <span class="tag p0">P0</span>
+      <h3 style="margin-top:8px">停止条件与下游前置条件矛盾</h3>
+      <p style="color:var(--muted);font-size:14px">三轮皆为 NEEDS_DYNAMIC_INVESTIGATION，下游却假定存在 confirmed_root_cause。固定轮数把未收敛状态伪装成流程完成，导致修复基于未确认根因。</p>
+    </div>
+    <div class="card p0">
+      <span class="tag p0">P0</span>
+      <h3 style="margin-top:8px">没有最小区分实验契约</h3>
+      <p style="color:var(--muted);font-size:14px">审查产物只有 verdict + evidence_gaps，没有要求候选假设、可观察预测、反证标准、执行命令或实验结果。&ldquo;需要动态调查&rdquo;不是可执行的诊断任务。</p>
+    </div>
+    <div class="card p0">
+      <span class="tag p0">P0</span>
+      <h3 style="margin-top:8px">重复调查未声明新信息条件</h3>
+      <p style="color:var(--muted);font-size:14px">Round 2、3 都调查同一 CodeMate-WebView 且均未收敛；输入未描述二者不同的触发路径、观测指标或 falsifier。重复调用不必然增加证据独立性或信息增益。</p>
+    </div>
+    <div class="card p1">
+      <span class="tag p1">P1</span>
+      <h3 style="margin-top:8px">审查成为关键路径瓶颈</h3>
+      <p style="color:var(--muted);font-size:14px">Round 1 reviewer 64m，超过最长 investigator 的 60.6m。自由文本报告迫使审查者从 Markdown 重建证据结构，与&ldquo;审查是轻量收敛器&rdquo;的预期相悖。</p>
+    </div>
+    <div class="card p1">
+      <span class="tag p1">P1</span>
+      <h3 style="margin-top:8px">状态所有权不单一</h3>
+      <p style="color:var(--muted);font-size:14px">team-leader 与 hypothesis-manager 均可更新 belief-state.json；reviewer ↔ investigator 又有旁路 P2P。无版本号、写入租约或事件日志，无法证明决策使用同一证据快照。</p>
+    </div>
+    <div class="card p1">
+      <span class="tag p1">P1</span>
+      <h3 style="margin-top:8px">缺少可审计的端到端 trace</h3>
+      <p style="color:var(--muted);font-size:14px">Phase 时长口径冲突，且无 token、工具调用、重试、队列、cache、测试结果字段。无法区分&ldquo;模型慢&rdquo;&ldquo;工具慢&rdquo;&ldquo;排队&rdquo;&ldquo;上下文膨胀&rdquo;。</p>
+    </div>
+  </div>
+
+  <div class="callout red" style="margin-top:20px">
+    <strong>以下事项在当前材料中均无证据，必须以 trace/测试工件/人工标注验证：</strong>模型是否幻觉、某仓库是否本来无 bug、动态工具是否失败、reviewer 是否读错报告、belief-state 是否发生竞争写入、或某 Agent prompt 是否不充分。
+  </div>
+</section>
+
+<!-- ═══════════════ §2 交叉验证 ═══════════════ -->
+<section id="sec-validation">
+  <span class="sec-label">审计结果</span>
+  <h2>独立交叉验证：确认、限定与修正</h2>
+  <p class="deck">本页结论经过两条独立验证线：架构推演按仓库实现与时间账本复核；外部资料按原始论文/工程文档逐条核对。以下只保留能被证据支撑的强度。</p>
+
+  <div class="card" style="margin-top:18px">
+    <h3>验证矩阵</h3>
+    <table class="tbl">
+      <thead><tr><th>诊断项</th><th>独立验证结果</th><th>最终强度</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>缺可证伪诊断协议</strong></td>
+          <td>架构验证确认：当前 TUI 设计已出现 Observed/Expected、复现、证据与开放问题等结构，但仍是 prompt 约束，尚无机器校验的 falsifier / artifact hash / snapshot。</td>
+          <td><strong>成立，是主根因</strong></td>
+        </tr>
+        <tr>
+          <td><strong>未收敛仍进入修复</strong></td>
+          <td>三轮 verdict 均为 NEEDS_DYNAMIC_INVESTIGATION，而 Phase 4 前置条件是 confirmed_root_cause；固定轮次没有提供确认语义。</td>
+          <td><strong>成立，P0</strong></td>
+        </tr>
+        <tr>
+          <td><strong>时间账本冲突</strong></td>
+          <td>逐项相加 Phase 3 关键路径为 270.5m，而非约 168m；hypothesis-manager 为 27.4m，而非 30m。至少存在一种口径混用。</td>
+          <td><strong>成立；先修指标，再做性能归因</strong></td>
+        </tr>
+        <tr>
+          <td><strong>共享上下文零损耗</strong></td>
+          <td>无运行 trace 或消融证明 primary agent 一定完整保留 probe 上下文，也不能证明其必然优于独立上下文。</td>
+          <td><strong>降级为待验证假设</strong></td>
+        </tr>
+        <tr>
+          <td><strong>permission 是安全边界</strong></td>
+          <td>OpenCode permission 是交互式操作门禁；更强隔离应依赖容器/VM 边界与最小权限。</td>
+          <td><strong>降级为操作门禁</strong></td>
+        </tr>
+        <tr>
+          <td><strong>只派发 referee 约束</strong></td>
+          <td>当前 task 权限不能按子代理名过滤；repair 配置仍为 task: allow，因此这是行为提示，不是架构保证。</td>
+          <td><strong>降级为待实现约束</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid2" style="margin-top:20px">
+    <div class="card p0">
+      <h3>外部资料审计</h3>
+      <p style="color:var(--muted);font-size:14px">核心 8 篇引用均真实且支持对应论断；MAST 论文的数据口径已修正为 7 个框架、1600+ annotated traces / 150 traces 分类法。2026 年新增的协作收益、SHERLOC、coordinator 研究也均能检索到，但属于近期研究，应随版本更新复核。</p>
+    </div>
+    <div class="card p0">
+      <h3>实现漂移告警</h3>
+      <p style="color:var(--muted);font-size:14px">仓库中新旧编排路径存在漂移：旧 harness 仍引用已删除的 bug-fix / bug-fix-verifier agent，GitHub workflow 仍调用旧入口；新路径使用 repair / referee。测试通过不代表运行路径一致，应先统一入口或显式废弃旧 CI。</p>
+    </div>
+  </div>
+
+  <div class="callout blue" style="margin-top:18px">
+    <strong>交叉验证后的结论更保守，也更可执行：</strong>“诊断协议缺失”被确认；“多 Agent 无效”未被确认，只能通过 S0/S1/M1/M2 消融验证；“共享上下文 / 权限隔离 / agent 限制”三项必须从架构保证降级为待验证假设。
+  </div>
+</section>
+
+<!-- ═══════════════ §2 业界研究 ═══════════════ -->
+<section id="sec-research">
+  <span class="sec-label">研究依据</span>
+  <h2>业界事实与本案的关系</h2>
+  <p class="deck">架构结论参照公开一手工程资料与同行评审/预印本研究。</p>
+
+  <div class="grid-auto">
+    <div class="card">
+      <h4>Anthropic 多 Agent 复盘</h4>
+      <p style="color:var(--muted);font-size:13.5px">多 Agent 收益主要来自给真正可并行的问题增加推理/工具容量；编码任务可真正并行的部分更少，实时协调仍是弱项。<br><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Multi-Agent Research System</a></p>
+    </div>
+    <div class="card">
+      <h4>OpenAI 编排指南</h4>
+      <p style="color:var(--muted);font-size:13.5px">建议只当 specialist 在能力/策略/提示/trace 可读性上带来实质收益时才增加；manager 保留最终所有权。<br><a href="https://developers.openai.com/api/docs/guides/agents/orchestration" target="_blank">Orchestration &amp; Handoffs</a></p>
+    </div>
+    <div class="card">
+      <h4>Anthropic Building Agents</h4>
+      <p style="color:var(--muted);font-size:13.5px">运行环境的 ground truth 是循环的必要反馈；停止条件用来限制无限迭代；自动化测试不替代人类审查。<br><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Building Effective AI Agents</a></p>
+    </div>
+    <div class="card">
+      <h4>OpenAI Agent Evals</h4>
+      <p style="color:var(--muted);font-size:13.5px">端到端 trace（模型调用、工具调用、guardrail、handoff）+ 结构化 grader 是定位工作流级失败的起点。<br><a href="https://developers.openai.com/api/docs/guides/agent-evals" target="_blank">Agent Evaluations</a></p>
+    </div>
+    <div class="card">
+      <h4>SWE-agent (2024)</h4>
+      <p style="color:var(--muted);font-size:13.5px">专用 agent-computer interface 显著改变代码导航与测试效果；&ldquo;更长 prompt / 更多 Agent&rdquo;不能替代可用的检索执行工具。<br><a href="https://arxiv.org/abs/2405.15793" target="_blank">arXiv:2405.15793</a></p>
+    </div>
+    <div class="card">
+      <h4>Agentless (2024)</h4>
+      <p style="color:var(--muted);font-size:13.5px">明确的&ldquo;定位 → 修复 → patch 验证&rdquo;三段式是强基线；多 Agent 必须通过消融证明增量收益。<br><a href="https://arxiv.org/abs/2407.01489" target="_blank">arXiv:2407.01489</a></p>
+    </div>
+    <div class="card">
+      <h4>SWE-bench Patch 正确性 (2025)</h4>
+      <p style="color:var(--muted);font-size:13.5px">部分被判正确的 patch 仍无法通过开发者测试；单一自动评测不能单独作为根因已确认的证据。<br><a href="https://arxiv.org/abs/2503.15223" target="_blank">arXiv:2503.15223</a></p>
+    </div>
+    <div class="card">
+      <h4>MAST 多 Agent 失败分类 (2025)</h4>
+      <p style="color:var(--muted);font-size:13.5px">对 7 个框架、1600+ annotated traces（150 traces 形成分类法）归纳 14 类失败，核心是规格不清、Agent 间错位、验证不足；直接对应本工作流的 &ldquo;需要动态调查不是可执行任务&rdquo; 和 &ldquo;未收敛仍进入修复&rdquo;。<br><a href="https://arxiv.org/html/2503.13657v2" target="_blank">Why Do Multi-Agent LLM Systems Fail?</a></p>
+    </div>
+    <div class="card">
+      <h4>能力饱和后的协作收益 (2026)</h4>
+      <p style="color:var(--muted);font-size:13.5px">260 个配置、6 个 benchmark 的控制实验显示：单 Agent 基线能力是是否受益于协作的最强预测因子；超过能力阈值后，多 Agent 常只增加 reasoning-turn overhead。<br><a href="https://www.nature.com/articles/s42256-026-01268-y" target="_blank">Nature Machine Intelligence</a></p>
+    </div>
+    <div class="card">
+      <h4>SHERLOC 定位研究 (2026)</h4>
+      <p style="color:var(--muted);font-size:13.5px">结构化假设探索、紧凑仓库工具和可复用诊断发现，比更多编排更有效；定位 token 下降 36.7%，注入修复后 resolve rate 平均 +5.95pp。<br><a href="https://arxiv.org/pdf/2606.24820v1" target="_blank">SHERLOC</a></p>
+    </div>
+    <div class="card">
+      <h4>Coordinator 并不自动带来收益 (2026)</h4>
+      <p style="color:var(--muted);font-size:13.5px">1,902 个 coding agent 团队运行显示，指定 coordinator 不必然形成有效通信枢纽或提高成功率；共享文件通道在消息密集任务中可减少约 42% 输出 token。<br><a href="https://arxiv.org/html/2608.16801v1" target="_blank">When Agents Coordinate</a></p>
+    </div>
+    <div class="card">
+      <h4>Anthropic Demystifying Evals</h4>
+      <p style="color:var(--muted);font-size:13.5px">Agent 评估是多轮系统评估；trace → grader → 数据集 → 反复 eval 是当前建议的标准顺序。<br><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank">Demystifying Evals</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ §3 目标架构 ═══════════════ -->
+<section id="sec-architecture">
+  <span class="sec-label">目标架构</span>
+  <h2>以诊断闭环替代报告闭环</h2>
+  <p class="deck">将 Phase 3 从&ldquo;出报告、审报告、再出报告&rdquo;的文档流水线，改造为&ldquo;可复现 → 候选根因账本 → 最小区分实验 → 证据门禁&rdquo;的闭环。</p>
+
+  <!-- Flow diagram -->
+  <div class="flow-h" style="margin-top:24px">
+    <div class="flow-node entry">Issue / 日志</div>
+    <div class="flow-conn">→</div>
+    <div class="flow-node entry">可复现门禁<span class="sm">失败命令 + 环境指纹</span></div>
+    <div class="flow-conn">→</div>
+    <div class="flow-node entry">范围定位<span class="sm">变更 · 调用链 · 所有权图</span></div>
+    <div class="flow-conn">→</div>
+    <div class="flow-node decision">根因账本<span class="sm">候选假设 + 预测 + 反证</span></div>
+  </div>
+  <div class="flow-h" style="margin-top:0">
+    <div class="flow-node decision">实验调度器<span class="sm">选择最高信息增益实验</span></div>
+    <div class="flow-conn">→</div>
+    <div class="flow-node">受限 investigator<span class="sm">运行 · trace · 最小探针</span></div>
+    <div class="flow-conn">→</div>
+    <div class="flow-node">证据校验器<span class="sm">schema · 可重现性 · 冲突检查</span></div>
+    <div class="flow-conn">↻</div>
+    <div class="flow-node confirm" style="font-size:15px">确认门禁<span class="sm">或升级人工</span></div>
+  </div>
+
+  <!-- Evidence schema -->
+  <div class="card" style="margin-top:20px">
+    <h3>证据契约：从自由报告改为结构化 schema</h3>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:12px">每一次 investigation 必须产生结构化证据单元；自由文本只作为 <code>notes</code> 附件。</p>
+    <table class="tbl">
+      <thead><tr><th>字段</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>hypothesis_id</code></td><td>绑定的候选假设 ID</td></tr>
+        <tr><td><code>claim</code></td><td>断言描述</td></tr>
+        <tr><td><code>prediction</code></td><td>可观察预测</td></tr>
+        <tr><td><code>falsifier</code></td><td>反证条件：若 X 发生则拒绝该假设</td></tr>
+        <tr><td><code>method</code></td><td>执行命令 + 环境摘要</td></tr>
+        <tr><td><code>observation</code></td><td>可引用的 trace、日志行或测试输出</td></tr>
+        <tr><td><code>supports / contradicts</code></td><td>受支持/被否定的候选假设 ID 列表</td></tr>
+        <tr><td><code>reproducible</code></td><td>布尔值；artifact_refs 引用 hash</td></tr>
+        <tr><td><code>next_experiment</code></td><td>仅当仍不能区分存活假设时填写</td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--red);font-size:13px;margin-top:10px"><strong>证据校验器应拒绝：</strong>没有预测、没有观测、无可重现命令、或只含主观 confidence 的结果。</p>
+  </div>
+
+  <!-- State ledger -->
+  <div style="margin-top:20px">
+    <h3>控制面：一个状态写入者 + 不可变事件日志</h3>
+  </div>
+  <div class="ledger">
+    <div class="ledger-item">
+      <span class="file">case.json</span>
+      <p>版本、状态机阶段、预算、最后一次决策；由 case-controller 单写。</p>
+    </div>
+    <div class="ledger-item">
+      <span class="file">evidence.ndjson</span>
+      <p>不可变事件，含 artifact hash、生成 Agent、命令、时间、仓库 revision。</p>
+    </div>
+    <div class="ledger-item">
+      <span class="file">hypotheses.json</span>
+      <p>由事件流物化；每个假设有 prior、支持/反驳证据、预测与 next experiment。</p>
+    </div>
+    <div class="ledger-item">
+      <span class="file">decision.json</span>
+      <p>每次 continue / confirm / escalate 的 snapshot hash、规则命中项与预算消耗。</p>
+    </div>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin-top:8px">P2P 消息可保留，但只能创建&ldquo;补证请求/答复事件&rdquo;，不能直接改变假设权重或通过确认门禁。</p>
+</section>
+
+<!-- ═══════════════ §4 确认门禁 ═══════════════ -->
+<section id="sec-gates">
+  <span class="sec-label">停止规则</span>
+  <h2>确认根因的三道门</h2>
+  <p class="deck">不能以&ldquo;跑了三轮&rdquo;或 reviewer 文字判定替代因果验证。</p>
+
+  <div class="gate-row" style="margin-top:18px">
+    <div class="gate-card">
+      <span class="numeral">1</span>
+      <h4>现象可复现</h4>
+      <p>原始失败在固定 revision 与环境中可复现。</p>
+    </div>
+    <div class="gate-card">
+      <span class="numeral">2</span>
+      <h4>因果链成立</h4>
+      <p>观测满足该假设预测，并排除至少一个强竞争候选。</p>
+    </div>
+    <div class="gate-card">
+      <span class="numeral">3</span>
+      <h4>干预可验证</h4>
+      <p>最小 patch 或开关按预测改变失败现象，独立验证未发现明显回归。</p>
+    </div>
+  </div>
+
+  <div class="state-flow" style="margin-top:22px">
+    <span class="state complete">Reproduce</span><span class="state-arr">→</span>
+    <span class="state complete">Scope</span><span class="state-arr">→</span>
+    <span class="state active">Experiment</span><span class="state-arr">↻</span>
+    <span class="state complete">Confirmed</span><span class="state-arr">→</span>
+    <span class="state complete">Repair</span><span class="state-arr">→</span>
+    <span class="state complete">Validate</span>
+  </div>
+  <div class="state-flow" style="margin-top:4px">
+    <span class="state warn">Escalated</span>
+    <span class="state-arr">←</span>
+    <span style="font-size:13px;color:var(--muted)">预算耗尽 / 无可区分实验 / 不可复现 / 验证失败</span>
+  </div>
+
+  <div class="callout red" style="margin-top:16px">
+    <strong>任一条件未满足 → UNRESOLVED / ESCALATED，不得写入 confirmed_root_cause。</strong>固定 N 轮是成本上限，不是&ldquo;视为确认&rdquo;的条件。
+  </div>
+</section>
+
+<!-- ═══════════════ §5 调度面 ═══════════════ -->
+<section id="sec-scheduling">
+  <span class="sec-label">调度策略</span>
+  <h2>少而有界的并行，围绕独立证据</h2>
+
+  <table class="tbl" style="margin-top:14px">
+    <thead><tr><th>阶段</th><th class="num">默认并发</th><th>Agent 职责</th><th>进入下一阶段的门禁</th></tr></thead>
+    <tbody>
+      <tr><td>0. Reproduce</td><td class="num">1</td><td>reproduction agent</td><td>固定失败命令、版本、环境与最小复现</td></tr>
+      <tr><td>1. Scope</td><td class="num">1+可选1</td><td>locator / codegraph</td><td>产出候选文件、调用链、所有权图</td></tr>
+      <tr><td>2. Hypothesize</td><td class="num">1</td><td>case-controller</td><td>每个候选互斥或可区分，有预测与反证</td></tr>
+      <tr><td>3. Experiment</td><td class="num">1&ndash;3</td><td>investigator（受限）</td><td>每个任务绑定假设对与预算；不同目标</td></tr>
+      <tr><td>4. Verify</td><td class="num">1</td><td>evidence verifier</td><td>schema、可重现性、证据新颖度、一致性</td></tr>
+      <tr><td>5. Repair</td><td class="num">1</td><td>fix agent</td><td>patch 声明满足的预测</td></tr>
+      <tr><td>6. Validate</td><td class="num">1</td><td>validation agent（独立上下文）</td><td>复现、目标测试、回归、diff 语义审查</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout blue" style="margin-top:14px">
+    <strong>定位是高耦合的因果推断任务。</strong>默认使用单 case owner + 受限工具专家（manager-as-tools 模式）。仅当实验之间不共享环境/状态、输出可用 schema 合并、且能说明分别排除什么候选时才并发。这与 OpenAI specialist 增量原则及 Anthropic 对编码任务可并行度有限的生产观察一致。
+  </div>
+</section>
+
+<!-- ═══════════════ §6 演进路线 ═══════════════ -->
+<section id="sec-roadmap">
+  <span class="sec-label">演进计划</span>
+  <h2>分阶段路线图</h2>
+
+  <div class="grid3" style="margin-top:18px">
+    <div class="roadmap-item">
+      <span class="wk">第 1 周 · 可观测</span>
+      <h3>先让失败可见</h3>
+      <ul>
+        <li>统一 span 与时间口径（wall-clock / active / queue / tool）</li>
+        <li>收集 20&ndash;50 个冻结脱敏 case</li>
+        <li>建立 4 个 trace grader（复现、反证、区分度、状态一致性）</li>
+      </ul>
+    </div>
+    <div class="roadmap-item">
+      <span class="wk">第 2&ndash;3 周 · 实验协议</span>
+      <h3>让调查产生信息增量</h3>
+      <ul>
+        <li>用 evidence schema 取代自由报告作为决策输入</li>
+        <li>创建 case-controller 单写 + append-only evidence log</li>
+        <li>reviewer：一次结构化判定 + 一次基于 schema 缺失的补证，超限升级</li>
+        <li>默认任务改为&ldquo;区分 H-x 与 H-y 的实验&rdquo;</li>
+      </ul>
+    </div>
+    <div class="roadmap-item">
+      <span class="wk">第 4&ndash;6 周 · 消融</span>
+      <h3>用实验证明多 Agent 是否值得</h3>
+      <ul>
+        <li>S0：单 Agent 定位→修复→验证（基线）</li>
+        <li>S1：单 case owner + 结构化工具/证据协议</li>
+        <li>M1：S1 + 仅独立实验并发</li>
+        <li>M2：当前 reviewer + P2P + 三轮（遗留对照）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>消融矩阵：判据与决策规则</h3>
+    <table class="ablate">
+      <thead><tr><th>配置</th><th>用途</th><th>保留条件</th></tr></thead>
+      <tbody>
+        <tr><td><strong>S0</strong> · 单 Agent</td><td>成本与成功率基线</td><td>—</td></tr>
+        <tr><td><strong>S1</strong> · 结构化闭环</td><td>判断问题是否主要来自工具/契约</td><td>—</td></tr>
+        <tr><td><strong>M1</strong> · 独立实验并发</td><td>衡量受限并发的增益</td><td>成功率 ↑ 或 p95 ↓ 且单位成本不恶化</td></tr>
+        <tr><td><strong>M2</strong> · 遗留拓扑</td><td>作为对照，非默认</td><td>仅在 M1 显著优于时保留</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════ §7 指标 ═══════════════ -->
+<section id="sec-metrics">
+  <span class="sec-label">验收标准</span>
+  <h2>生产指标与防假象设计</h2>
+
+  <table class="tbl" style="margin-top:14px">
+    <thead><tr><th>维度</th><th>指标</th><th>计算方式</th><th>防止的假象</th></tr></thead>
+    <tbody>
+      <tr><td>定位质量</td><td>Root-cause precision / recall</td><td>人工/已知根因与最终定位 case-level 对比</td><td>&ldquo;报告像答案&rdquo;被当作定位成功</td></tr>
+      <tr><td>诊断质量</td><td>Discriminating-evidence rate</td><td>有明确预测且排除/支持竞争假设的实验 ÷ 全部实验</td><td>反复搜集同类证据</td></tr>
+      <tr><td>修复质量</td><td>Independent validation pass rate</td><td>独立上下文运行复现、目标、回归测试后通过的 patch 比例</td><td>自己给自己判通过</td></tr>
+      <tr><td>效率</td><td>Time-to-first-repro, p50/p95 wall-clock</td><td>从 case 创建到对应状态转换</td><td>只看 Agent 工时而忽略用户等待</td></tr>
+      <tr><td>资源</td><td>Cost per validated resolution</td><td>token + 工具 + 容器/CI ÷ 独立验证通过 case</td><td>以总任务数稀释失败成本</td></tr>
+      <tr><td>收敛</td><td>Unresolved rate、平均有效实验数</td><td>按停止原因和有信息量实验计数</td><td>用固定轮数掩盖不确定性</td></tr>
+      <tr><td>可靠性</td><td>State version conflict rate</td><td>写入冲突/缺失可重现工件的占比</td><td>看不到控制面一致性故障</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout blue" style="margin-top:14px">
+    验收时应优先报告置信区间、case 分层（单仓/多仓、可复现/不可复现、静态/动态）和失败样本，而非只报告一个均值。
+  </div>
+</section>
+
+<!-- ═══════════════ §8 立即行动 ═══════════════ -->
+<section id="sec-actions">
+  <span class="sec-label">立即执行</span>
+  <h2>立即可落地的决策</h2>
+
+  <div class="grid-auto" style="margin-top:16px">
+    <div class="card" style="border-top:3px solid var(--red)">
+      <h3 style="color:var(--red)">1. 暂停&ldquo;固定三轮后进入修复&rdquo;</h3>
+      <p style="color:var(--muted);font-size:14px">改为确认门禁或 ESCALATED。消除错误修复风险的第一优先级。</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber)">
+      <h3>2. 下一次只运行一个 case</h3>
+      <p style="color:var(--muted);font-size:14px">先完成复现、候选账本和一个最小区分实验；不要先并行四个宽泛 investigator。</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber)">
+      <h3>3. 审查输出改为可机检 decision</h3>
+      <p style="color:var(--muted);font-size:14px">必须列出存活假设、已满足/缺失证据和唯一下一实验；无下一实验即升级。</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber)">
+      <h3>4. 补全 trace 后再讨论模型/prompt/数量</h3>
+      <p style="color:var(--muted);font-size:14px">当前时间统计不足以支持模型、prompt 或 Agent 数量方面的归因。</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <h3>5. 以 S0/S1/M1/M2 消融决定长期拓扑</h3>
+      <p style="color:var(--muted);font-size:14px">多 Agent 是待验证的性能优化，不应作为定位正确性的前提。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ References ═══════════════ -->
+<section>
+  <span class="sec-label">参考资料</span>
+  <h2>事实依据</h2>
+  <div class="refs" style="margin-top:12px">
+    <p>1. Anthropic, <em>How we built our multi-agent research system</em>, 2025-06-13. <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">anthropic.com</a></p>
+    <p>2. OpenAI, <em>Orchestration and handoffs</em>. <a href="https://developers.openai.com/api/docs/guides/agents/orchestration" target="_blank">developers.openai.com</a></p>
+    <p>3. Anthropic, <em>Building Effective AI Agents</em>, 2024-12-19. <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com</a></p>
+    <p>4. OpenAI, <em>Evaluate agent workflows</em>. <a href="https://developers.openai.com/api/docs/guides/agent-evals" target="_blank">developers.openai.com</a></p>
+    <p>5. Yang et al., <em>SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering</em>, 2024. <a href="https://arxiv.org/abs/2405.15793" target="_blank">arXiv:2405.15793</a></p>
+    <p>6. Xia et al., <em>Agentless: Demystifying LLM-based Software Engineering Agents</em>, 2024. <a href="https://arxiv.org/abs/2407.01489" target="_blank">arXiv:2407.01489</a></p>
+    <p>7. <em>Are &ldquo;Solved Issues&rdquo; in SWE-bench Really Solved Correctly?</em>, 2025. <a href="https://arxiv.org/abs/2503.15223" target="_blank">arXiv:2503.15223</a></p>
+    <p>8. Anthropic, <em>Demystifying evals for AI agents</em>, 2026-01-09. <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank">anthropic.com</a></p>
+    <p>9. Cemri et al., <em>Why Do Multi-Agent LLM Systems Fail?</em>, 2025. <a href="https://arxiv.org/html/2503.13657v2" target="_blank">arXiv:2503.13657</a></p>
+    <p>10. <em>Capable language models can outgrow the benefits of collaboration</em>, Nature Machine Intelligence, 2026. <a href="https://www.nature.com/articles/s42256-026-01268-y" target="_blank">nature.com</a></p>
+    <p>11. <em>SHERLOC: A Framework for Deep Bug Localization</em>, 2026. <a href="https://arxiv.org/pdf/2606.24820v1" target="_blank">arXiv:2606.24820</a></p>
+    <p>12. <em>When Agents Coordinate: Efforts and Obstacles in Multi-Agent Collaboration</em>, 2026. <a href="https://arxiv.org/html/2608.16801v1" target="_blank">arXiv:2608.16801</a></p>
+  </div>
+</section>
+
+<footer>
+  该页面是架构诊断与方案展示 · 真实根因仍须以运行 trace、可复现工件和独立测试验证 · 2026-09-29
+</footer>
+</div>
+
+<script>
+(function() {
+  const nav = document.querySelector('.deck-nav');
+  const links = Array.from(document.querySelectorAll('.deck-nav .nav-link'));
+  const sections = links.map(function(link) {
+    return document.getElementById(link.dataset.target);
+  });
+  const fullscreenButton = document.getElementById('fullscreen-btn');
+  const navHeight = nav ? nav.offsetHeight : 0;
+
+  function setProgress() {
+    if (!nav) return;
+    const top = window.scrollY + navHeight + 120;
+    let active = sections[0];
+    sections.forEach(function(section) {
+      if (section && section.offsetTop <= top) active = section;
+    });
+    links.forEach(function(link) {
+      link.setAttribute('aria-current', String(!!active && link.dataset.target === active.id));
+    });
+  }
+
+  function scrollToSection(index) {
+    const bounded = Math.max(0, Math.min(sections.length - 1, index));
+    const section = sections[bounded];
+    if (section) window.scrollTo({ top: section.offsetTop - navHeight - 12, behavior: 'smooth' });
+  }
+
+  function currentSectionIndex() {
+    const top = window.scrollY + navHeight + 120;
+    let index = 0;
+    sections.forEach(function(section, i) {
+      if (section && section.offsetTop <= top) index = i;
+    });
+    return index;
+  }
+
+  links.forEach(function(link, index) {
+    link.addEventListener('click', function() { scrollToSection(index); });
+  });
+  window.addEventListener('scroll', setProgress, { passive: true });
+  window.addEventListener('resize', setProgress);
+
+  document.addEventListener('keydown', function(event) {
+    const key = event.key;
+    let handled = true;
+    if (key === 'j' || key === 'ArrowDown' || key === 'PageDown') scrollToSection(currentSectionIndex() + 1);
+    else if (key === 'k' || key === 'ArrowUp' || key === 'PageUp') scrollToSection(currentSectionIndex() - 1);
+    else if (key === 'Home') window.scrollTo({ top: 0, behavior: 'smooth' });
+    else if (key === 'End') window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    else if (key === 'f' || key === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+    } else handled = false;
+    if (handled) event.preventDefault();
+  });
+
+  fullscreenButton.addEventListener('click', function() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+  });
+
+  setProgress();
+})();
+</script>
+</body>
+</html>

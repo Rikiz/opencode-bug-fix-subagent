@@ -1,0 +1,420 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Permissions documentation for OpenCode."><meta name="theme-color" content="#000000"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="swap"><script type="module" src="/v2/_astro/ClientRouter.astro_astro_type_script_index_0_lang.QXqYV-0P.js"></script><link rel="canonical" href="https://opencode.ai/v2/docs/permissions/"><link rel="icon" type="image/svg+xml" href="/v2/favicon.svg"><title>Permissions | OpenCode</title><link rel="stylesheet" href="/v2/_astro/_..CwgjG4PU.css"></head><body><a class="skip-link" href="#docs-content">Skip to content</a><header class="site-header"><div class="header-inner"><a class="brand" href="/v2/" aria-label="OpenCode home"><img src="/v2/assets/logo-dark.svg" alt="OpenCode"></a><nav aria-label="Documentation sections"><a href="/v2/docs/" aria-current="page">Docs</a><a href="/v2/docs/cli/">CLI</a><a href="/v2/docs/build/">Build</a><a href="/v2/docs/api/">API</a><a href="/v2/docs/console/">Console</a><a href="/docs">V1</a></nav><div class="header-spacer"></div><button class="search-trigger" type="button" data-search-open aria-label="Search documentation"><span>Search</span><kbd>⌘K</kbd></button><a class="github-link" href="https://github.com/anomalyco/opencode" aria-label="OpenCode on GitHub">GitHub</a></div></header><dialog class="search-dialog" data-search-dialog data-pagefind-path="/v2/docs/pagefind/pagefind.js" data-base-url="/v2/docs/" aria-label="Search documentation"><form method="dialog" class="search-bar"><span aria-hidden="true">&gt;</span><input data-search-input type="search" placeholder="Search docs" autocomplete="off"><button type="submit" aria-label="Close search">Esc</button></form><div class="search-results" data-search-results><p>Start typing to search the documentation.</p></div></dialog><script>
+  let pagefind
+
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault()
+      const dialog = document.querySelector("[data-search-dialog]")
+      dialog?.showModal()
+      dialog?.querySelector("[data-search-input]")?.focus()
+    }
+  })
+
+  const setupSearch = () => {
+    const dialog = document.querySelector("[data-search-dialog]")
+    const input = document.querySelector("[data-search-input]")
+    const results = document.querySelector("[data-search-results]")
+    const trigger = document.querySelector("[data-search-open]")
+    if (trigger && !trigger.dataset.searchReady) {
+      trigger.dataset.searchReady = "true"
+      trigger.addEventListener("click", () => {
+        dialog?.showModal()
+        input?.focus()
+      })
+    }
+
+    if (input && results && !input.dataset.searchReady) input.addEventListener("input", async () => {
+      input.dataset.searchReady = "true"
+      const query = input.value.trim()
+      if (!query) {
+        results.innerHTML = "<p>Start typing to search the documentation.</p>"
+        return
+      }
+
+      const pagefindPath = dialog?.dataset.pagefindPath
+      if (!pagefindPath) return
+      const api = pagefind ?? (pagefind = await import(pagefindPath))
+      const search = await api.search(query)
+      const pages = await Promise.all(search.results.slice(0, 8).map((result) => result.data()))
+      results.replaceChildren(
+        ...pages.map((page) => {
+          const link = document.createElement("a")
+          const base = dialog.dataset.baseUrl ?? "/"
+          link.href = page.url.startsWith(base)
+            ? page.url
+            : `${dialog.dataset.baseUrl?.replace(/\/$/, "")}${page.url}`
+          const title = document.createElement("strong")
+          title.textContent = page.meta.title
+          const excerpt = document.createElement("span")
+          excerpt.innerHTML = page.excerpt
+          link.append(title, excerpt)
+          return link
+        }),
+      )
+      if (!pages.length) results.innerHTML = "<p>No results found.</p>"
+    })
+  }
+
+  setupSearch()
+  document.addEventListener("astro:page-load", setupSearch)
+</script><details class="mobile-navigation"><summary>Docs navigation</summary><nav class="docs-sidebar" aria-label="Documentation"><section><ul><li><a href="/v2/docs/">Intro</a></li><li><a href="/v2/docs/config/">Config</a></li><li><a href="/v2/docs/migrate-v1/">Migrate from V1</a></li><li><a href="/v2/docs/troubleshooting/">Troubleshooting</a></li></ul></section><section><h2>Configure</h2><ul><li><a href="/v2/docs/agents/">Agents</a></li><li><a href="/v2/docs/models/">Models</a></li><li><a href="/v2/docs/skills/">Skills</a></li><li><a href="/v2/docs/themes/">Themes</a></li><li><a href="/v2/docs/commands/">Commands</a></li><li><a href="/v2/docs/plugins/">Plugins</a></li><li><a href="/v2/docs/providers/">Providers</a></li><li><a href="/v2/docs/websearch/">Websearch</a></li><li><a href="/v2/docs/network/">Network</a></li><li><a href="/v2/docs/snapshots/">Snapshots</a></li><li><a href="/v2/docs/compaction/">Compaction</a></li><li><a href="/v2/docs/formatters/">Formatters</a></li><li><a href="/v2/docs/references/">References</a></li><li><a href="/v2/docs/attachments/">Attachments</a></li><li><a href="/v2/docs/tools/">Tools</a></li><li><a href="/v2/docs/mcp-servers/">MCP servers</a></li><li><a href="/v2/docs/permissions/" aria-current="page">Permissions</a></li><li><a href="/v2/docs/policies/">Policies</a></li><li><a href="/v2/docs/instructions/">Instructions</a></li><li><a href="/v2/docs/sharing/">Sharing</a></li><li><a href="/v2/docs/warming/">Warming</a></li></ul></section></nav></details><div class="docs-frame"><aside class="sidebar-column"><nav class="docs-sidebar" aria-label="Documentation"><section><ul><li><a href="/v2/docs/">Intro</a></li><li><a href="/v2/docs/config/">Config</a></li><li><a href="/v2/docs/migrate-v1/">Migrate from V1</a></li><li><a href="/v2/docs/troubleshooting/">Troubleshooting</a></li></ul></section><section><h2>Configure</h2><ul><li><a href="/v2/docs/agents/">Agents</a></li><li><a href="/v2/docs/models/">Models</a></li><li><a href="/v2/docs/skills/">Skills</a></li><li><a href="/v2/docs/themes/">Themes</a></li><li><a href="/v2/docs/commands/">Commands</a></li><li><a href="/v2/docs/plugins/">Plugins</a></li><li><a href="/v2/docs/providers/">Providers</a></li><li><a href="/v2/docs/websearch/">Websearch</a></li><li><a href="/v2/docs/network/">Network</a></li><li><a href="/v2/docs/snapshots/">Snapshots</a></li><li><a href="/v2/docs/compaction/">Compaction</a></li><li><a href="/v2/docs/formatters/">Formatters</a></li><li><a href="/v2/docs/references/">References</a></li><li><a href="/v2/docs/attachments/">Attachments</a></li><li><a href="/v2/docs/tools/">Tools</a></li><li><a href="/v2/docs/mcp-servers/">MCP servers</a></li><li><a href="/v2/docs/permissions/" aria-current="page">Permissions</a></li><li><a href="/v2/docs/policies/">Policies</a></li><li><a href="/v2/docs/instructions/">Instructions</a></li><li><a href="/v2/docs/sharing/">Sharing</a></li><li><a href="/v2/docs/warming/">Warming</a></li></ul></section></nav></aside><main id="docs-content"><article class="prose" data-pagefind-body data-pagefind-meta="title:Permissions"><h1>Permissions<button type="button" aria-label="Copy page as Markdown" data-copy-markdown data-pagefind-ignore><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button></h1><p>Permissions control whether an agent may perform an action on a resource.</p>
+<h2 id="configure">Configure</h2>
+<p>A common setup is to ask before running shell commands, allow routine Git
+inspection, and always block pushes. Add these ordered rules to <code>opencode.jsonc</code>:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;$schema&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;https://opencode.ai/config.json&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;ask&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;git status *&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;git diff *&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;git push *&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>The last matching rule wins, so the specific exceptions follow the broad rule.</p>
+<aside class="callout callout-warning" aria-label="Warning"><strong>Warning</strong><div><p>V1 uses different field and action names. In V2, use <code>permissions</code>, <code>shell</code>, and <code>subagent</code> instead of <code>permission</code>,
+<code>bash</code>, and <code>task</code>.</p></div></aside>
+<h2 id="rules">Rules</h2>
+<p>Each rule requires three string fields:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Field</th><th>Meaning</th></tr></thead><tbody><tr><td><code>action</code></td><td>Tool permission action</td></tr><tr><td><code>resource</code></td><td>Value being used, such as a path, command, URL, query, skill ID, or agent ID</td></tr><tr><td><code>effect</code></td><td><code>allow</code>, <code>deny</code>, or <code>ask</code></td></tr></tbody></table>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*.env&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Effect</th><th>Result</th></tr></thead><tbody><tr><td><code>allow</code></td><td>Continue without prompting</td></tr><tr><td><code>deny</code></td><td>Block the operation</td></tr><tr><td><code>ask</code></td><td>Wait for a decision from the client</td></tr></tbody></table>
+<p>If no rule matches, OpenCode uses <code>ask</code>.</p>
+<h2 id="matching">Matching</h2>
+<p>Actions and resources use simple whole-value wildcards:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Pattern</th><th>Match</th></tr></thead><tbody><tr><td><code>*</code></td><td>Zero or more characters, including <code>/</code></td></tr><tr><td><code>?</code></td><td>Exactly one character</td></tr><tr><td>Other</td><td>The literal character</td></tr></tbody></table>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;edit&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;packages/docs/*.mdx&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>This pattern matches the entire normalized path. Backslashes are normalized to
+slashes, and matching is case-insensitive on Windows.</p>
+<p>A shell pattern ending in <code> *</code> also matches the command without arguments:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{ </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;git status *&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> }</span></span></code></pre>
+<p>This matches both <code>git status</code> and <code>git status --short</code>.</p>
+<p>OpenCode combines rules in order and uses the last match. Lower-priority
+configuration is loaded first, global rules are appended next, and agent rules
+are appended last.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;secrets/*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Operations may check several resources, such as a patch that touches multiple
+files. Any <code>deny</code> denies the operation; otherwise any <code>ask</code> asks; otherwise the
+operation is allowed.</p>
+<h2 id="actions">Actions</h2>
+<p>V2 action names are strings, so plugins may define more actions. Built-in tools
+currently use these actions and resources:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Action</th><th>Resource</th></tr></thead><tbody><tr><td><code>read</code></td><td>Location-relative internal path or canonical absolute external path</td></tr><tr><td><code>edit</code></td><td>Target path for <code>edit</code>, <code>write</code>, and <code>patch</code></td></tr><tr><td><code>glob</code></td><td>Requested glob pattern</td></tr><tr><td><code>grep</code></td><td>Requested regular expression, not the search path</td></tr><tr><td><code>shell</code></td><td>Scanner-produced command string; compound commands may produce several</td></tr><tr><td><code>subagent</code></td><td>Target agent ID</td></tr><tr><td><code>skill</code></td><td>Skill ID</td></tr><tr><td><code>question</code></td><td><code>*</code></td></tr><tr><td><code>webfetch</code></td><td>Requested URL</td></tr><tr><td><code>websearch</code></td><td>Search query</td></tr><tr><td><code>external_directory</code></td><td>Canonical external directory boundary, normally ending in <code>/*</code></td></tr><tr><td><code>&lt;server&gt;_&lt;tool&gt;</code></td><td><code>*</code> for an MCP tool; unsupported characters in both names become <code>_</code></td></tr><tr><td><code>execute</code></td><td><code>*</code>; controls Code Mode availability, while nested tools enforce their rules</td></tr></tbody></table>
+<p>For example, allow one skill and deny all other skills:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;skill&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;skill&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p><code>doom_loop</code> and <code>lsp</code> are not current V2 Core permission actions.</p>
+<h2 id="directories">Directories</h2>
+<p>A path outside both the active Location and its non-root project worktree needs
+<code>external_directory</code> approval before its <code>read</code> or <code>edit</code> approval.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;$schema&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;https://opencode.ai/config.json&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;external_directory&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;~/projects/reference/*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;~/projects/reference/*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;edit&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;~/projects/reference/*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>This applies to external paths used by <code>read</code>, <code>edit</code>, <code>write</code>, and <code>patch</code>.
+Shell checks its external working directory and directories inferred by its
+scanner before checking <code>shell</code> resources.</p>
+<p>For <code>external_directory</code>, <code>read</code>, and <code>edit</code>, a leading <code>~</code>, <code>~/</code>, <code>$HOME</code>, or
+<code>$HOME/</code> is expanded when configuration loads:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{ </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;$HOME/reference/*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> }</span></span></code></pre>
+<p>Shell resources remain raw command text and are not home-expanded.</p>
+<aside class="callout callout-warning" aria-label="Warning"><strong>Warning</strong><div><p><code>shell</code> runs with the host user’s filesystem, process, and network authority. Directory inference from command text is
+best effort, so prefer a narrow shell allowlist instead of patterns intended to recognize every dangerous command.</p></div></aside>
+<p>Relative mutation paths may leave the active Location while remaining inside
+its project worktree. Explicit external paths are canonicalized before matching,
+so authorize only trusted directory boundaries.</p>
+<h2 id="scanner">Scanner</h2>
+<p>Enable the experimental portable shell scanner with:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;$schema&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;https://opencode.ai/config.json&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;experimental&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;portable_shell_scanner&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>The portable scanner replaces the default tree-sitter scanner; tree-sitter is
+not a fallback or second opinion. A command the portable scanner cannot analyze
+returns a scanner error, not a permission denial.</p>
+<p>The flag changes only parser selection. Existing permission rules, saved
+approval patterns, and best-effort directory inference still apply. There is no
+extra approval mode or blanket restriction for unknown directories.</p>
+<h2 id="defaults">Defaults</h2>
+<p>Every agent, including custom agents, starts with this ordered base policy:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">[</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;external_directory&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;ask&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*.env&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;ask&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*.env.*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;ask&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*.env.example&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">]</span></span></code></pre>
+<p>Shipped agents append these policies:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Agent</th><th>Additional policy</th></tr></thead><tbody><tr><td><code>build</code></td><td>Allows questions</td></tr><tr><td><code>plan</code></td><td>Allows questions; denies edits except files under <code>~/.opencode/plan</code></td></tr><tr><td><code>general</code></td><td>Denies questions and launching subagents</td></tr><tr><td><code>explore</code></td><td>Denies everything except reads, globs, grep, web fetches, and web searches; asks for external directories and <code>.env</code> reads</td></tr><tr><td><code>title</code></td><td>Denies all actions</td></tr><tr><td><code>summary</code></td><td>Denies all actions</td></tr><tr><td><code>compaction</code></td><td>Keeps the base policy</td></tr></tbody></table>
+<p>OpenCode also allows external-directory access to its managed tool-output,
+shell-output, temporary, and global configuration directories. The underlying
+<code>read</code>, <code>edit</code>, or other action still uses its own rules. Later global and agent
+rules can override these defaults.</p>
+<h2 id="agents">Agents</h2>
+<p>Put shared rules at the top level and narrower rules under
+<code>agents.&lt;id&gt;.permissions</code>:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;$schema&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;https://opencode.ai/config.json&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;ask&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;git status *&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;reviewer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;description&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Review code without changing it&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;mode&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;subagent&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;edit&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Agent rules are appended after global rules; they do not replace the global
+array. A custom subagent uses its own permissions, not a subset of its parent’s
+permissions.</p>
+<h2 id="approvals">Approvals</h2>
+<p>When a rule resolves to <code>ask</code>, clients can reply with:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Choice</th><th>Reply</th><th>Result</th></tr></thead><tbody><tr><td>Allow once</td><td><code>once</code></td><td>Approve only the pending request</td></tr><tr><td>Allow always</td><td><code>always</code></td><td>Approve it and save the tool’s proposed patterns for the project</td></tr><tr><td>Reject</td><td><code>reject</code></td><td>Reject it and every other pending permission request in that session</td></tr></tbody></table>
+<p>For example, choosing <strong>Allow always</strong> for <code>git status --short</code> may save a
+shell prefix that covers later <code>git status</code> commands:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>shell: git status * → allow</span></span></code></pre>
+<p>Saved approvals are durable, project-scoped <code>allow</code> rules. They never override
+a configured <code>deny</code>. Tools choose the proposed saved pattern: some propose <code>*</code>,
+shell proposes command prefixes, and skills and subagents propose their IDs.
+Review broad approvals and remove those no longer needed.</p>
+<p>Clients may attach feedback when rejecting. Non-interactive clients must decide
+how to handle approval requests; configured <code>deny</code> rules always remain enforced.</p>
+<h2 id="policies">Policies</h2>
+<p>A <a href="/v2/docs/policies">policy</a> can hard-deny a permission check after these rules and saved
+approvals run. It turns <code>allow</code> or <code>ask</code> into <code>deny</code> and never grants access.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;experimental&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;policies&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [{ </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;permission&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell:sudo *&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> }],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Global and Console-managed policies override project configuration, which is how an
+organization blocks a command that a repository would allow.</p></article></main><aside class="toc-column"><nav class="docs-toc" aria-label="On this page"><h2>On this page</h2><ul><li><a href="#configure">Configure</a></li><li><a href="#rules">Rules</a></li><li><a href="#matching">Matching</a></li><li><a href="#actions">Actions</a></li><li><a href="#directories">Directories</a></li><li><a href="#scanner">Scanner</a></li><li><a href="#defaults">Defaults</a></li><li><a href="#agents">Agents</a></li><li><a href="#approvals">Approvals</a></li><li><a href="#policies">Policies</a></li></ul></nav></aside></div><script>
+      const addHeadingAnchors = () => {
+        for (const heading of document.querySelectorAll(".prose :is(h2, h3)[id]")) {
+          if (heading.querySelector(".heading-anchor")) continue
+          const anchor = document.createElement("a")
+          anchor.className = "heading-anchor"
+          anchor.href = `#${heading.id}`
+          anchor.setAttribute("aria-label", `Link to ${heading.textContent ?? "section"}`)
+          anchor.textContent = "#"
+          heading.append(anchor)
+        }
+      }
+
+      addHeadingAnchors()
+      document.addEventListener("astro:page-load", addHeadingAnchors)
+    </script><script type="module">globalThis.process??={},globalThis.process.env??={},document.addEventListener(`click`,async e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`[data-copy-markdown]`);if(!t)return;t.dataset.copied=`true`,t.setAttribute(`aria-label`,`Copied`),window.setTimeout(()=>{delete t.dataset.copied,t.setAttribute(`aria-label`,`Copy page as Markdown`)},1500);let n=await fetch(window.location.href,{headers:{Accept:`text/markdown`}});n.ok&&await navigator.clipboard.writeText(await n.text())});</script></body></html>

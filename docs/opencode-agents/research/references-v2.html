@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="References documentation for OpenCode."><meta name="theme-color" content="#000000"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="swap"><script type="module" src="/v2/_astro/ClientRouter.astro_astro_type_script_index_0_lang.QXqYV-0P.js"></script><link rel="canonical" href="https://opencode.ai/v2/docs/references"><link rel="icon" type="image/svg+xml" href="/v2/favicon.svg"><title>References | OpenCode</title><link rel="stylesheet" href="/v2/_astro/_..CwgjG4PU.css"></head><body><a class="skip-link" href="#docs-content">Skip to content</a><header class="site-header"><div class="header-inner"><a class="brand" href="/v2/" aria-label="OpenCode home"><img src="/v2/assets/logo-dark.svg" alt="OpenCode"></a><nav aria-label="Documentation sections"><a href="/v2/docs/" aria-current="page">Docs</a><a href="/v2/docs/cli/">CLI</a><a href="/v2/docs/build/">Build</a><a href="/v2/docs/api/">API</a><a href="/v2/docs/console/">Console</a><a href="/docs">V1</a></nav><div class="header-spacer"></div><button class="search-trigger" type="button" data-search-open aria-label="Search documentation"><span>Search</span><kbd>⌘K</kbd></button><a class="github-link" href="https://github.com/anomalyco/opencode" aria-label="OpenCode on GitHub">GitHub</a></div></header><dialog class="search-dialog" data-search-dialog data-pagefind-path="/v2/docs/pagefind/pagefind.js" data-base-url="/v2/docs/" aria-label="Search documentation"><form method="dialog" class="search-bar"><span aria-hidden="true">&gt;</span><input data-search-input type="search" placeholder="Search docs" autocomplete="off"><button type="submit" aria-label="Close search">Esc</button></form><div class="search-results" data-search-results><p>Start typing to search the documentation.</p></div></dialog><script>
+  let pagefind
+
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault()
+      const dialog = document.querySelector("[data-search-dialog]")
+      dialog?.showModal()
+      dialog?.querySelector("[data-search-input]")?.focus()
+    }
+  })
+
+  const setupSearch = () => {
+    const dialog = document.querySelector("[data-search-dialog]")
+    const input = document.querySelector("[data-search-input]")
+    const results = document.querySelector("[data-search-results]")
+    const trigger = document.querySelector("[data-search-open]")
+    if (trigger && !trigger.dataset.searchReady) {
+      trigger.dataset.searchReady = "true"
+      trigger.addEventListener("click", () => {
+        dialog?.showModal()
+        input?.focus()
+      })
+    }
+
+    if (input && results && !input.dataset.searchReady) input.addEventListener("input", async () => {
+      input.dataset.searchReady = "true"
+      const query = input.value.trim()
+      if (!query) {
+        results.innerHTML = "<p>Start typing to search the documentation.</p>"
+        return
+      }
+
+      const pagefindPath = dialog?.dataset.pagefindPath
+      if (!pagefindPath) return
+      const api = pagefind ?? (pagefind = await import(pagefindPath))
+      const search = await api.search(query)
+      const pages = await Promise.all(search.results.slice(0, 8).map((result) => result.data()))
+      results.replaceChildren(
+        ...pages.map((page) => {
+          const link = document.createElement("a")
+          const base = dialog.dataset.baseUrl ?? "/"
+          link.href = page.url.startsWith(base)
+            ? page.url
+            : `${dialog.dataset.baseUrl?.replace(/\/$/, "")}${page.url}`
+          const title = document.createElement("strong")
+          title.textContent = page.meta.title
+          const excerpt = document.createElement("span")
+          excerpt.innerHTML = page.excerpt
+          link.append(title, excerpt)
+          return link
+        }),
+      )
+      if (!pages.length) results.innerHTML = "<p>No results found.</p>"
+    })
+  }
+
+  setupSearch()
+  document.addEventListener("astro:page-load", setupSearch)
+</script><details class="mobile-navigation"><summary>Docs navigation</summary><nav class="docs-sidebar" aria-label="Documentation"><section><ul><li><a href="/v2/docs/">Intro</a></li><li><a href="/v2/docs/config/">Config</a></li><li><a href="/v2/docs/migrate-v1/">Migrate from V1</a></li><li><a href="/v2/docs/troubleshooting/">Troubleshooting</a></li></ul></section><section><h2>Configure</h2><ul><li><a href="/v2/docs/agents/">Agents</a></li><li><a href="/v2/docs/models/">Models</a></li><li><a href="/v2/docs/skills/">Skills</a></li><li><a href="/v2/docs/themes/">Themes</a></li><li><a href="/v2/docs/commands/">Commands</a></li><li><a href="/v2/docs/plugins/">Plugins</a></li><li><a href="/v2/docs/providers/">Providers</a></li><li><a href="/v2/docs/websearch/">Websearch</a></li><li><a href="/v2/docs/network/">Network</a></li><li><a href="/v2/docs/snapshots/">Snapshots</a></li><li><a href="/v2/docs/compaction/">Compaction</a></li><li><a href="/v2/docs/formatters/">Formatters</a></li><li><a href="/v2/docs/references/" aria-current="page">References</a></li><li><a href="/v2/docs/attachments/">Attachments</a></li><li><a href="/v2/docs/tools/">Tools</a></li><li><a href="/v2/docs/mcp-servers/">MCP servers</a></li><li><a href="/v2/docs/permissions/">Permissions</a></li><li><a href="/v2/docs/policies/">Policies</a></li><li><a href="/v2/docs/instructions/">Instructions</a></li><li><a href="/v2/docs/sharing/">Sharing</a></li><li><a href="/v2/docs/warming/">Warming</a></li></ul></section></nav></details><div class="docs-frame"><aside class="sidebar-column"><nav class="docs-sidebar" aria-label="Documentation"><section><ul><li><a href="/v2/docs/">Intro</a></li><li><a href="/v2/docs/config/">Config</a></li><li><a href="/v2/docs/migrate-v1/">Migrate from V1</a></li><li><a href="/v2/docs/troubleshooting/">Troubleshooting</a></li></ul></section><section><h2>Configure</h2><ul><li><a href="/v2/docs/agents/">Agents</a></li><li><a href="/v2/docs/models/">Models</a></li><li><a href="/v2/docs/skills/">Skills</a></li><li><a href="/v2/docs/themes/">Themes</a></li><li><a href="/v2/docs/commands/">Commands</a></li><li><a href="/v2/docs/plugins/">Plugins</a></li><li><a href="/v2/docs/providers/">Providers</a></li><li><a href="/v2/docs/websearch/">Websearch</a></li><li><a href="/v2/docs/network/">Network</a></li><li><a href="/v2/docs/snapshots/">Snapshots</a></li><li><a href="/v2/docs/compaction/">Compaction</a></li><li><a href="/v2/docs/formatters/">Formatters</a></li><li><a href="/v2/docs/references/" aria-current="page">References</a></li><li><a href="/v2/docs/attachments/">Attachments</a></li><li><a href="/v2/docs/tools/">Tools</a></li><li><a href="/v2/docs/mcp-servers/">MCP servers</a></li><li><a href="/v2/docs/permissions/">Permissions</a></li><li><a href="/v2/docs/policies/">Policies</a></li><li><a href="/v2/docs/instructions/">Instructions</a></li><li><a href="/v2/docs/sharing/">Sharing</a></li><li><a href="/v2/docs/warming/">Warming</a></li></ul></section></nav></aside><main id="docs-content"><article class="prose" data-pagefind-body data-pagefind-meta="title:References"><h1>References<button type="button" aria-label="Copy page as Markdown" data-copy-markdown data-pagefind-ignore><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button></h1><p>References give OpenCode named access to directories outside the current
+project. Add one in <code>opencode.json</code> or <code>opencode.jsonc</code>, then attach its alias in
+your client when you need it.</p>
+<figure class="astro-code-figure"><figcaption class="astro-code-title">opencode.jsonc</figcaption><pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;$schema&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;https://opencode.ai/config.json&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;docs&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;path&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;../product-docs&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;description&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Use for product behavior and terminology&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre></figure>
+<p>After attaching <code>docs</code>, ask the agent to inspect the relevant path:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>Read the attached docs reference and summarize api/authentication.md.</span></span></code></pre>
+<p>Use references for documentation, shared libraries, examples, or source from
+another repository.</p>
+<h2 id="local">Local</h2>
+<p>Use <code>path</code> for a local directory:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;design-system&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;path&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;../design-system&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;description&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Use when working with components or design tokens&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Paths behave as follows:</p>
+<ul>
+<li>Relative paths resolve from the directory containing the config file.</li>
+<li>Absolute paths are supported.</li>
+<li>Home-relative paths such as <code>~/docs</code> are supported.</li>
+</ul>
+<p>Use the string shorthand when no other fields are needed:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;docs&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;../docs&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;shared&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;~/work/shared&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<aside class="callout callout-note" aria-label="Note"><strong>Note</strong><div><p>A shorthand string is a local path only when it starts with <code>.</code>, <code>/</code>, or <code>~</code>. Use <code>./docs</code>, not <code>docs</code>; a bare <code>docs</code>
+value is interpreted as a Git repository.</p></div></aside>
+<h2 id="git">Git</h2>
+<p>Use <code>repository</code> for a remote Git repository:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;repository&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Effect-TS/effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;branch&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;main&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;internal-sdk&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;repository&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;git@gitlab.example.com:platform/sdk.git&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;branch&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;release/v2&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Supported remote forms include:</p>
+<ul>
+<li>GitHub <code>owner/repo</code> shorthand</li>
+<li>Git URLs</li>
+<li>Host/path forms</li>
+<li>SCP-style remotes</li>
+</ul>
+<p>Local <code>file:</code> repositories are not supported.</p>
+<p>Use the string shorthand to follow the remote’s default branch:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Effect-TS/effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;sdk&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;gitlab.com/platform/sdk&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Without <code>branch</code>, OpenCode checks out and refreshes the remote’s default branch.
+Branch names may contain letters, numbers, <code>/</code>, <code>_</code>, <code>.</code>, and <code>-</code>, but cannot
+start with <code>-</code> or contain <code>..</code>.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;sdk&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;repository&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;example/sdk&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;branch&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;release/v2.1&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<h2 id="storage">Storage</h2>
+<p>OpenCode normalizes each remote and stores one checkout per remote and branch
+under its global data directory. Without an explicit branch, the path uses this
+shape:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>opencode/repos/&lt;host&gt;/&lt;repository-path&gt;</span></span></code></pre>
+<p>On a typical Linux installation, <code>Effect-TS/effect</code> is stored at:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>~/.local/share/opencode/repos/github.com/Effect-TS/effect</span></span></code></pre>
+<p>An explicit branch adds an encoded <code>@&lt;branch&gt;</code> suffix:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>~/.local/share/opencode/repos/github.com/Effect-TS/effect@main</span></span></code></pre>
+<h2 id="refresh">Refresh</h2>
+<p>Missing repositories are cloned asynchronously. Existing checkouts are checked
+in the background when references load or reload and after a new user prompt is
+admitted in their Location.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>Prompt admitted → refresh check starts in background → agent continues</span></span></code></pre>
+<p>A checkout is eligible when its last refresh attempt was at least 24 hours ago,
+or when no attempt has been recorded. A refresh fetches and resets to the
+configured branch or the remote’s default branch.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>Last attempt: 25 hours ago → eligible</span></span>
+<span class="line"><span>Last attempt: 2 hours ago  → skipped</span></span></code></pre>
+<p>Refresh behavior follows these rules:</p>
+<ul>
+<li>Timestamps persist across service restarts.</li>
+<li>Locations using the same checkout share its timestamp.</li>
+<li>Failed attempts are logged and remain subject to the 24-hour limit.</li>
+<li>There is no periodic polling while a Location is unused.</li>
+<li>Clone or refresh failures do not stop other references from loading.</li>
+</ul>
+<p>Prompts do not wait for cloning or refreshing. An attachment can contain older
+content even if a later tool read sees the updated checkout, and a new reference
+can appear before its checkout is ready.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>Attachment created → cached content</span></span>
+<span class="line"><span>Background refresh completes → later tool read sees newer content</span></span></code></pre>
+<aside class="callout callout-warning" aria-label="Warning"><strong>Warning</strong><div><p>Cached checkouts are shared and can update while an agent is using them. Avoid editing cached checkouts because a
+refresh resets them.</p></div></aside>
+<h2 id="guidance">Guidance</h2>
+<p><code>description</code> tells agents when a reference is relevant. References with a
+description appear in agent instructions with their alias and resolved path.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;docs&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;path&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;../docs&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;description&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Use for product behavior and terminology&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>References without a description remain available to clients but are not
+advertised automatically.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;archive&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;path&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;../archive&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<h2 id="visibility">Visibility</h2>
+<p>Set <code>hidden</code> to <code>true</code> to remove a reference from interactive client selectors:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;internal&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;path&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;../internal&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;description&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Use for internal service behavior&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;hidden&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p><code>hidden</code> affects only interactive visibility. The reference remains in the
+reference API and, when it has a description, in agent instructions.</p>
+<h2 id="usage">Usage</h2>
+<p>Clients attach a reference by its root alias. The attachment contains a
+non-recursive listing of the root’s immediate files and directories.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>Attached alias: docs</span></span>
+<span class="line"><span>Ask: Inspect docs/guides/deployment.md and explain the deployment steps.</span></span></code></pre>
+<p>Ask the agent to inspect a specific path when you need content below the root.</p>
+<h2 id="permissions">Permissions</h2>
+<p>References do not grant extra tool permissions. Access outside the active
+Location still follows normal tool rules and the <code>external_directory</code>
+permission; editing also requires the applicable edit permission.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>Read ../product-docs/api.md</span></span></code></pre>
+<p>The request succeeds only when the active permissions allow that external read.</p>
+<h2 id="fields">Fields</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Field</th><th>Local</th><th>Git</th><th>Description</th></tr></thead><tbody><tr><td><code>path</code></td><td>Required</td><td>No</td><td>Local directory path</td></tr><tr><td><code>repository</code></td><td>No</td><td>Required</td><td>Remote Git repository</td></tr><tr><td><code>branch</code></td><td>No</td><td>Optional</td><td>Branch to fetch and check out</td></tr><tr><td><code>description</code></td><td>Optional</td><td>Optional</td><td>Guidance describing when agents should use it</td></tr><tr><td><code>hidden</code></td><td>Optional</td><td>Optional</td><td>Hide it from interactive client selectors</td></tr></tbody></table>
+<p>A complete Git entry can use every Git-compatible field:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;references&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;sdk&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;repository&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;example/sdk&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;branch&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;main&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;description&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Use for SDK implementation details&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;hidden&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">false</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<h2 id="aliases">Aliases</h2>
+<p>An alias cannot be empty or contain <code>/</code>, <code>\</code>, whitespace, a backtick, or a
+comma.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>Valid:   docs</span></span>
+<span class="line"><span>Invalid: product docs</span></span>
+<span class="line"><span>Invalid: docs/api</span></span></code></pre></article></main><aside class="toc-column"><nav class="docs-toc" aria-label="On this page"><h2>On this page</h2><ul><li><a href="#local">Local</a></li><li><a href="#git">Git</a></li><li><a href="#storage">Storage</a></li><li><a href="#refresh">Refresh</a></li><li><a href="#guidance">Guidance</a></li><li><a href="#visibility">Visibility</a></li><li><a href="#usage">Usage</a></li><li><a href="#permissions">Permissions</a></li><li><a href="#fields">Fields</a></li><li><a href="#aliases">Aliases</a></li></ul></nav></aside></div><script>
+      const addHeadingAnchors = () => {
+        for (const heading of document.querySelectorAll(".prose :is(h2, h3)[id]")) {
+          if (heading.querySelector(".heading-anchor")) continue
+          const anchor = document.createElement("a")
+          anchor.className = "heading-anchor"
+          anchor.href = `#${heading.id}`
+          anchor.setAttribute("aria-label", `Link to ${heading.textContent ?? "section"}`)
+          anchor.textContent = "#"
+          heading.append(anchor)
+        }
+      }
+
+      addHeadingAnchors()
+      document.addEventListener("astro:page-load", addHeadingAnchors)
+    </script><script type="module">globalThis.process??={},globalThis.process.env??={},document.addEventListener(`click`,async e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`[data-copy-markdown]`);if(!t)return;t.dataset.copied=`true`,t.setAttribute(`aria-label`,`Copied`),window.setTimeout(()=>{delete t.dataset.copied,t.setAttribute(`aria-label`,`Copy page as Markdown`)},1500);let n=await fetch(window.location.href,{headers:{Accept:`text/markdown`}});n.ok&&await navigator.clipboard.writeText(await n.text())});</script></body></html>

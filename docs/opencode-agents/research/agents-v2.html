@@ -1,0 +1,370 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Agents documentation for OpenCode."><meta name="theme-color" content="#000000"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="swap"><script type="module" src="/v2/_astro/ClientRouter.astro_astro_type_script_index_0_lang.QXqYV-0P.js"></script><link rel="canonical" href="https://opencode.ai/v2/docs/agents/"><link rel="icon" type="image/svg+xml" href="/v2/favicon.svg"><title>Agents | OpenCode</title><link rel="stylesheet" href="/v2/_astro/_..CwgjG4PU.css"></head><body><a class="skip-link" href="#docs-content">Skip to content</a><header class="site-header"><div class="header-inner"><a class="brand" href="/v2/" aria-label="OpenCode home"><img src="/v2/assets/logo-dark.svg" alt="OpenCode"></a><nav aria-label="Documentation sections"><a href="/v2/docs/" aria-current="page">Docs</a><a href="/v2/docs/cli/">CLI</a><a href="/v2/docs/build/">Build</a><a href="/v2/docs/api/">API</a><a href="/v2/docs/console/">Console</a><a href="/docs">V1</a></nav><div class="header-spacer"></div><button class="search-trigger" type="button" data-search-open aria-label="Search documentation"><span>Search</span><kbd>⌘K</kbd></button><a class="github-link" href="https://github.com/anomalyco/opencode" aria-label="OpenCode on GitHub">GitHub</a></div></header><dialog class="search-dialog" data-search-dialog data-pagefind-path="/v2/docs/pagefind/pagefind.js" data-base-url="/v2/docs/" aria-label="Search documentation"><form method="dialog" class="search-bar"><span aria-hidden="true">&gt;</span><input data-search-input type="search" placeholder="Search docs" autocomplete="off"><button type="submit" aria-label="Close search">Esc</button></form><div class="search-results" data-search-results><p>Start typing to search the documentation.</p></div></dialog><script>
+  let pagefind
+
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault()
+      const dialog = document.querySelector("[data-search-dialog]")
+      dialog?.showModal()
+      dialog?.querySelector("[data-search-input]")?.focus()
+    }
+  })
+
+  const setupSearch = () => {
+    const dialog = document.querySelector("[data-search-dialog]")
+    const input = document.querySelector("[data-search-input]")
+    const results = document.querySelector("[data-search-results]")
+    const trigger = document.querySelector("[data-search-open]")
+    if (trigger && !trigger.dataset.searchReady) {
+      trigger.dataset.searchReady = "true"
+      trigger.addEventListener("click", () => {
+        dialog?.showModal()
+        input?.focus()
+      })
+    }
+
+    if (input && results && !input.dataset.searchReady) input.addEventListener("input", async () => {
+      input.dataset.searchReady = "true"
+      const query = input.value.trim()
+      if (!query) {
+        results.innerHTML = "<p>Start typing to search the documentation.</p>"
+        return
+      }
+
+      const pagefindPath = dialog?.dataset.pagefindPath
+      if (!pagefindPath) return
+      const api = pagefind ?? (pagefind = await import(pagefindPath))
+      const search = await api.search(query)
+      const pages = await Promise.all(search.results.slice(0, 8).map((result) => result.data()))
+      results.replaceChildren(
+        ...pages.map((page) => {
+          const link = document.createElement("a")
+          const base = dialog.dataset.baseUrl ?? "/"
+          link.href = page.url.startsWith(base)
+            ? page.url
+            : `${dialog.dataset.baseUrl?.replace(/\/$/, "")}${page.url}`
+          const title = document.createElement("strong")
+          title.textContent = page.meta.title
+          const excerpt = document.createElement("span")
+          excerpt.innerHTML = page.excerpt
+          link.append(title, excerpt)
+          return link
+        }),
+      )
+      if (!pages.length) results.innerHTML = "<p>No results found.</p>"
+    })
+  }
+
+  setupSearch()
+  document.addEventListener("astro:page-load", setupSearch)
+</script><details class="mobile-navigation"><summary>Docs navigation</summary><nav class="docs-sidebar" aria-label="Documentation"><section><ul><li><a href="/v2/docs/">Intro</a></li><li><a href="/v2/docs/config/">Config</a></li><li><a href="/v2/docs/migrate-v1/">Migrate from V1</a></li><li><a href="/v2/docs/troubleshooting/">Troubleshooting</a></li></ul></section><section><h2>Configure</h2><ul><li><a href="/v2/docs/agents/" aria-current="page">Agents</a></li><li><a href="/v2/docs/models/">Models</a></li><li><a href="/v2/docs/skills/">Skills</a></li><li><a href="/v2/docs/themes/">Themes</a></li><li><a href="/v2/docs/commands/">Commands</a></li><li><a href="/v2/docs/plugins/">Plugins</a></li><li><a href="/v2/docs/providers/">Providers</a></li><li><a href="/v2/docs/websearch/">Websearch</a></li><li><a href="/v2/docs/network/">Network</a></li><li><a href="/v2/docs/snapshots/">Snapshots</a></li><li><a href="/v2/docs/compaction/">Compaction</a></li><li><a href="/v2/docs/formatters/">Formatters</a></li><li><a href="/v2/docs/references/">References</a></li><li><a href="/v2/docs/attachments/">Attachments</a></li><li><a href="/v2/docs/tools/">Tools</a></li><li><a href="/v2/docs/mcp-servers/">MCP servers</a></li><li><a href="/v2/docs/permissions/">Permissions</a></li><li><a href="/v2/docs/policies/">Policies</a></li><li><a href="/v2/docs/instructions/">Instructions</a></li><li><a href="/v2/docs/sharing/">Sharing</a></li><li><a href="/v2/docs/warming/">Warming</a></li></ul></section></nav></details><div class="docs-frame"><aside class="sidebar-column"><nav class="docs-sidebar" aria-label="Documentation"><section><ul><li><a href="/v2/docs/">Intro</a></li><li><a href="/v2/docs/config/">Config</a></li><li><a href="/v2/docs/migrate-v1/">Migrate from V1</a></li><li><a href="/v2/docs/troubleshooting/">Troubleshooting</a></li></ul></section><section><h2>Configure</h2><ul><li><a href="/v2/docs/agents/" aria-current="page">Agents</a></li><li><a href="/v2/docs/models/">Models</a></li><li><a href="/v2/docs/skills/">Skills</a></li><li><a href="/v2/docs/themes/">Themes</a></li><li><a href="/v2/docs/commands/">Commands</a></li><li><a href="/v2/docs/plugins/">Plugins</a></li><li><a href="/v2/docs/providers/">Providers</a></li><li><a href="/v2/docs/websearch/">Websearch</a></li><li><a href="/v2/docs/network/">Network</a></li><li><a href="/v2/docs/snapshots/">Snapshots</a></li><li><a href="/v2/docs/compaction/">Compaction</a></li><li><a href="/v2/docs/formatters/">Formatters</a></li><li><a href="/v2/docs/references/">References</a></li><li><a href="/v2/docs/attachments/">Attachments</a></li><li><a href="/v2/docs/tools/">Tools</a></li><li><a href="/v2/docs/mcp-servers/">MCP servers</a></li><li><a href="/v2/docs/permissions/">Permissions</a></li><li><a href="/v2/docs/policies/">Policies</a></li><li><a href="/v2/docs/instructions/">Instructions</a></li><li><a href="/v2/docs/sharing/">Sharing</a></li><li><a href="/v2/docs/warming/">Warming</a></li></ul></section></nav></aside><main id="docs-content"><article class="prose" data-pagefind-body data-pagefind-meta="title:Agents"><h1>Agents<button type="button" aria-label="Copy page as Markdown" data-copy-markdown data-pagefind-ignore><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button></h1><p>Create a Markdown file to add a reusable agent. This example adds a read-only reviewer that the main agent can launch for code reviews:</p>
+<figure class="astro-code-figure"><figcaption class="astro-code-title">.opencode/agents/reviewer.md</figcaption><pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="md"><code><span class="line"><span style="color:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold">---</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">description: Reviews changes for correctness and regressions</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">mode: subagent</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">model: anthropic/claude-sonnet-4-5#high</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">permissions:</span></span>
+<span class="line"><span style="color:#E36209;--shiki-dark:#FFAB70">  -</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> action: edit</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    resource: &quot;*&quot;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    effect: deny</span></span>
+<span class="line"><span style="color:#E36209;--shiki-dark:#FFAB70">  -</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> action: shell</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    resource: &quot;*&quot;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    effect: deny</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">Review the current changes. List findings in severity order with file and line references.</span></span></code></pre></figure>
+<p>Ask your primary agent to use it:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>Use the reviewer subagent to review my current changes.</span></span></code></pre>
+<p>An agent combines a system prompt, model preference, permissions, and display details into a named assistant profile.</p>
+<h2 id="locations">Locations</h2>
+<p>Save Markdown agents globally for all projects or inside a project:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>~/.config/opencode/agents/&lt;name&gt;.md</span></span>
+<span class="line"><span>.opencode/agents/&lt;name&gt;.md</span></span></code></pre>
+<p>OpenCode discovers project <code>.opencode</code> directories from the current directory up to the project root. A nested path becomes part of the agent ID:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>.opencode/agents/team/reviewer.md  →  team/reviewer</span></span></code></pre>
+<h2 id="formats">Formats</h2>
+<h3 id="markdown">Markdown</h3>
+<p>Frontmatter accepts the same fields as an <code>agents</code> configuration entry. The Markdown body becomes the agent’s <code>system</code> prompt:</p>
+<figure class="astro-code-figure"><figcaption class="astro-code-title">.opencode/agents/explainer.md</figcaption><pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="md"><code><span class="line"><span style="color:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold">---</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">description: Explains code without changing it</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">mode: subagent</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">Explain the relevant code with short examples. Do not edit files.</span></span></code></pre></figure>
+<h3 id="jsonc">JSONC</h3>
+<p>Define agents under <code>agents</code> in any <a href="/v2/docs/config">OpenCode configuration file</a>:</p>
+<figure class="astro-code-figure"><figcaption class="astro-code-title">opencode.jsonc</figcaption><pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;$schema&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;https://opencode.ai/config.json&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;reviewer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;description&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Reviews current changes&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;mode&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;subagent&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;system&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Report findings in severity order.&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;edit&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre></figure>
+<h2 id="selection">Selection</h2>
+<p>Set the primary agent used when a session has not selected one:</p>
+<figure class="astro-code-figure"><figcaption class="astro-code-title">opencode.jsonc</figcaption><pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;$schema&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;https://opencode.ai/config.json&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;default_agent&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;writer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;writer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;mode&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;primary&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre></figure>
+<p>The selected default must exist, be visible, and support primary use. Otherwise OpenCode uses <code>build</code>, then the first visible primary-capable agent. Changing this setting does not replace the agent stored on an existing session.</p>
+<h2 id="modes">Modes</h2>
+<p>Set <code>mode</code> according to where the agent should run:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;reviewer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;mode&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;subagent&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Mode</th><th>Behavior</th></tr></thead><tbody><tr><td><code>primary</code></td><td>Runs as the main agent for a session. This is the default for a new custom agent.</td></tr><tr><td><code>subagent</code></td><td>Runs only in a child session through the <code>subagent</code> tool.</td></tr><tr><td><code>all</code></td><td>Runs either as a primary agent or a subagent.</td></tr></tbody></table>
+<p>Subagents run with fresh context in foreground or background child sessions. The parent agent’s <code>subagent</code> permissions control which agents it may launch; the child uses its own configured permissions.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;orchestrator&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;subagent&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;subagent&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;reviewer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<h2 id="builtins">Builtins</h2>
+<p>OpenCode includes these visible agents:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Agent</th><th>Mode</th><th>Purpose</th></tr></thead><tbody><tr><td><strong>Build</strong> (<code>build</code>)</td><td><code>primary</code></td><td>Default coding agent. Tools are allowed by default; sensitive environment-file reads and access outside the workspace ask for approval.</td></tr><tr><td><strong>Plan</strong> (<code>plan</code>)</td><td><code>primary</code></td><td>Explores and plans without editing normal project files. It may write OpenCode plan files when asked, and shell commands remain permission-controlled.</td></tr><tr><td><strong>General</strong> (<code>general</code>)</td><td><code>subagent</code></td><td>Handles research and multi-step work with broad tool access, but cannot launch more subagents.</td></tr><tr><td><strong>Explore</strong> (<code>explore</code>)</td><td><code>subagent</code></td><td>Searches and reads code or web sources without editing files.</td></tr></tbody></table>
+<p>Override a built-in by using the same ID:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;build&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;git push *&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;ask&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Hidden <code>compaction</code>, <code>title</code>, and <code>summary</code> agents perform maintenance and cannot be selected directly. V2 has no built-in <code>scout</code> agent.</p>
+<h2 id="merging">Merging</h2>
+<p>Agent definitions merge in configuration order. Later scalar values replace earlier values, request maps merge by key, and permission rules append:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;ask&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;build&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;shell&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;git status&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Global <code>permissions</code> apply before agent-specific rules, so later agent rules can refine them.</p>
+<h2 id="options">Options</h2>
+<h3 id="description">Description</h3>
+<p><code>description</code> explains the agent’s purpose. Add it to subagents because OpenCode shows it to the model choosing which agent to launch:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A;--shiki-dark:#85E89D">description</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">Reviews database migrations for safety</span></span></code></pre>
+<h3 id="mode">Mode</h3>
+<p><code>mode</code> accepts <code>primary</code>, <code>subagent</code>, or <code>all</code>. When omitted on a new custom agent, it defaults to <code>primary</code>:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A;--shiki-dark:#85E89D">mode</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">all</span></span></code></pre>
+<h3 id="model">Model</h3>
+<p><code>model</code> uses <code>provider/model</code> with an optional <code>#variant</code>:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A;--shiki-dark:#85E89D">model</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">anthropic/claude-sonnet-4-5#high</span></span></code></pre>
+<p>JSON configuration also accepts the expanded form:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;reviewer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;model&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        &quot;providerID&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;anthropic&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        &quot;model&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;claude-sonnet-4-5&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        &quot;variant&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;high&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<ul>
+<li>A subagent uses its configured model, or inherits the parent session’s model when none is configured.</li>
+<li>A session stores its selected model separately. Selecting a primary agent by ID does not change that model.</li>
+</ul>
+<h3 id="system">System</h3>
+<p><code>system</code> sets the agent’s system prompt. A non-empty value replaces the provider’s base prompt for that agent:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;reviewer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;system&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;Review only. Do not modify files.&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Project instructions, skills, references, and other instruction sources are still added. In a Markdown agent, put this text in the document body instead of a <code>system</code> frontmatter field.</p>
+<h3 id="permissions">Permissions</h3>
+<p><code>permissions</code> is an ordered list of matching rules:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;reviewer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;permissions&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;*&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;deny&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;src/**&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      ],</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Field</th><th>Meaning</th></tr></thead><tbody><tr><td><code>action</code></td><td>Tool or permission action. Wildcards are supported.</td></tr><tr><td><code>resource</code></td><td>Path, command, agent ID, or other value matched by the action. Wildcards are supported.</td></tr><tr><td><code>effect</code></td><td><code>allow</code>, <code>ask</code>, or <code>deny</code>.</td></tr></tbody></table>
+<p>The last matching rule wins, so put broad rules before exceptions. Common actions include:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Action</th><th>Covers</th></tr></thead><tbody><tr><td><code>shell</code></td><td>Shell commands</td></tr><tr><td><code>edit</code></td><td>Edit, write, and patch tools</td></tr><tr><td><code>subagent</code></td><td>Child agents</td></tr><tr><td><code>read</code>, <code>glob</code>, <code>grep</code></td><td>Local discovery tools</td></tr><tr><td><code>webfetch</code>, <code>websearch</code></td><td>Web tools</td></tr><tr><td><code>skill</code></td><td>Skill loading</td></tr></tbody></table>
+<p>For <code>read</code>, <code>edit</code>, and <code>external_directory</code> resources, OpenCode expands <code>~</code> and <code>$HOME</code>:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{ </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;action&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;read&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;resource&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;~/notes/**&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;effect&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;allow&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> }</span></span></code></pre>
+<p>Shell resources remain raw command text and do not expand those values.</p>
+<h3 id="steps">Steps</h3>
+<p><code>steps</code> sets a positive maximum number of model steps:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A;--shiki-dark:#85E89D">steps</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">8</span></span></code></pre>
+<p>On the final step, OpenCode removes tools and asks the model to summarize in text. New user input resets the allowance.</p>
+<h3 id="hidden">Hidden</h3>
+<p><code>hidden</code> removes an agent from normal listings, interactive discovery, and the subagent catalog:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A;--shiki-dark:#85E89D">hidden</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span></span></code></pre>
+<p>This controls visibility, not security. Use permissions to restrict behavior.</p>
+<h3 id="color">Color</h3>
+<p><code>color</code> sets the agent’s UI color using a six-digit hex value:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A;--shiki-dark:#85E89D">color</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;#ff6b6b&quot;</span></span></code></pre>
+<h3 id="disabled">Disabled</h3>
+<p><code>disabled</code> removes a built-in or custom agent at that point in configuration loading:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;plan&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;disabled&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<h3 id="request">Request</h3>
+<p><code>request</code> accepts per-agent header and JSON body overlays:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto" tabindex="0" data-language="jsonc"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  &quot;agents&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    &quot;reviewer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      &quot;request&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        &quot;headers&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;x-agent&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&quot;reviewer&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        &quot;body&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: { </span><span style="color:#005CC5;--shiki-dark:#79B8FF">&quot;temperature&quot;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">0.1</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<aside class="callout callout-warning" aria-label="Warning"><strong>Warning</strong><div><p>The V2 session runner preserves these values but does not yet send them with model requests. Configure active request
+settings on the provider, model, or model variant instead.</p></div></aside>
+<p>Do not use legacy top-level fields such as <code>temperature</code>, <code>top_p</code>, <code>prompt</code>, <code>permission</code>, <code>tools</code>, <code>disable</code>, or <code>maxSteps</code> in new V2 agent configuration.</p></article></main><aside class="toc-column"><nav class="docs-toc" aria-label="On this page"><h2>On this page</h2><ul><li><a href="#locations">Locations</a></li><li><a href="#formats">Formats</a></li><li class="nested"><a href="#markdown">Markdown</a></li><li class="nested"><a href="#jsonc">JSONC</a></li><li><a href="#selection">Selection</a></li><li><a href="#modes">Modes</a></li><li><a href="#builtins">Builtins</a></li><li><a href="#merging">Merging</a></li><li><a href="#options">Options</a></li><li class="nested"><a href="#description">Description</a></li><li class="nested"><a href="#mode">Mode</a></li><li class="nested"><a href="#model">Model</a></li><li class="nested"><a href="#system">System</a></li><li class="nested"><a href="#permissions">Permissions</a></li><li class="nested"><a href="#steps">Steps</a></li><li class="nested"><a href="#hidden">Hidden</a></li><li class="nested"><a href="#color">Color</a></li><li class="nested"><a href="#disabled">Disabled</a></li><li class="nested"><a href="#request">Request</a></li></ul></nav></aside></div><script>
+      const addHeadingAnchors = () => {
+        for (const heading of document.querySelectorAll(".prose :is(h2, h3)[id]")) {
+          if (heading.querySelector(".heading-anchor")) continue
+          const anchor = document.createElement("a")
+          anchor.className = "heading-anchor"
+          anchor.href = `#${heading.id}`
+          anchor.setAttribute("aria-label", `Link to ${heading.textContent ?? "section"}`)
+          anchor.textContent = "#"
+          heading.append(anchor)
+        }
+      }
+
+      addHeadingAnchors()
+      document.addEventListener("astro:page-load", addHeadingAnchors)
+    </script><script type="module">globalThis.process??={},globalThis.process.env??={},document.addEventListener(`click`,async e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`[data-copy-markdown]`);if(!t)return;t.dataset.copied=`true`,t.setAttribute(`aria-label`,`Copied`),window.setTimeout(()=>{delete t.dataset.copied,t.setAttribute(`aria-label`,`Copy page as Markdown`)},1500);let n=await fetch(window.location.href,{headers:{Accept:`text/markdown`}});n.ok&&await navigator.clipboard.writeText(await n.text())});</script></body></html>
